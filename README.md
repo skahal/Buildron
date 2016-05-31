@@ -10,7 +10,7 @@
 ### What is this?
 ![](docs/images/Buildron-logo.png)
 
-Buildron is an free and open source app from developers to developers. Are you a developer? No, so take a look on our game Ships N' Battles, you will enjoy it a much more than Buildron.
+Buildron is an free and open source app from developers to developers. Are you a developer? No, so take a look on our game [Ships N' Battles](https://itunes.apple.com/br/app/ships-n-battles-hd/id510480132?mt=8), you will enjoy it a much more than Buildron.
 
 Well, are you still here? Oh... maybe you are a developer, or a geek... maybe both!
 
@@ -36,6 +36,9 @@ Nowadays we have a lot of options of Continous Integrations Servers, like TeamCi
 
 We wanna something more interactive, more visual and, what not, more FUN!
 
+![](docs/images/screenshots/Buildron-screenshot-01.png)
+
+See it in action: [https://www.youtube.com/watch?v=sEghUYUvTHg](https://www.youtube.com/watch?v=sEghUYUvTHg)
 
 Buildron is a 3D environment where each of your build configuration became a Totem. Each Totem display some information of the build, like project name and configuration, last user that has triggered the build, and, of course, the state of build: success, running, failed and queued.
 
@@ -57,6 +60,7 @@ Buildron RC is a 3D remote control app for Buildron where you can:
 	✓ Zoom in and zoom out 
 	✓ Get closer to the builds history totem 
 	✓ Share Buildron screenshots on Twitter 
+
 It's fun, you should try.
 
 Oh, we need to warm you: there is some easter eggs to be found here... Free your mind ;)
@@ -71,7 +75,7 @@ Help us to popularize Buidlron, spread the word in the social networks, blogs, f
 
 Please, follow Skahal Studios on [Twitter](http://twitter.com/skahal) and Facebook.
 
-If you like taking a picture from your TV or monitor running Buildron: send to us! We will appreciate to see this and put your Buildron picture on our gallery bellow:
+If you like taking a picture from your TV or monitor running Buildron: send to us! We will appreciate to see this and put your Buildron picture on our ["Buildron around the World gallery"](docs/images/around-the-world-gallery). 
 
 ## Setup
 Download the latest version from our realease page, unzip it anywhere in the machine where you want to run Buildron.
