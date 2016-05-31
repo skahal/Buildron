@@ -78,7 +78,7 @@ Please, follow Skahal Studios on [Twitter](http://twitter.com/skahal) and Facebo
 If you like taking a picture from your TV or monitor running Buildron: send to us! We will appreciate to see this and put your Buildron picture on our ["Buildron around the World gallery"](docs/images/around-the-world-gallery). 
 
 ## Setup
-Download the latest version from our realease page, unzip it anywhere in the machine where you want to run Buildron.
+Download the latest version from our [releases page](releases), unzip it anywhere in the machine where you want to run Buildron.
 
 ## Usage
 ### Run
@@ -125,4 +125,4 @@ In others words, you can use this library for developement any kind of software:
 
 
 ## Change Log
- - 1.0.0 First version.
+ - 1.6.0 - First open source version.
