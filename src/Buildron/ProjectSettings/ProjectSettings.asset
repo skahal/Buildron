@@ -28,7 +28,7 @@ PlayerSettings:
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   iosAppInBackgroundBehavior: 0
-  displayResolutionDialog: 2
+  displayResolutionDialog: 1
   iosAllowHTTPDownload: 1
   allowedAutorotateToPortrait: 1
   allowedAutorotateToPortraitUpsideDown: 1
@@ -177,24 +177,6 @@ PlayerSettings:
       m_Icon: {fileID: 2800000, guid: 03d47fa7a8a7344b3b525a0f841a2773, type: 3}
       m_Width: 128
       m_Height: 128
-  - m_BuildTarget: Standalone
-    m_Icons:
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 03d47fa7a8a7344b3b525a0f841a2773, type: 3}
-      m_Width: 128
-      m_Height: 128
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 35744cd0772794397814a5a2a2d9b2fc, type: 3}
-      m_Width: 48
-      m_Height: 48
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 9efc2970cfff34173940f9f7378e3288, type: 3}
-      m_Width: 32
-      m_Height: 32
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 597e86d5b8bf349e08de3604c6fd8312, type: 3}
-      m_Width: 16
-      m_Height: 16
   m_BuildTargetBatching:
   - m_BuildTarget: Standalone
     m_StaticBatching: 1

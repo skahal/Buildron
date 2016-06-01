@@ -145,7 +145,6 @@ GameObject:
   - 81: {fileID: 94104661}
   - 114: {fileID: 94104664}
   - 114: {fileID: 94104665}
-  - 114: {fileID: 94104666}
   - 114: {fileID: 94104667}
   - 114: {fileID: 94104668}
   - 114: {fileID: 94104669}
@@ -261,17 +260,6 @@ MonoBehaviour:
   iterations: 3
   blurSpread: 0.6
   blurShader: {fileID: 4800000, guid: 57e6deea7c2924e22a5138e2b70bb4dc, type: 3}
---- !u!114 &94104666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 94104658}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a367b63fce8e4227b8c283ec75810d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &94104667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1463,7 +1451,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400000, guid: f8a358eaa4d3a4426a9424aa21d42e45, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: f8a358eaa4d3a4426a9424aa21d42e45, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &389856567
