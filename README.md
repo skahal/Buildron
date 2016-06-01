@@ -8,7 +8,7 @@
 ## Your builds, our world!
 
 ### What is this?
-![](docs/images/Buildron-logo.png)
+![](docs/images/Buildron-logo-128x128.png)
 
 Buildron is an free and open source app from developers to developers. Are you a developer? No, so take a look on our game [Ships N' Battles](https://itunes.apple.com/br/app/ships-n-battles-hd/id510480132?mt=8), you will enjoy it a much more than Buildron.
 
@@ -101,7 +101,8 @@ If you want to run Buildron and auto start/connect to CI server, just pass the a
    - AppHarbor
    - Unity Cloud Build 
  - Change the way that Buildron and Buildron RC communicate, maybe expose a rest web api.  
- - Create the wiki
+ - Add to wiki how mods/sounds works.
+ - Supports themes.
  
 --------
 
