@@ -10,12 +10,21 @@ public class BuildProcessor {
 	[PostProcessBuildAttribute(1)]
 	public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) 
 	{
-		CopyModsFilesToBuild (pathToBuiltProject);
+		CopyModsFilesToBuild (target, pathToBuiltProject);
 	}
 
-	private static void CopyModsFilesToBuild(string pathToBuiltProject)
+	private static void CopyModsFilesToBuild(BuildTarget target, string pathToBuiltProject)
 	{
 		Debug.Log("BuildProcessor.OnPostprocessBuild");
+
+        switch(target)
+        {
+            case BuildTarget.StandaloneWindows:
+            case BuildTarget.StandaloneWindows64:
+                pathToBuiltProject = Path.GetDirectoryName(pathToBuiltProject);
+                break;
+        }
+
 		Debug.LogFormat("pathToBuiltProject: {0}", pathToBuiltProject);
 		Debug.LogFormat("current directory: {0}", Application.dataPath);
 
