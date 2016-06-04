@@ -48,13 +48,21 @@ public class BuildsDeployController : MonoBehaviour
 		BuildService.BuildFound += delegate(object sender, BuildFoundEventArgs e) {		
 			UpdateBuild (e.Build);
 		};
+
+		BuildService.BuildRemoved += delegate(object sender, BuildRemovedEventArgs e) {		
+			RemoveBuild (e.Build);
+		};
 		
 		StartCoroutine (DeployBuilds ());
 	}
 	
 	private void UpdateBuild (Build b)
 	{
-		if (!BuildController.ExistsGameObject (b)) {
+		if (BuildController.ExistsGameObject (b)) {
+			var go = BuildController.GetGameObject (b);
+			go.SendMessage ("Show");
+		}
+		else {
 			var go = BuildController.CreateGameObject (b);
 			go.transform.parent = m_container.transform;
 			m_currentDeployPosition.x = m_initialDeployPosition.x + (m_currentTotemIndex * TotemsDistance);
@@ -72,6 +80,16 @@ public class BuildsDeployController : MonoBehaviour
 		}
 		
 		m_currentDeployPosition += Vector3.up;
+	}
+
+	private void RemoveBuild (Build b)
+	{
+		if (BuildController.ExistsGameObject (b)) {
+			var go = BuildController.GetGameObject (b);
+			go.SendMessage ("Hide");
+			go.transform.position = m_currentDeployPosition;
+			//GameObject.Destroy (go);
+		}
 	}
 	
 	private Vector3 CalculateInitialPosition ()
