@@ -246,7 +246,10 @@ public class ConfigPanelController : MonoBehaviour
 		
 			if (m_CIServer.IP.Equals ("#TEST_MODE#")) {
 				m_buildsProvider = new TestBuildsProvider ();
-			} 
+			}
+
+            // Inject the FilterBuildsProvider.
+            m_buildsProvider = new FilterBuildsProvider(m_buildsProvider);
 			
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
 			BuildService.Initialize (m_buildsProvider);

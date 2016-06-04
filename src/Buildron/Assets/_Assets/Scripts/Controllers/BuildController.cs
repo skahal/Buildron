@@ -109,9 +109,6 @@ public class BuildController : MonoBehaviour
 			Data.TriggeredByChanged += delegate {
 				UpdateUserAvatar ();	
 			};
-		
-			Messenger.Register (gameObject, 
-			"OnBuildFilterUpdated");
 		}
 		
 		Messenger.Register (gameObject, 
@@ -182,8 +179,6 @@ public class BuildController : MonoBehaviour
 		m_focusedPanel.GetComponent<Renderer>().materials[1].SetColor ("_Color", color);
 		
 		m_isFirstCheckState = false;
-		
-		Filter ();
 	}		
 				
 	private void UpdateRunningStatusIcon (bool hide)
@@ -216,40 +211,7 @@ public class BuildController : MonoBehaviour
 			Messenger.Send ("OnBuildReachGround", gameObject);
 		}
 	}
-	
-	private void OnBuildFilterUpdated ()
-	{
-		Filter ();
-	}
-	
-	private bool Filter ()
-	{
-		var f = ServerState.Instance.BuildFilter;
-		var success = f.SuccessEnabled;
-		var running = f.RunningEnabled;
-		var failed = f.FailedEnabled;
-		var queued = f.QueuedEnabled;
-		
-		var show = 
-			(success && Data.IsSuccess)
-		|| (running && Data.IsRunning)
-		|| (failed && Data.IsFailed)
-		|| (queued && Data.IsQueued);
-		
-		var text = Data.ToString().ToUpperInvariant ();
-		
-		show = show 
-			&& (text.Contains (f.KeyWord.ToUpperInvariant()) ^ f.KeyWordType != KeyWordFilterType.Contains);
-		
-		if (IsVisible && !show) {
-			Hide ();
-		} else if (!IsVisible && show) {
-			Show ();
-		}
-		
-		return show;	
-	}
-	
+
 	private void Hide ()
 	{
 		if (IsVisible) {

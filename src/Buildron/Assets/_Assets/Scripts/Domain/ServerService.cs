@@ -2,6 +2,7 @@
 using UnityEngine;
 using Buildron.Domain;
 using Skahal.Infrastructure.Framework.Commons;
+using System;
 using System.Linq;
 #endregion
 
@@ -10,6 +11,10 @@ using System.Linq;
 /// </summary>
 public static class ServerService
 {
+	#region Events
+	public static event EventHandler Initialized;
+	#endregion
+
 	#region Properties
 	public static ServerMessagesListener Listener { get; private set; }
 	#endregion
@@ -36,6 +41,10 @@ public static class ServerService
 				buildFilterRepository.Modify (buildFilter);
 			}
 		};
+
+		if (Initialized != null) {
+			Initialized (typeof(ServerService), EventArgs.Empty);
+		}
 	}
 	#endregion
 }

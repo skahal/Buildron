@@ -38,7 +38,6 @@ namespace Buildron.Domain
 		private BuildUser m_triggeredBy;
 		private static int s_instancesCount;
 		private DateTime m_lockCurrentStatusUntil = DateTime.Now;
-
 		#endregion
 		
 		#region Constructors
