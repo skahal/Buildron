@@ -2,15 +2,13 @@
 using System.Linq;
 using Buildron.Domain;
 using Buildron.Domain.Versions;
+using Buildron.Infrastructure.BuildsProvider.Filter;
 using Buildron.Infrastructure.BuildsProvider.Hudson;
 using Buildron.Infrastructure.BuildsProvider.Jenkins;
 using Buildron.Infrastructure.BuildsProvider.TeamCity;
 using UnityEngine;
-using Buildron.Infrastructure.BuildsProvider;
 using UnityEngine.UI;
 using System;
-
-
 #endregion
 
 /// <summary>
