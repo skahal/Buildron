@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Buildron.Domain;
 using Skahal.Camera;
+using Skahal.Logging;
 using Skahal.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 #endregion
-	
+
 public class BuildController : MonoBehaviour
 {
 	#region Fields
@@ -23,12 +24,18 @@ public class BuildController : MonoBehaviour
 	private Image m_runningStatusIcon;
 	private Image m_userAvatarIcon;
 	private GameObject m_body;
-	private Collider m_topEdge;
+    private Rigidbody m_rigidbody;
+    private Collider m_bodyCollider;
+    private Collider m_topEdge;
 	private Collider m_bottomEdge;
 	private Collider m_leftEdge;
 	private Collider m_rightEdge;
+    private Renderer m_bodyRenderer;
+    private Renderer m_focusedPanelRenderer;
 	private bool m_isFirstCheckState = true;
+    private BuildStatus m_lastCheckStateStatus;
 	private GameObject m_focusedPanel;
+    
 	#endregion
 	
 	#region Properties
@@ -71,7 +78,7 @@ public class BuildController : MonoBehaviour
 	
 	#region Life cycle 
 	private void Start ()
-	{
+	{        
 		IsVisible = true;
 		
 		if (m_projectLabel == null) {
@@ -92,20 +99,24 @@ public class BuildController : MonoBehaviour
 		m_bottomEdge = transform.FindChild ("Edges/BottomEdge").GetComponent<Collider>();
 		m_leftEdge = transform.FindChild ("Edges/LeftEdge").GetComponent<Collider>();
 		m_rightEdge = transform.FindChild ("Edges/RightEdge").GetComponent<Collider>();
-		
-		m_progressBar = GetComponentInChildren<BuildProgressBarController> ();
+
+        m_rigidbody = GetComponent<Rigidbody>();
+        m_bodyCollider = GetComponent<Collider>();
+        m_bodyRenderer = m_body.GetComponent<Renderer>();
+        m_focusedPanelRenderer = m_focusedPanel.GetComponent<Renderer>();
+
+        m_progressBar = GetComponentInChildren<BuildProgressBarController> ();
 		CheckState ();
 	
 		if (!IsHistoryBuild) {
 			Data.StatusChanged += delegate {
 				if (Data.Status <= BuildStatus.Running && Data.Status != BuildStatus.Queued) {
-					GetComponent<Rigidbody>().AddForce (StatusChangedForce);
+					m_rigidbody.AddForce (StatusChangedForce);
 				}
 				
 				CheckState ();
 			};
-		
-		
+				
 			Data.TriggeredByChanged += delegate {
 				UpdateUserAvatar ();	
 			};
@@ -114,9 +125,9 @@ public class BuildController : MonoBehaviour
 		Messenger.Register (gameObject, 
 			"OnRemoteControlConnected", 
 			"OnRemoteControlDisconnected");
-	}
-	
-	private void OnRemoteControlConnected ()
+	} 
+
+    private void OnRemoteControlConnected ()
 	{
 		var rc = RemoteControlService.GetConnectedRemoteControl ();
 		var rcUserName = rc == null ? null : rc.UserName.ToLowerInvariant ();
@@ -137,49 +148,74 @@ public class BuildController : MonoBehaviour
 	
 	private void CheckState ()
 	{
-		m_progressBar.gameObject.SetActive (Data.Status >= BuildStatus.Running);
-		Color color;
-		
-		switch (Data.Status) {
-		case BuildStatus.Failed:
-		case BuildStatus.Error:
-		case BuildStatus.Canceled:
-			color = FailedColor;
-			UpdateRunningStatusIcon (true);
-			CreateFailedEffects ();
-			Messenger.Send ("OnBuildFailed", gameObject);
-			break;
-				
-		case BuildStatus.Success:
-			color = SuccessColor;
-			UpdateRunningStatusIcon (true);
-			CreateSuccessEffects ();
-			Messenger.Send ("OnBuildSuccess", gameObject);
-			break;
-			
-		case BuildStatus.Queued:
-			color = QueuedColor;
-			UpdateRunningStatusIcon (true);
-			Messenger.Send ("OnBuildQueued", gameObject);
-			break;
-				
-		default:
-			color = RunningColor;
-			UpdateRunningStatusIcon (false);
-			
-			m_progressBar.UpdateValue (Data.PercentageComplete);
-			
-			Messenger.Send ("OnBuildRunning", gameObject);
-			break;
+        SHLog.Debug("{0} | {1} | {2}", m_isFirstCheckState, m_lastCheckStateStatus, Data.Status);
+        var statusChanged = m_isFirstCheckState || m_lastCheckStateStatus != Data.Status;      
+
+        if (Data.IsRunning) {
+			m_progressBar.Show ();
+		} else {
+			m_progressBar.Hide ();
 		}
-		
-		UpdateUserAvatar ();
-	
-		m_body.GetComponent<Renderer>().materials [1].SetColor ("_Color", color);	
-		m_focusedPanel.GetComponent<Renderer>().materials[1].SetColor ("_Color", color);
-		
-		m_isFirstCheckState = false;
-	}		
+
+        Color color;
+
+        switch (Data.Status)
+        {
+            case BuildStatus.Failed:
+            case BuildStatus.Error:
+            case BuildStatus.Canceled:
+                color = FailedColor;
+                UpdateRunningStatusIcon(true);                
+
+                if (statusChanged)
+                {
+                    CreateFailedEffects();
+                    Messenger.Send("OnBuildFailed", gameObject);
+                }
+                break;
+
+            case BuildStatus.Success:
+                color = SuccessColor;
+                UpdateRunningStatusIcon(true);                
+
+                if (statusChanged)
+                {
+                    CreateSuccessEffects();
+                    Messenger.Send("OnBuildSuccess", gameObject);
+                }
+                break;
+
+            case BuildStatus.Queued:
+                color = QueuedColor;
+                UpdateRunningStatusIcon(true);
+
+                if (statusChanged)
+                {
+                    Messenger.Send("OnBuildQueued", gameObject);
+                }
+                break;
+
+            default:
+                color = RunningColor;
+                UpdateRunningStatusIcon(false);
+
+                m_progressBar.UpdateValue(Data.PercentageComplete);
+
+                if (statusChanged)
+                {
+                    Messenger.Send("OnBuildRunning", gameObject);
+                }
+                break;
+        }
+
+        UpdateUserAvatar();
+
+        m_bodyRenderer.materials[1].SetColor("_Color", color);
+        m_focusedPanelRenderer.materials[1].SetColor("_Color", color);
+
+        m_isFirstCheckState = false;
+        m_lastCheckStateStatus = Data.Status;
+    }		
 				
 	private void UpdateRunningStatusIcon (bool hide)
 	{	
@@ -214,34 +250,76 @@ public class BuildController : MonoBehaviour
 
 	private void Hide ()
 	{
-		if (IsVisible) {
+		if (IsVisible)
+        {            
+			CheckState ();
 			CreateHiddingEffect ();
-			GetComponent<Rigidbody>().isKinematic = true;
-			GetComponent<Collider>().enabled = false;
+
+            m_rigidbody.isKinematic = true;
+			m_bodyCollider.enabled = false;
+            m_topEdge.enabled = false;
+            m_rightEdge.enabled = false;
+            m_bottomEdge.enabled = false;
+            m_leftEdge.enabled = false;
+            
 			m_body.SetActive(false);
 			IsVisible = false;
 			m_runningStatusIcon.enabled = false;
 			m_userAvatarIcon.enabled = false;
 			m_projectLabel.enabled = false;
 			m_configurationLabel.enabled = false;
-			m_progressBar.enabled = false;
+			m_progressBar.Hide ();
 			Messenger.Send ("OnBuildHidden");
-		}
+
+            WakeUpSleepingBuilds();
+        }
 	}
+
+    /// <summary>
+    /// Issue #9: https://github.com/skahal/Buildron/issues/9
+    /// If a build was removed, maybe there are space between builds totems and some can be sleeping.
+    /// Wake everyone!
+    /// </summary>
+    private void WakeUpSleepingBuilds()
+    {      
+        foreach (var visibleBuild in BuildController.GetVisibles())
+        {
+            var rb = visibleBuild.GetComponent<BuildController>().m_rigidbody;
+
+            if (rb.IsSleeping())
+            {
+                SHLog.Debug("Wake up build game object: {0}", visibleBuild.name);
+                rb.WakeUp();
+            }
+        }
+    }
 	
 	private void Show ()
 	{
-		if (!IsVisible) {
-			transform.position += Vector3.up * 20;	
-			GetComponent<Rigidbody>().isKinematic = false;
-			GetComponent<Collider>().enabled = true;
-			m_body.SetActive(true);
-			IsVisible = true;
-			m_runningStatusIcon.enabled = !Data.IsRunning;
+		if (!IsVisible)
+        {
+			CheckState ();
+			transform.position += Vector3.up * 20;
+
+            m_rigidbody.isKinematic = false;
+			m_bodyCollider.enabled = true;
+            m_topEdge.enabled = true;
+            m_rightEdge.enabled = true;
+            m_bottomEdge.enabled = true;
+            m_leftEdge.enabled = true;
+
+            m_body.SetActive(true);
+			IsVisible = true;			
 			UpdateUserAvatar ();
 			m_projectLabel.enabled = true;
 			m_configurationLabel.enabled = true;
-			m_progressBar.enabled = true;
+
+            if (Data.IsRunning)
+            {
+                m_runningStatusIcon.enabled = true;
+                m_progressBar.Show();
+            }
+
 			Messenger.Send ("OnBuildVisible");
 		}
 	}
@@ -334,7 +412,7 @@ public class BuildController : MonoBehaviour
 			&& b.HasReachGround
 			&& b.IsVisible
 			&& !b.IsHistoryBuild
-			&& Mathf.Abs (b.GetComponent<Rigidbody>().velocity.y) <= b.VisibleMaxYVelocity
+			&& Mathf.Abs (b.m_rigidbody.velocity.y) <= b.VisibleMaxYVelocity
 			&& !b.m_topEdge.IsVisibleFrom (Camera.main)
 			&& (b.m_leftEdge.IsVisibleFrom (Camera.main) 
 			|| b.m_rightEdge.IsVisibleFrom (Camera.main)
@@ -350,7 +428,7 @@ public class BuildController : MonoBehaviour
 			&& b.HasReachGround
 			&& b.IsVisible
 			&& !b.IsHistoryBuild
-			&& Mathf.Abs (b.GetComponent<Rigidbody>().velocity.y) <= b.VisibleMaxYVelocity
+			&& Mathf.Abs (b.m_rigidbody.velocity.y) <= b.VisibleMaxYVelocity
 			&& b.m_topEdge.IsVisibleFrom (Camera.main)
 			&& (!b.m_leftEdge.IsVisibleFrom (Camera.main) 
 			|| !b.m_rightEdge.IsVisibleFrom (Camera.main)
