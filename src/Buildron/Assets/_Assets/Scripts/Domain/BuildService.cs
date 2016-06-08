@@ -6,6 +6,7 @@ using Buidron.Domain;
 using Buildron.Domain;
 using Buildron.Domain.Sorting;
 using Skahal.Common;
+using Skahal.Logging;
 #endregion
 
 namespace Buildron.Domain
@@ -49,7 +50,7 @@ namespace Buildron.Domain
 		
 		#region Fields
 		private static IBuildsProvider s_buildsProvider;
-		private static List<string> s_buildIdsRefreshed;
+		private static List<string> s_buildConfigurationIdsRefreshed;
 		private static List<Build> s_builds;
 		private static int s_serverDownFromProviderCount;
 		#endregion
@@ -73,20 +74,23 @@ namespace Buildron.Domain
 		#region Methods
 	    public static void Initialize (IBuildsProvider buildsProvider)
 		{
-			s_buildIdsRefreshed = new List<string> ();
+			s_buildConfigurationIdsRefreshed = new List<string> ();
 			s_builds = new List<Build> ();
 			s_buildsProvider = buildsProvider;
 			
-			s_buildsProvider.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e) {
-				var newBuild = e.Build;
-				s_buildIdsRefreshed.Add(newBuild.Id);
+			s_buildsProvider.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e) {                
+                var newBuild = e.Build;
+
+                s_buildConfigurationIdsRefreshed.Add(newBuild.Configuration.Id);
 				var oldBuild = s_builds.FirstOrDefault (bld => bld.Configuration.Id.Equals (newBuild.Configuration.Id));
 			
 				if (oldBuild == null) {
-					s_builds.Add (newBuild);
+                    SHLog.Debug("BuildService.BuildUpdated: new build {0}", newBuild.Id);
+                    s_builds.Add (newBuild);
 					BuildFound.Raise (typeof(BuildService), new BuildFoundEventArgs (newBuild));
 				} else {
-					oldBuild.PercentageComplete = newBuild.PercentageComplete;
+                    SHLog.Debug("BuildService.BuildUpdated: old build {0}", newBuild.Id);
+                    oldBuild.PercentageComplete = newBuild.PercentageComplete;
 					
 					if (oldBuild.TriggeredBy != null && !oldBuild.Configuration.Id.Equals (newBuild.Configuration.Id)) {
 						oldBuild.TriggeredBy.Builds.Remove (oldBuild);
@@ -105,15 +109,18 @@ namespace Buildron.Domain
 			
 			s_buildsProvider.BuildsRefreshed += delegate {
 
-				var removedBuilds = s_builds.Where(b => !s_buildIdsRefreshed.Any(id => b.Id.Equals(id)));
+				var removedBuilds = s_builds.Where(b => !s_buildConfigurationIdsRefreshed.Any(configId => b.Configuration.Id.Equals(configId))).ToArray();
 
-				foreach(var build in removedBuilds)
+                SHLog.Warning("BuildService.BuildsRefreshed: there is {0} builds and {1} were refreshed. {2} will be removed", s_builds.Count, s_buildConfigurationIdsRefreshed.Count, removedBuilds.Length);
+
+                foreach (var build in removedBuilds)
 				{
+                    s_builds.Remove(build);
 					BuildRemoved.Raise(typeof(BuildService), new BuildRemovedEventArgs(build));
 				}
 
-				s_buildIdsRefreshed = new List<string>();
-				BuildsRefreshed.Raise (typeof(BuildService));
+                s_buildConfigurationIdsRefreshed.Clear();
+                BuildsRefreshed.Raise (typeof(BuildService));
 			};
 			
 			s_buildsProvider.ServerDown += delegate {
