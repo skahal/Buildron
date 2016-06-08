@@ -4,6 +4,7 @@ using System.Collections;
 using Buildron.Domain;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Skahal.Logging;
 
 
 #endregion
@@ -57,13 +58,17 @@ public class BuildsDeployController : MonoBehaviour
 	}
 	
 	private void UpdateBuild (Build b)
-	{
+	{        
 		if (BuildController.ExistsGameObject (b)) {
-			var go = BuildController.GetGameObject (b);
+            SHLog.Debug("BuildsDeploy: existing build updated {0}", b.Id);
+
+            var go = BuildController.GetGameObject (b);
 			go.SendMessage ("Show");
 		}
 		else {
-			var go = BuildController.CreateGameObject (b);
+            SHLog.Debug("BuildsDeploy: new build updated {0}", b.Id);
+
+            var go = BuildController.CreateGameObject (b);
 			go.transform.parent = m_container.transform;
 			m_currentDeployPosition.x = m_initialDeployPosition.x + (m_currentTotemIndex * TotemsDistance);
 			go.transform.position = m_currentDeployPosition;
@@ -87,10 +92,8 @@ public class BuildsDeployController : MonoBehaviour
 		if (BuildController.ExistsGameObject (b)) {
 			var go = BuildController.GetGameObject (b);
 			go.SendMessage ("Hide");
-			go.transform.position = m_currentDeployPosition;
-			//GameObject.Destroy (go);
 		}
-	}
+    }
 	
 	private Vector3 CalculateInitialPosition ()
 	{
