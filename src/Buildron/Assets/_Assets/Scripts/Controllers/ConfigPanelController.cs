@@ -9,6 +9,7 @@ using Buildron.Infrastructure.BuildsProvider.TeamCity;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Skahal.Threading;
 #endregion
 
 /// <summary>
@@ -177,6 +178,11 @@ public class ConfigPanelController : MonoBehaviour
 	private void HandleBuildServiceUserAuthenticationFailed (object sender, System.EventArgs e)
 	{
 		CIServerStatusLabel.text = "IP, Username or Password invalid!";
+
+        if(HasAutoStartArgument())
+        {
+            SHThread.Start(1f, StartBuildron);
+        }
 	}
 
 	public void UpdateBuildsProvider ()
