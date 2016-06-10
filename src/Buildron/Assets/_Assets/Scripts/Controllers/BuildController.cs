@@ -453,7 +453,17 @@ public class BuildController : MonoBehaviour
 		
 		return query.ToList ();
 	}
-	#endregion
-	
-	#endregion
+
+    public static bool AreAllSleeping()
+    {
+        return BuildController.GetVisibles().All(b => b.GetComponent<BuildController>().m_rigidbody.IsSleeping());
+    }
+
+    public static bool HasAllReachGround()
+    {
+        return BuildController.GetVisibles().All(b => b.GetComponent<BuildController>().HasReachGround);
+    }
+    #endregion
+
+    #endregion
 }
