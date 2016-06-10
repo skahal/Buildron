@@ -1,22 +1,17 @@
-#region Usings
 using System.Collections.Generic;
 using Buidron.Domain;
 using Buildron.Domain;
 using Buildron.Domain.Sorting;
 using Skahal.Logging;
-using UnityEngine;
-using Skahal.Tweening;
 using Skahal.Threading;
-
-
-#endregion
+using Skahal.Tweening;
+using UnityEngine;
 
 /// <summary>
 /// Sorting controller.
 /// </summary>
 public class SortingController : MonoBehaviour
 {
-
     #region Fields
     private bool m_shouldUpdateStatusBar;
     #endregion
@@ -26,21 +21,12 @@ public class SortingController : MonoBehaviour
     {      
         BuildService.BuildsRefreshed += (sender, e) =>
         {
-            // New builds are found, sort it.
-            if (e.BuildsFound.Count > 0)
+            // New builds were found or if an existing one changed the status, sort it.
+            if (e.BuildsFound.Count > 0 || e.BuildsStatusChanged.Count > 0)
             {
                 PerformOnBuildSortUpdated();
             }
-        };
-
-        var interceptor = new AnyBuildEventInterceptor((buildEvent) =>
-        {
-            if (buildEvent.Build.PreviousStatus != BuildStatus.Unknown)
-            {
-                PerformOnBuildSortUpdated();
-            }
-        });
-        Build.EventInterceptors.Add(interceptor);
+        };        
 
         Messenger.Register(
             gameObject,
@@ -51,28 +37,30 @@ public class SortingController : MonoBehaviour
 
     private void PerformOnBuildSortUpdated()
     {
-        // Give a time to builds reach the ground.
-        SHThread.WaitFor(
+        SHThread.Start(
+        1f, // This 1 second give the time to build physics activate when became visible because a filter sent from RC.
         () =>
         {
-            var hasBuildsToDeploy = BuildsDeployController.Instance.HasBuildsToDeploy;
-            var hasNotVisiblesFromTop = BuildController.HasNotVisiblesFromTop();
-            SHLog.Warning(
-                "Waiting all builds become visible to user to start sorting. HasBuildsToDeploy: {0} and HasNotVisiblesFromTop:{1}", 
-                hasBuildsToDeploy, 
-                hasNotVisiblesFromTop);
+            SHThread.WaitFor(
+            () =>
+            {
+                var areAllSleeping = BuildController.AreAllSleeping();
+                SHLog.Warning(
+                    "Waiting all builds physics sleep. Are all sleeping: {0}",
+                    areAllSleeping);
 
-            return !hasBuildsToDeploy && !hasNotVisiblesFromTop;
-        },
-        () =>
-        {
-            var state = ServerState.Instance;
-            SHLog.Debug("Sorting - IsSorting: {0}, AlgorithmType: {1}, SortBy: {2}", state.IsSorting, state.BuildSortingAlgorithmType, state.BuildSortBy);
+                return areAllSleeping;
+            },
+            () =>
+            {
+                var state = ServerState.Instance;
+                SHLog.Debug("Sorting - IsSorting: {0}, AlgorithmType: {1}, SortBy: {2}", state.IsSorting, state.BuildSortingAlgorithmType, state.BuildSortBy);
 
-            if (!state.IsSorting)
-            {                
-                OnBuildSortUpdated(new BuildSortUpdatedEventArgs(state.BuildSortingAlgorithmType, state.BuildSortBy));
-            }
+                if (!state.IsSorting)
+                {
+                    OnBuildSortUpdated(new BuildSortUpdatedEventArgs(state.BuildSortingAlgorithmType, state.BuildSortBy));
+                }
+            });
         });
     }
 
@@ -145,7 +133,7 @@ public class SortingController : MonoBehaviour
 
         if (m_shouldUpdateStatusBar)
         {            
-            StatusBarController.SetStatusText(text, secondsTimeout);
+            StatusBarController .SetStatusText(text, secondsTimeout);
         }
     }
     #endregion
