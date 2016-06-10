@@ -66,6 +66,12 @@ public class CameraController : MonoBehaviour
 		m_targetPosition = transform.position;
 		m_historyPosition = m_originalPosition + new Vector3 (0, 30, 25);	
 	
+		ServerState.Updated += (sender, e) => {
+			m_autoPosition = false;
+			m_originalPosition.z = ServerState.Instance.CameraPositionZ;
+			Debug.LogWarning (ServerState.Instance.CameraPositionZ);
+		};
+
 		Messenger.Register (gameObject, 
 			"OnCIServerReady",
 			"OnBuildReachGround",
@@ -84,7 +90,6 @@ public class CameraController : MonoBehaviour
 			"OnBuildFilterUpdated");
 		
 		PrepareEffects ();
-		
 		StartCoroutine (AdjustCameraPosition ());
 	}
 	
