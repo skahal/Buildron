@@ -1,4 +1,5 @@
 #region Usings
+using System;
 using System.Collections.Generic;
 using System.Linq;
 #endregion
@@ -30,7 +31,7 @@ namespace Buildron.Domain
 	/// <summary>
 	/// Defines a user that trigger a build.
 	/// </summary>
-	public class BuildUser 
+	public class BuildUser : IEquatable<BuildUser>
 	{
 		#region Constructors
 		/// <summary>
@@ -80,6 +81,11 @@ namespace Buildron.Domain
 		{
 			return Builds.Count (b => b.Status >= BuildStatus.Running) > 0;
 		}
-		#endregion
-	}
+
+        public bool Equals(BuildUser other)
+        {
+            return other != null && other.UserName.Equals(UserName, StringComparison.Ordinal);
+        }
+        #endregion
+    }
 }

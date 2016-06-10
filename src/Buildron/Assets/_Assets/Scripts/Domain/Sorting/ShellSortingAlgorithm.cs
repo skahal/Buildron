@@ -39,9 +39,7 @@ namespace Buildron.Domain.Sorting
 				} else {
 					increment = 1;
 				}
-			}
-					
-			Messenger.Send ("OnSortingEnded");
+			}							
 		}
 	}
 }

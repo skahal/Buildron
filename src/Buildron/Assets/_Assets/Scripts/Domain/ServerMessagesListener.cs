@@ -14,6 +14,7 @@ public class ServerMessagesListener : MonoBehaviour
 {
 	#region Events
 	public event System.EventHandler BuildFilterUpdated;
+	public event System.EventHandler<BuildSortUpdatedEventArgs> BuildSortUpdated;
 	#endregion
 	
 	#region Life cycle
@@ -127,8 +128,13 @@ public class ServerMessagesListener : MonoBehaviour
 		var sorting = (SortingAlgorithmType)sortingAlgorithmType;
 		var sortByProperty = (SortBy)sortBy;
 		SHLog.Debug ("SendToServerSortBuilds: {0}, {1}", sorting, sortByProperty);
-		
-		Messenger.Send ("OnBuildSortUpdated", new BuildSortUpdatedEventArgs (sorting, sortByProperty));
+
+		var args = new BuildSortUpdatedEventArgs (sorting, sortByProperty);
+		Messenger.Send ("OnBuildSortUpdated", args);
+
+		if (BuildSortUpdated != null) {
+			BuildSortUpdated (this, args);
+		}
 	}
 	
 	[RPC]
