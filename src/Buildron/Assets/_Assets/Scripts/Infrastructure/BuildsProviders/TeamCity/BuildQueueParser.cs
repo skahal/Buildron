@@ -11,7 +11,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 	public static class BuildQueueParser
 	{
 		#region Fields
-		private static Regex s_getBuildConfigurationIdsRegex = new Regex("name=\"ref(bt\\d+)\"", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+		private static Regex s_getBuildConfigurationIdsRegex = new Regex("viewType\\.html\\?buildTypeId=(.+)\"", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 		#endregion
 		
 		#region Methods

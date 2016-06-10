@@ -10,6 +10,11 @@ namespace Buildron.Domain
 	/// </summary>
 	public interface IBuildUserAvatarProvider
 	{
-		void GetUserPhoto(BuildUser user, Action<Texture2D> photoReceived);
+        /// <summary>
+        /// Gets the user photo.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="photoReceived">The photo received callback.</param>
+        void GetUserPhoto(BuildUser user, Action<Texture2D> photoReceived);
 	}
 }

@@ -94,14 +94,12 @@ If you want to run Buildron and auto start/connect to CI server, just pass the a
 - On Mac (OSX): open Buildron.app --args autostart
 
 ## Roadmap
- - Use Unity Cloud Build to build releases.
  - Push Buildron RC to GitHub.
  - Implement new builds providers:
    - Travis CI
    - AppHarbor
    - Unity Cloud Build 
  - Change the way that Buildron and Buildron RC communicate, maybe expose a rest web api.  
- - Add to wiki how mods/sounds works.
  - Supports themes.
  
 --------

@@ -1,4 +1,3 @@
-
 namespace Buildron.Domain.Sorting
 {
 	/// <summary>
@@ -6,15 +5,45 @@ namespace Buildron.Domain.Sorting
 	/// </summary>
 	public enum SortingAlgorithmType 
 	{
+        /// <summary>
+        /// No sorting at all.
+        /// </summary>
+        None = 0,
+
 		/// <summary>
-		/// Insertion Sort: http://www.sorting-algorithms.com/insertion-sort
+		/// Insertion sort.
 		/// </summary>
-		Insertion
-	}
-	
-	public enum SortBy
+		Insertion,
+
+        /// <summary>
+        /// Selection sort.
+        /// </summary>
+        Selection,
+
+        /// <summary>
+        /// Shell sort.
+        /// </summary>
+        Shell,
+
+        /// <summary>
+        /// Bubble sort.
+        /// </summary>
+        Bubble
+    }
+
+    /// <summary>
+    /// The kinds of sort by.
+    /// </summary>
+    public enum SortBy
 	{
-		Text,
-		Date
-	}
+        /// <summary>
+        /// Sort by text.
+        /// </summary>
+        Text,
+
+        /// <summary>
+        /// Sort by date.
+        /// </summary>
+        Date
+    }
 }

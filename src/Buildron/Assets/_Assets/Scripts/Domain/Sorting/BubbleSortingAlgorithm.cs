@@ -26,9 +26,7 @@ namespace Buildron.Domain.Sorting
 						yield return Swap (items, index, index + 1);
 					}
 				}
-			}
-			
-			Messenger.Send ("OnSortingEnded");
+			}					
 		}
 	}
 }

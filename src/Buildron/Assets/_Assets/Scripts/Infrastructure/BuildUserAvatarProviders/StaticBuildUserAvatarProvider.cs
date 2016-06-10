@@ -5,9 +5,12 @@ using Buildron.Domain;
 using UnityEngine;
 #endregion
 
-namespace Buildron.Infrastructure.UserBuildAvatarProviders
+namespace Buildron.Infrastructure.BuildUserAvatarProviders
 {
-	public class StaticUserBuildAvatarProvider : IBuildUserAvatarProvider
+    /// <summary>
+    /// An IBuildUserAvatarProvider that use a static list of images to avatars.
+    /// </summary>
+    public class StaticBuildUserAvatarProvider : IBuildUserAvatarProvider
 	{
 		#region Fields
 		private Dictionary<BuildUserKind, Texture2D> m_photosByKind = new Dictionary<BuildUserKind, Texture2D> ();

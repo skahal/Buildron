@@ -12,8 +12,6 @@ using UnityEngine.UI;
 public class MainSceneController : MonoBehaviour 
 {
 	#region Fields
-	private GameObject m_container;
-	private Vector3 m_currentColumnDeploy;
 	private Queue<GameObject> m_buildsToDeploy = new Queue<GameObject>();
 	private int m_deployedBuildsCount;
 	private bool m_isRefreshingBuilds;
@@ -38,11 +36,9 @@ public class MainSceneController : MonoBehaviour
 	#region Initialize
 	private void Awake ()
 	{
-		m_container = new GameObject ("Builds");
 		SetLogMessage (string.Empty);
 		UpdateServerIP ();
-		m_currentColumnDeploy = FirstColumnDeployPosition;
-		
+
 		Messenger.Register (
 			gameObject, 
 			"OnCIServerReady",

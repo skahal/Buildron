@@ -608,8 +608,7 @@ MonoBehaviour:
   FailedColor: {r: 0.85820895, g: 0.12168635, b: 0.12168635, a: 1}
   RunningColor: {r: 0.8731343, g: 0.8731343, b: 0.16289821, a: 1}
   QueuedColor: {r: 0.36078432, g: 0.45490196, b: 0.5529412, a: 1}
-  UserAvatarIconMaterial: {fileID: 2100000, guid: eca123d5a0a2c4d6db357111b9b7741e,
-    type: 2}
+  UserAvatarIconMaterial: {fileID: 0}
   StatusChangedForce: {x: 0, y: 1000, z: 0}
   BuildHighlightZChange: -2
   VisibleMaxYVelocity: 0.3
@@ -906,7 +905,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100022}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -918,7 +917,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100024}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -930,7 +929,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100026}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -942,7 +941,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

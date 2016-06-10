@@ -27,7 +27,7 @@ namespace Buildron.Domain.Sorting
 		{
 			Messenger.Send ("OnSortingBegin");
 			Comparer = equalityComparer;
-			SH.StartCoroutine (PerformSort (items));
+			SH.StartCoroutine (CallPerformSort(items));
 		}
 		
 		protected abstract IEnumerator PerformSort (IList<TItem> items);
@@ -52,6 +52,13 @@ namespace Buildron.Domain.Sorting
 			Messenger.Send ("OnSortingItemsSwapped", new TItem[] { item1, item2 });
 			return new WaitForSeconds(SortingAlgorithmFactory.SwappingTime);
 		}
+
+        private IEnumerator CallPerformSort(IList<TItem> items)
+        {
+            var enumerator = PerformSort(items);
+            yield return enumerator;
+            Messenger.Send("OnSortingEnded");
+        }
 		#endregion
 	}
 }

@@ -2,15 +2,14 @@
 using System.Linq;
 using Buildron.Domain;
 using Buildron.Domain.Versions;
+using Buildron.Infrastructure.BuildsProvider.Filter;
 using Buildron.Infrastructure.BuildsProvider.Hudson;
 using Buildron.Infrastructure.BuildsProvider.Jenkins;
 using Buildron.Infrastructure.BuildsProvider.TeamCity;
 using UnityEngine;
-using Buildron.Infrastructure.BuildsProvider;
 using UnityEngine.UI;
 using System;
-
-
+using Skahal.Threading;
 #endregion
 
 /// <summary>
@@ -179,6 +178,11 @@ public class ConfigPanelController : MonoBehaviour
 	private void HandleBuildServiceUserAuthenticationFailed (object sender, System.EventArgs e)
 	{
 		CIServerStatusLabel.text = "IP, Username or Password invalid!";
+
+        if(HasAutoStartArgument())
+        {
+            SHThread.Start(1f, StartBuildron);
+        }
 	}
 
 	public void UpdateBuildsProvider ()
@@ -246,7 +250,10 @@ public class ConfigPanelController : MonoBehaviour
 		
 			if (m_CIServer.IP.Equals ("#TEST_MODE#")) {
 				m_buildsProvider = new TestBuildsProvider ();
-			} 
+			}
+
+            // Inject the FilterBuildsProvider.
+            m_buildsProvider = new FilterBuildsProvider(m_buildsProvider);
 			
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
 			BuildService.Initialize (m_buildsProvider);

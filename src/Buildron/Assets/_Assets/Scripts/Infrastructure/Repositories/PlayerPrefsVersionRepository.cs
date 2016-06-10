@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Buildron.Infrastructure.Repositories
 {
-	public class VersionRepository : IVersionRepository
+	public class PlayerPrefsVersionRepository : IVersionRepository
 	{
 		#region IVersionRepository implementation
 		public void Save (Version version)
