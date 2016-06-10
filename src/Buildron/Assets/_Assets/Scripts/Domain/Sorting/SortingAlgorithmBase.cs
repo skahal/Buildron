@@ -55,7 +55,8 @@ namespace Buildron.Domain.Sorting
 
         private IEnumerator CallPerformSort(IList<TItem> items)
         {
-            yield return PerformSort(items);
+            var enumerator = PerformSort(items);
+            yield return enumerator;
             Messenger.Send("OnSortingEnded");
         }
 		#endregion
