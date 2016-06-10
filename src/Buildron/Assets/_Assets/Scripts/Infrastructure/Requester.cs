@@ -8,6 +8,7 @@ using Skahal.Logging;
 using Skahal.Common;
 using System.Collections.Generic;
 using Buildron.Infrastructure;
+using Skahal.Threading;
 #endregion
 
 public class Requester : MonoBehaviour
@@ -126,11 +127,11 @@ public class Requester : MonoBehaviour
 		});
 	}
 	
-	public void GetTexture (string url, Action<Texture2D> responseReceived)
+	public void GetTexture (string url, Action<Texture2D> responseReceived, Action errorReceived = null)
 	{
 		m_requestsQueue.Enqueue (() =>
 		{
-			StartCoroutine (DoGet (url, responseReceived));
+			StartCoroutine (DoGet (url, responseReceived, errorReceived));
 		});
 	}
 	
@@ -150,11 +151,12 @@ public class Requester : MonoBehaviour
 		}, errorReceived);
 	}
 	
-	private IEnumerator DoGet (string url, Action<Texture2D> responseReceived)
+	private IEnumerator DoGet (string url, Action<Texture2D> responseReceived, Action errorReceived = null)
 	{
 		return DoBasicGet (url, (response) => {
 			responseReceived (response.texture);
-		});	
+		},
+        errorReceived);	
 	}
 	
 	private IEnumerator DoBasicGet (string url, Action<WWW> responseReceived)
@@ -189,8 +191,28 @@ public class Requester : MonoBehaviour
 		else {
 			request = new WWW (url);
 		}
-		
-		yield return request;
+
+        
+        // Timeout
+        SHThread.Start(
+            30, 
+            () =>
+            {
+                if(request != null && !request.isDone)
+                {
+                    try
+                    {
+                        SHLog.Warning("Request timeout for url {0}.", url);
+                        request.Dispose();
+                    }
+                    catch(ObjectDisposedException)
+                    {
+                        SHLog.Warning("Request already disposed.", url);
+                    }
+                }
+            });
+
+        yield return request;
 		
 		var status = request.responseHeaders.ContainsKey ("STATUS") ? request.responseHeaders ["STATUS"] : "";
 		
@@ -204,7 +226,7 @@ public class Requester : MonoBehaviour
 			}
 			
 		} else {
-			SHLog.Error ("Error from server to URL '{0}': {1}", url, request.error);
+			SHLog.Warning ("Error from server to URL '{0}': {1}", url, request.error);
 			
 			if (errorReceived != null) {
 				errorReceived ();	
