@@ -1,4 +1,3 @@
-#region Usings
 using System.Collections;
 using System.Collections.Generic;
 using Buildron.Domain;
@@ -7,10 +6,10 @@ using UnityEngine;
 using Skahal.Rendering;
 using Skahal.Threading;
 
-
-#endregion
-
 #region Enums
+/// <summary>
+/// Camera state.
+/// </summary>
 public enum CameraState
 {
 	ShowingBuilds,
@@ -39,7 +38,6 @@ public class CameraController : MonoBehaviour
 	private Tonemapping m_serverDownToneMappingEffect;
 	private CameraState m_state = CameraState.ShowingConfigPanel;
 	private Vector3 m_historyPosition;
-	private int m_totemsNumber = 2;
 	private bool m_autoPosition = true;
     #endregion
 	
@@ -95,11 +93,8 @@ public class CameraController : MonoBehaviour
 	
 	private void OnCIServerReady ()
 	{
-		m_totemsNumber = CIServerService.GetCIServer ().BuildsTotemsNumber;	
 		transform.position = m_originalPosition;
-			
 		m_state = CameraState.ShowingBuilds;
-
 	}
 	
 	private IEnumerator AdjustCameraPosition ()

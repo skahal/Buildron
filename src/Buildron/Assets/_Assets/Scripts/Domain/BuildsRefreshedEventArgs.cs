@@ -9,10 +9,15 @@ namespace Buildron.Domain
     public class BuildsRefreshedEventArgs : EventArgs
 	{
 		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildsRefreshedEventArgs"/> class.
+		/// </summary>
+		/// <param name="buildsFound">Builds found.</param>
+		/// <param name="buildsRemoved">Builds removed.</param>
 		public BuildsRefreshedEventArgs(IList<Build> buildsFound, IList<Build> buildsRemoved)
 		{
             BuildsFound = buildsFound;
-            buildsRemoved = buildsRemoved;
+            BuildsRemoved = buildsRemoved;
 		}
         #endregion
 

@@ -108,7 +108,6 @@ public class TestBuildsProvider : IBuildsProvider
 	
 	private BuildStatus RandomStatus ()
 	{
-		//return BuildStatus.Success;
 		return (BuildStatus)Random.Range (1, (int)BuildStatus.RunningDeploy);
 	}
 	
