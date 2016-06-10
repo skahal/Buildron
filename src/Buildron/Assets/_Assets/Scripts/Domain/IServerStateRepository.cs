@@ -3,7 +3,7 @@ using Skahal.Infrastructure.Framework.Repositories;
 
 namespace Buildron.Domain
 {
-	public interface IBuildFilterRepository : IRepository<BuildFilter>
+	public interface IServerStateRepository : IRepository<ServerState>
 	{
 	}
 }
