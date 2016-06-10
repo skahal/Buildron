@@ -122,10 +122,11 @@ namespace Buildron.Domain
 					BuildRemoved.Raise(typeof(BuildService), new BuildRemovedEventArgs(build));
 				}
 
-                s_buildConfigurationIdsRefreshed.Clear();
-                BuildsRefreshed.Raise (typeof(BuildService), new BuildsRefreshedEventArgs(s_buildsFoundInLastRefresh.ToList(), removedBuilds));
-                s_buildsFoundInLastRefresh.Clear();
+                var buildsStatusChanged = s_builds.Where(b => b.PreviousStatus != BuildStatus.Unknown && b.PreviousStatus != b.Status).ToList();
 
+                s_buildConfigurationIdsRefreshed.Clear();
+                BuildsRefreshed.Raise (typeof(BuildService), new BuildsRefreshedEventArgs(buildsStatusChanged, s_buildsFoundInLastRefresh.ToList(), removedBuilds));
+                s_buildsFoundInLastRefresh.Clear();
             };
 			
 			s_buildsProvider.ServerDown += delegate {
