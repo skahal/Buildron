@@ -269,7 +269,9 @@ public class BuildController : MonoBehaviour
 			m_projectLabel.enabled = false;
 			m_configurationLabel.enabled = false;
 			m_progressBar.Hide ();
-			Messenger.Send ("OnBuildHidden");
+            HasReachGround = false;
+            m_groundReachdAlreadRaised = false;
+            Messenger.Send ("OnBuildHidden");
 
             WakeUpSleepingBuilds();
         }
