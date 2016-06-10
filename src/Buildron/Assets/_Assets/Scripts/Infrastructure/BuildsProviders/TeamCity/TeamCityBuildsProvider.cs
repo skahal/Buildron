@@ -1,5 +1,6 @@
 #region Usings
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using Buildron.Domain;
 using Skahal.Logging;
@@ -12,8 +13,13 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 	/// </summary>
 	public class TeamCityBuildsProvider : BuildsProviderBase
 	{
-		#region Constructors
-		public TeamCityBuildsProvider (CIServer server) : base(server)
+        #region Fields
+        private int m_currentBuildsFoundCount;
+        private List<string> m_currentUpdatedBuildIds = new List<string>();
+        #endregion
+
+        #region Constructors
+        public TeamCityBuildsProvider (CIServer server) : base(server)
 		{
 			Name = "TeamCity";
 			AuthenticationRequirement = AuthenticationRequirement.Always;
@@ -25,8 +31,9 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 		public override void RefreshAllBuilds ()
 		{	
 			BuildUserParser.Reset ();
-			
-			Requester.GetText (GetNoRestUrl ("queue.html"), (html) => 
+            m_currentUpdatedBuildIds.Clear();
+
+            Requester.GetText (GetNoRestUrl ("queue.html"), (html) => 
 			{		
 				var queuedBuildConfigurationsId = BuildQueueParser.ParseBuildConfigurationsIdsFromQueueHtml (html);
 				
@@ -44,7 +51,18 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 						
 						Action raiseBuildUpdated = delegate {
 							OnBuildUpdated(new BuildUpdatedEventArgs (build));
-						};
+
+                            if(!m_currentUpdatedBuildIds.Contains(build.Id))
+                            {
+                                m_currentUpdatedBuildIds.Add(build.Id);
+                            }
+                            
+
+                            if (m_currentBuildsFoundCount == m_currentUpdatedBuildIds.Count)
+                            {
+                                OnBuildsRefreshed();
+                            }
+                        };
 						
 						build.LastChangeDescription = string.Empty;
 						
@@ -137,18 +155,17 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			Get ((r) => 
 			{
 				var configs = r.SelectNodes ("buildTypes/buildType");
-				int counter = 0;
-				
-				foreach (XmlNode c in configs) {
+                m_currentBuildsFoundCount = configs.Count;
+
+                foreach (XmlNode c in configs) {
 					Get ((bc) => 
 					{
 						configReceived (BuildConfigurationParser.Parse (bc));
-						counter++;
+
 					}, "buildTypes/id:{0}", c.Attributes ["id"].Value);
 				}
 				
-				OnServerUp ();
-				OnBuildsRefreshed ();
+				OnServerUp ();				
 			}, "buildTypes");
 		}
 		

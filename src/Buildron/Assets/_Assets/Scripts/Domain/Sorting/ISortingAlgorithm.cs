@@ -9,7 +9,16 @@ namespace Buildron.Domain.Sorting
 	/// </summary>
 	public interface ISortingAlgorithm<TItem> where TItem : System.IComparable<TItem>
 	{
-		string Name { get; }
-		void Sort(IList<TItem> items, IComparer<TItem> equalityComparer);
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Sorts the specified items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        void Sort(IList<TItem> items, IComparer<TItem> equalityComparer);
 	}
 }

@@ -11,13 +11,13 @@ public class InfrastructureInitializer : MonoBehaviour
 {
 	void Awake ()
 	{
-		DependencyService.Register<IBuildFilterRepository> (new BuildFilterRepository ());
+		DependencyService.Register<IServerStateRepository> (new PlayerPrefsServerStateRepository ());
 		
 		DependencyService.Register<IVersionClient> (() => {
 			return new BackEndClient (); });
 		
 		DependencyService.Register<IVersionRepository> (() => {
-			return new VersionRepository (); });
+			return new PlayerPrefsVersionRepository (); });
 		
 		DependencyService.Register<INotificationClient> (() => {
 			return new BackEndClient (); });

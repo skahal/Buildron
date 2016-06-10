@@ -6,6 +6,7 @@ using Buidron.Domain;
 using Buildron.Domain;
 using Buildron.Domain.Sorting;
 using Skahal.Common;
+using Skahal.Logging;
 #endregion
 
 namespace Buildron.Domain
@@ -24,11 +25,16 @@ namespace Buildron.Domain
 		/// Occurs when a build is found.
 		/// </summary>
 		public static event EventHandler<BuildFoundEventArgs> BuildFound;
+
+		/// <summary>
+		/// Occurs when a build is removed.
+		/// </summary>
+		public static event EventHandler<BuildRemovedEventArgs> BuildRemoved;
 		
 		/// <summary>
 		/// Occurs when builds are refreshed.
 		/// </summary>
-		public static event EventHandler BuildsRefreshed;
+		public static event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;
 		
 		/// <summary>
 		/// Occurs when a build is updated.
@@ -44,7 +50,9 @@ namespace Buildron.Domain
 		
 		#region Fields
 		private static IBuildsProvider s_buildsProvider;
+		private static List<string> s_buildConfigurationIdsRefreshed;
 		private static List<Build> s_builds;
+        private static List<Build> s_buildsFoundInLastRefresh;
 		private static int s_serverDownFromProviderCount;
 		#endregion
 		
@@ -67,37 +75,59 @@ namespace Buildron.Domain
 		#region Methods
 	    public static void Initialize (IBuildsProvider buildsProvider)
 		{
+			s_buildConfigurationIdsRefreshed = new List<string> ();
 			s_builds = new List<Build> ();
-			s_buildsProvider = buildsProvider;
+            s_buildsFoundInLastRefresh = new List<Build>();
+            s_buildsProvider = buildsProvider;
 			
-			s_buildsProvider.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e) {
-				var newBld = e.Build;
-				var oldBld = s_builds.FirstOrDefault (bld => bld.Configuration.Id.Equals (newBld.Configuration.Id));
+			s_buildsProvider.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e) {                
+                var newBuild = e.Build;
+
+                s_buildConfigurationIdsRefreshed.Add(newBuild.Configuration.Id);
+				var oldBuild = s_builds.FirstOrDefault (bld => bld.Configuration.Id.Equals (newBuild.Configuration.Id));
 			
-				if (oldBld == null) {
-					s_builds.Add (newBld);
-					BuildFound.Raise (typeof(BuildService), new BuildFoundEventArgs (newBld));
+				if (oldBuild == null) {
+                    SHLog.Debug("BuildService.BuildUpdated: new build {0}", newBuild.Id);
+                    s_builds.Add (newBuild);
+                    s_buildsFoundInLastRefresh.Add(newBuild);
+                    BuildFound.Raise (typeof(BuildService), new BuildFoundEventArgs (newBuild));
 				} else {
-					oldBld.PercentageComplete = newBld.PercentageComplete;
+                    SHLog.Debug("BuildService.BuildUpdated: old build {0}", newBuild.Id);
+                    oldBuild.PercentageComplete = newBuild.PercentageComplete;
 					
-					if (oldBld.TriggeredBy != null && !oldBld.Configuration.Id.Equals (newBld.Configuration.Id)) {
-						oldBld.TriggeredBy.Builds.Remove (oldBld);
+					if (oldBuild.TriggeredBy != null && !oldBuild.Configuration.Id.Equals (newBuild.Configuration.Id)) {
+						oldBuild.TriggeredBy.Builds.Remove (oldBuild);
 					}
 					
-					oldBld.LastChangeDescription = newBld.LastChangeDescription;
-					oldBld.Date = newBld.Date;
-					oldBld.TriggeredBy = newBld.TriggeredBy;
-					oldBld.LastRanStep = newBld.LastRanStep;
-					oldBld.Status = newBld.Status;
-					oldBld.Configuration = newBld.Configuration;
+					oldBuild.LastChangeDescription = newBuild.LastChangeDescription;
+					oldBuild.Date = newBuild.Date;
+					oldBuild.TriggeredBy = newBuild.TriggeredBy;
+					oldBuild.LastRanStep = newBuild.LastRanStep;
+					oldBuild.Status = newBuild.Status;
+					oldBuild.Configuration = newBuild.Configuration;
 				}
 				
 				BuildUpdated.Raise (typeof(BuildService), e);
 			};
 			
 			s_buildsProvider.BuildsRefreshed += delegate {
-				BuildsRefreshed.Raise (typeof(BuildService));
-			};
+
+                var removedBuilds = s_builds.Where(b => !s_buildConfigurationIdsRefreshed.Any(configId => b.Configuration.Id.Equals(configId))).ToList();
+
+                SHLog.Warning("BuildService.BuildsRefreshed: there is {0} builds and {1} were refreshed. {2} will be removed", s_builds.Count, s_buildConfigurationIdsRefreshed.Count, removedBuilds.Count);
+
+                foreach (var build in removedBuilds)
+				{
+                    s_builds.Remove(build);
+					BuildRemoved.Raise(typeof(BuildService), new BuildRemovedEventArgs(build));
+				}
+
+                var buildsStatusChanged = s_builds.Where(b => b.PreviousStatus != BuildStatus.Unknown && b.PreviousStatus != b.Status).ToList();
+
+                s_buildConfigurationIdsRefreshed.Clear();
+                BuildsRefreshed.Raise (typeof(BuildService), new BuildsRefreshedEventArgs(buildsStatusChanged, s_buildsFoundInLastRefresh.ToList(), removedBuilds));
+                s_buildsFoundInLastRefresh.Clear();
+            };
 			
 			s_buildsProvider.ServerDown += delegate {
 				s_serverDownFromProviderCount++;

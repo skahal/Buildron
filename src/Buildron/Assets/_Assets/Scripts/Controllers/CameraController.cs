@@ -1,4 +1,3 @@
-#region Usings
 using System.Collections;
 using System.Collections.Generic;
 using Buildron.Domain;
@@ -7,10 +6,10 @@ using UnityEngine;
 using Skahal.Rendering;
 using Skahal.Threading;
 
-
-#endregion
-
 #region Enums
+/// <summary>
+/// Camera state.
+/// </summary>
 public enum CameraState
 {
 	ShowingBuilds,
@@ -39,7 +38,6 @@ public class CameraController : MonoBehaviour
 	private Tonemapping m_serverDownToneMappingEffect;
 	private CameraState m_state = CameraState.ShowingConfigPanel;
 	private Vector3 m_historyPosition;
-	private int m_totemsNumber = 2;
 	private bool m_autoPosition = true;
     #endregion
 	
@@ -66,6 +64,13 @@ public class CameraController : MonoBehaviour
 		m_targetPosition = transform.position;
 		m_historyPosition = m_originalPosition + new Vector3 (0, 30, 25);	
 	
+		ServerState.Updated += (sender, e) => {
+            var cameraPosition = ServerState.Instance.GetCameraPosition();            
+            SHLog.Warning("Setting camera position to latest position: {0}", cameraPosition);
+            m_autoPosition = false;
+			m_originalPosition = cameraPosition;			
+		};
+
 		Messenger.Register (gameObject, 
 			"OnCIServerReady",
 			"OnBuildReachGround",
@@ -84,17 +89,13 @@ public class CameraController : MonoBehaviour
 			"OnBuildFilterUpdated");
 		
 		PrepareEffects ();
-		
 		StartCoroutine (AdjustCameraPosition ());
 	}
 	
 	private void OnCIServerReady ()
 	{
-		m_totemsNumber = CIServerService.GetCIServer ().BuildsTotemsNumber;	
 		transform.position = m_originalPosition;
-			
 		m_state = CameraState.ShowingBuilds;
-
 	}
 	
 	private IEnumerator AdjustCameraPosition ()
@@ -154,7 +155,9 @@ public class CameraController : MonoBehaviour
 			}
 		
 			m_lastVisiblesCount = currentVisiblesCount;
-		}
+
+            SaveServerState();
+        }
 		
 		return m_originalPosition;
 	}
@@ -241,9 +244,10 @@ public class CameraController : MonoBehaviour
 	
 	private void Reposition (Vector3 increment)
 	{
-		m_originalPosition += increment;	
-		m_autoPosition = false;
-	}
+		m_originalPosition += increment;        
+        m_autoPosition = false;
+        SaveServerState();
+    }
 	
 	private void OnZoomIn ()
 	{
@@ -279,6 +283,13 @@ public class CameraController : MonoBehaviour
 	{
 		m_originalPosition = m_firstPosition;
 		m_autoPosition = true;
-	}
+        SaveServerState();
+    }
+
+    private void SaveServerState()
+    {
+        ServerState.Instance.SetCameraPosition(m_originalPosition);
+        ServerService.SaveState();
+    }
 	#endregion
 }

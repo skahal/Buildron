@@ -4,6 +4,7 @@ using System.Collections;
 using Buildron.Domain;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Skahal.Logging;
 
 
 #endregion
@@ -13,7 +14,7 @@ using UnityEngine.UI;
 /// </summary>
 public class BuildsDeployController : MonoBehaviour
 {
-	#region Fields
+	#region Fields    
 	private GameObject m_container;
 	private Vector3 m_initialDeployPosition;
 	private Vector3 m_currentDeployPosition;
@@ -28,10 +29,32 @@ public class BuildsDeployController : MonoBehaviour
 	public float DeployInterval = 0.5f;
 	public float TotemsDistance = 10;
 	public Text BuildsCountLabel;
-	#endregion
-	
-	private	void Awake ()
+    #endregion
+
+    #region Properties    
+    /// <summary>
+    /// Gets the singleton instance.
+    /// </summary>
+    public static BuildsDeployController Instance { get; private set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance has builds to deploy.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if this instance has builds to deploy; otherwise, <c>false</c>.
+    /// </value>
+    public bool HasBuildsToDeploy
+    {
+        get
+        {
+            return m_buildsToDeploy.Count > 0;
+        }
+    }
+    #endregion
+
+    private void Awake ()
 	{
+        Instance = this;
 		m_container = new GameObject ("Builds");
 		
 		Messenger.Register (
@@ -48,23 +71,37 @@ public class BuildsDeployController : MonoBehaviour
 		BuildService.BuildFound += delegate(object sender, BuildFoundEventArgs e) {		
 			UpdateBuild (e.Build);
 		};
+
+		BuildService.BuildRemoved += delegate(object sender, BuildRemovedEventArgs e) {		
+			RemoveBuild (e.Build);
+		};
 		
 		StartCoroutine (DeployBuilds ());
 	}
 	
 	private void UpdateBuild (Build b)
 	{
-		if (!BuildController.ExistsGameObject (b)) {
-			var go = BuildController.CreateGameObject (b);
-			go.transform.parent = m_container.transform;
-			m_currentDeployPosition.x = m_initialDeployPosition.x + (m_currentTotemIndex * TotemsDistance);
-			go.transform.position = m_currentDeployPosition;
-			go.SetActive (false);
-			
-			m_buildsToDeploy.Enqueue (go);
+        GameObject go;
+
+		if (BuildController.ExistsGameObject (b)) {
+            SHLog.Debug("BuildsDeploy: existing build updated {0}", b.Id);
+
+            go = BuildController.GetGameObject (b);
+			go.SendMessage ("Show");
 		}
-		
-		m_currentTotemIndex++;
+		else {
+            SHLog.Debug("BuildsDeploy: new build updated {0}", b.Id);
+
+            go = BuildController.CreateGameObject (b);
+			go.transform.parent = m_container.transform;						
+		}
+
+        m_currentDeployPosition.x = m_initialDeployPosition.x + (m_currentTotemIndex * TotemsDistance);
+        go.transform.position = m_currentDeployPosition;
+        go.SetActive(false);
+        m_buildsToDeploy.Enqueue(go);
+
+        m_currentTotemIndex++;
 		
 		if (m_currentTotemIndex >= m_totemsNumber) {
 			m_currentTotemIndex = 0;
@@ -73,6 +110,15 @@ public class BuildsDeployController : MonoBehaviour
 		
 		m_currentDeployPosition += Vector3.up;
 	}
+
+	private void RemoveBuild (Build b)
+	{
+		if (BuildController.ExistsGameObject (b)) {
+			var go = BuildController.GetGameObject (b);
+			go.SendMessage ("Hide");
+            m_deployedBuildsCount--;            
+        }
+    }
 	
 	private Vector3 CalculateInitialPosition ()
 	{

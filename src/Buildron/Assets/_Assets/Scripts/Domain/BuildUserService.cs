@@ -1,6 +1,6 @@
 #region Usings
 using UnityEngine;
-using Buildron.Infrastructure.UserBuildAvatarProviders;
+using Buildron.Infrastructure.BuildUserAvatarProviders;
 using System;
 using Skahal.Infrastructure.Framework.Commons;
 #endregion
@@ -14,27 +14,49 @@ namespace Buildron.Domain
 	public static class BuildUserService
 	{
 		#region Fields
-		private static IBuildUserAvatarProvider s_humanUserAvatarProvider;
-		private static IBuildUserAvatarProvider s_nonHumanUserAvatarProvider;
+		private static IBuildUserAvatarProvider[] s_humanUserAvatarProviders;
+		private static IBuildUserAvatarProvider[] s_nonHumanUserAvatarProviders;
 		#endregion
 				
 		#region Methods
-		public static void Initialize (IBuildUserAvatarProvider humanUserAvatarProvider, IBuildUserAvatarProvider nonHumanAvatarProvider)
+		public static void Initialize (IBuildUserAvatarProvider[] humanUserAvatarProviders, IBuildUserAvatarProvider[] nonHumanAvatarProviders)
 		{
-			s_humanUserAvatarProvider = humanUserAvatarProvider;
-			s_nonHumanUserAvatarProvider = nonHumanAvatarProvider;
+			s_humanUserAvatarProviders = humanUserAvatarProviders;
+			s_nonHumanUserAvatarProviders = nonHumanAvatarProviders;
 		}
 		
 		public static void GetUserPhoto (BuildUser user, Action<Texture2D> photoReceived)
 		{
 			if (user != null) {
 				if (user.Kind == BuildUserKind.Human) {
-					s_humanUserAvatarProvider.GetUserPhoto (user, photoReceived);	
+                    GetUserPhoto(user, photoReceived, s_humanUserAvatarProviders);
 				} else {
-					s_nonHumanUserAvatarProvider.GetUserPhoto (user, photoReceived);	
-				}	
+                    GetUserPhoto(user, photoReceived, s_nonHumanUserAvatarProviders);
+                }	
 			}
 		}
-		#endregion
-	}
+
+        private static void GetUserPhoto(BuildUser user, Action<Texture2D> photoReceived, IBuildUserAvatarProvider[] providersChain, int providerStartIndex = 0)
+        {
+            if(providerStartIndex < providersChain.Length)
+            {
+                providersChain[providerStartIndex].GetUserPhoto(user, (photo) =>
+                {
+                    if (photo == null)
+                    {
+                        GetUserPhoto(user, photoReceived, providersChain, ++providerStartIndex);
+                    }
+                    else
+                    {
+                        photoReceived(photo);
+                    }
+                });
+            }
+            else
+            {
+                photoReceived(null);
+            }
+        }
+        #endregion
+    }
 }
