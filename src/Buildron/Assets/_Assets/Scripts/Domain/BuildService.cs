@@ -34,7 +34,7 @@ namespace Buildron.Domain
 		/// <summary>
 		/// Occurs when builds are refreshed.
 		/// </summary>
-		public static event EventHandler BuildsRefreshed;
+		public static event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;
 		
 		/// <summary>
 		/// Occurs when a build is updated.
@@ -52,6 +52,7 @@ namespace Buildron.Domain
 		private static IBuildsProvider s_buildsProvider;
 		private static List<string> s_buildConfigurationIdsRefreshed;
 		private static List<Build> s_builds;
+        private static List<Build> s_buildsFoundInLastRefresh;
 		private static int s_serverDownFromProviderCount;
 		#endregion
 		
@@ -76,7 +77,8 @@ namespace Buildron.Domain
 		{
 			s_buildConfigurationIdsRefreshed = new List<string> ();
 			s_builds = new List<Build> ();
-			s_buildsProvider = buildsProvider;
+            s_buildsFoundInLastRefresh = new List<Build>();
+            s_buildsProvider = buildsProvider;
 			
 			s_buildsProvider.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e) {                
                 var newBuild = e.Build;
@@ -87,7 +89,8 @@ namespace Buildron.Domain
 				if (oldBuild == null) {
                     SHLog.Debug("BuildService.BuildUpdated: new build {0}", newBuild.Id);
                     s_builds.Add (newBuild);
-					BuildFound.Raise (typeof(BuildService), new BuildFoundEventArgs (newBuild));
+                    s_buildsFoundInLastRefresh.Add(newBuild);
+                    BuildFound.Raise (typeof(BuildService), new BuildFoundEventArgs (newBuild));
 				} else {
                     SHLog.Debug("BuildService.BuildUpdated: old build {0}", newBuild.Id);
                     oldBuild.PercentageComplete = newBuild.PercentageComplete;
@@ -120,8 +123,10 @@ namespace Buildron.Domain
 				}
 
                 s_buildConfigurationIdsRefreshed.Clear();
-                BuildsRefreshed.Raise (typeof(BuildService));
-			};
+                BuildsRefreshed.Raise (typeof(BuildService), new BuildsRefreshedEventArgs(s_buildsFoundInLastRefresh.ToList(), removedBuilds));
+                s_buildsFoundInLastRefresh.Clear();
+
+            };
 			
 			s_buildsProvider.ServerDown += delegate {
 				s_serverDownFromProviderCount++;

@@ -1,20 +1,24 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
+﻿using System;
 
 namespace Buildron.Domain
 {
-	public class BuildRemovedEventArgs : EventArgs
+    /// <summary>
+    /// Arguments for build removed events.
+    /// </summary>
+    public class BuildRemovedEventArgs : EventArgs
 	{
 		#region Constructors
 		public BuildRemovedEventArgs (Build build)
 		{
 			Build = build;
 		}
-		#endregion
+        #endregion
 
-		#region Properties
-		public Build Build { get; private set; }
+        #region Properties        
+        /// <summary>
+        /// Gets the build.
+        /// </summary>
+        public Build Build { get; private set; }
 		#endregion
 	}
 }
