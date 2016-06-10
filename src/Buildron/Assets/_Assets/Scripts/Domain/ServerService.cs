@@ -46,7 +46,7 @@ public static class ServerService
         }
 
 		Listener.BuildFilterUpdated += (sender, e) => {
-       		Update();
+       		SaveState();
         };
 
 		Listener.BuildSortUpdated += (sender, e) => {
@@ -54,8 +54,8 @@ public static class ServerService
             SHLog.Warning("BuildSortUpdated: {0} {1}", e.SortingAlgorithm, e.SortBy);			
 			ServerState.Instance.BuildSortingAlgorithmType = e.SortingAlgorithm;
             ServerState.Instance.BuildSortBy = e.SortBy;
-            Update();
-		};
+            SaveState();
+		};        
 
         if (Initialized != null)
         {
@@ -63,7 +63,7 @@ public static class ServerService
         }
     }
 
-	private static void Update()
+	public static void SaveState()
 	{
 		var serverState = ServerState.Instance;
 
@@ -77,10 +77,6 @@ public static class ServerService
 			SHLog.Debug("Updating an current ServerState:");
 			s_repository.Modify(serverState);
 		}
-
-		SHLog.Debug(
-			"CameraPositionZ:{0}", 
-			serverState.CameraPositionZ);
 	}
     #endregion
 }

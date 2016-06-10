@@ -4,6 +4,7 @@ using System.Collections;
 using System;
 using Skahal.Infrastructure.Framework.Domain;
 using Buildron.Domain.Sorting;
+using Skahal.Logging;
 
 
 #endregion
@@ -39,6 +40,9 @@ namespace Buildron.Domain
 		public ServerState ()
 		{
 			BuildFilter = new BuildFilter ();
+            CameraPositionX = 2.2f;
+            CameraPositionY = 2.6f;
+            CameraPositionZ = -13f;
             Instance = this;
 		}
 		#endregion
@@ -97,11 +101,51 @@ namespace Buildron.Domain
 		/// <value><c>true</c> if this instance is showing history; otherwise, <c>false</c>.</value>
 		public bool IsShowingHistory { get; set; }
 
-		/// <summary>
-		/// Gets or sets the camera position z.
+        /// <summary>
+		/// Gets or sets the camera position X.
+		/// </summary>   
+		/// <value>The camera position X.</value>
+		public float CameraPositionX { get; set; }
+
+        /// <summary>
+		/// Gets or sets the camera position Y.
 		/// </summary>
-		/// <value>The camera position z.</value>
-		public float CameraPositionZ { get; set; }
-		#endregion
-	}
+		/// <value>The camera position Y.</value>
+		public float CameraPositionY { get; set; }
+
+        /// <summary>
+        /// Gets or sets the camera position Z.
+        /// </summary>
+        /// <value>The camera position Z.</value>
+        public float CameraPositionZ { get; set; }
+        #endregion
+
+        #region Methods        
+        /// <summary>
+        /// Gets the camera position.
+        /// </summary>
+        /// <remarks>
+        /// Vector3 is not serializable.
+        /// </remarks>
+        /// <returns>The camera position.</returns>
+        public Vector3 GetCameraPosition()
+        {
+            return new Vector3(CameraPositionX, CameraPositionY, CameraPositionZ);
+        }
+
+        /// <summary>
+        /// Sets the camera position.
+        /// </summary>
+        /// <remarks>
+        /// Vector3 is not serializable.
+        /// </remarks>
+        /// <param name="position">The position.</param>
+        public void SetCameraPosition(Vector3 position)
+        {
+            CameraPositionX = position.x;
+            CameraPositionY = position.y;
+            CameraPositionZ = position.z;
+        }
+        #endregion
+    }
 }

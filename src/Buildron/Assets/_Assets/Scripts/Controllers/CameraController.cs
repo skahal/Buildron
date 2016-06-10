@@ -65,9 +65,10 @@ public class CameraController : MonoBehaviour
 		m_historyPosition = m_originalPosition + new Vector3 (0, 30, 25);	
 	
 		ServerState.Updated += (sender, e) => {
-			m_autoPosition = false;
-			m_originalPosition.z = ServerState.Instance.CameraPositionZ;
-			Debug.LogWarning (ServerState.Instance.CameraPositionZ);
+            var cameraPosition = ServerState.Instance.GetCameraPosition();            
+            SHLog.Warning("Setting camera position to latest position: {0}", cameraPosition);
+            m_autoPosition = false;
+			m_originalPosition = cameraPosition;			
 		};
 
 		Messenger.Register (gameObject, 
@@ -154,7 +155,9 @@ public class CameraController : MonoBehaviour
 			}
 		
 			m_lastVisiblesCount = currentVisiblesCount;
-		}
+
+            SaveServerState();
+        }
 		
 		return m_originalPosition;
 	}
@@ -241,9 +244,10 @@ public class CameraController : MonoBehaviour
 	
 	private void Reposition (Vector3 increment)
 	{
-		m_originalPosition += increment;	
-		m_autoPosition = false;
-	}
+		m_originalPosition += increment;        
+        m_autoPosition = false;
+        SaveServerState();
+    }
 	
 	private void OnZoomIn ()
 	{
@@ -279,6 +283,13 @@ public class CameraController : MonoBehaviour
 	{
 		m_originalPosition = m_firstPosition;
 		m_autoPosition = true;
-	}
+        SaveServerState();
+    }
+
+    private void SaveServerState()
+    {
+        ServerState.Instance.SetCameraPosition(m_originalPosition);
+        ServerService.SaveState();
+    }
 	#endregion
 }

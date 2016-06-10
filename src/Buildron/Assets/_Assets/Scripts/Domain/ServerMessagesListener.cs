@@ -157,16 +157,14 @@ public class ServerMessagesListener : MonoBehaviour
 	[RPC]
 	public void SendToServerZoomIn ()
 	{
-		SHLog.Debug ("SendToServerZoomIn");
-		ServerState.Instance.CameraPositionZ = Camera.main.transform.position.z;
+		SHLog.Debug ("SendToServerZoomIn");		
 		Messenger.Send ("OnZoomIn");
-	}
+    }
 	
 	[RPC]
 	public void SendToServerZoomOut ()
 	{
 		SHLog.Debug ("SendToServerZoomOut");
-		ServerState.Instance.CameraPositionZ = Camera.main.transform.position.z;
 		Messenger.Send ("OnZoomOut");
 	}
 	
