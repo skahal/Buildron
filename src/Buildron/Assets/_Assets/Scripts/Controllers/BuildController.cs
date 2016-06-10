@@ -10,6 +10,9 @@ using UnityEngine;
 using UnityEngine.UI;
 #endregion
 
+/// <summary>
+/// Build controller.
+/// </summary>
 public class BuildController : MonoBehaviour
 {
 	#region Fields
@@ -456,6 +459,13 @@ public class BuildController : MonoBehaviour
 		return query.ToList ();
 	}
 
+    /// <summary>
+    /// Verify if all builds physics are sleeping.
+    /// </summary>
+    /// <remarks>
+    /// Works well with the value of "Sleep Threshold" in the "Project settings\Physics" as "0.05".
+    /// </remarks>
+    /// <returns>True if all builds are sleeping.</returns>
     public static bool AreAllSleeping()
     {
         return BuildController.GetVisibles().All(b => b.GetComponent<BuildController>().m_rigidbody.IsSleeping());
