@@ -10,6 +10,7 @@ namespace Buildron.Domain
 	#region Enums
 	public enum BuildStatus
 	{
+        Unknown,
 		Error,
 		Failed,
 		Canceled,
@@ -31,7 +32,7 @@ namespace Buildron.Domain
 		#endregion
 		
 		#region Events
-		public event EventHandler StatusChanged;
+		public event EventHandler<BuildStatusChangedEventArgs> StatusChanged;
 		public event EventHandler TriggeredByChanged;
 		#endregion
 	
@@ -50,6 +51,7 @@ namespace Buildron.Domain
 
 		public Build ()
 		{
+            Status = BuildStatus.Unknown;
 			Configuration = new BuildConfiguration ();
 			Sequence = ++s_instancesCount;
 		}
@@ -75,20 +77,26 @@ namespace Buildron.Domain
 			set {
 				if (m_status != value && DateTime.Now >= m_lockCurrentStatusUntil) {
 					
-					if (value == BuildStatus.Running && m_status > BuildStatus.Running) {
-						return;
-					} 
+					//if (value == BuildStatus.Running && m_status > BuildStatus.Running) {
+					//	return;
+					//} 
 					
 					if (value == BuildStatus.Queued) {
 						m_lockCurrentStatusUntil = DateTime.Now.AddSeconds(SecondsToLockQueueStatus);
 					}
-					
+
+                    PreviousStatus = m_status;
 					m_status = value;
 			
-					OnStatusChanged (EventArgs.Empty);
+					OnStatusChanged (new BuildStatusChangedEventArgs(this, PreviousStatus));
 				}
 			}
 		}
+
+        /// <summary>
+        /// Gets the previous status.
+        /// </summary>
+        public BuildStatus PreviousStatus { get; private set; }
 		
 		public BuildStep LastRanStep { get; set; }
 		
@@ -163,7 +171,7 @@ namespace Buildron.Domain
 			return c;
 		}
 
-		private void OnStatusChanged(EventArgs args)
+		private void OnStatusChanged(BuildStatusChangedEventArgs args)
 		{
 			if (StatusChanged != null) {
                 var buildEvent = CallInterceptors((i, e) => i.OnStatusChanged(e));
