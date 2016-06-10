@@ -1263,6 +1263,7 @@ MonoBehaviour:
   ScheduledTriggerAvatar: {fileID: 2800000, guid: 6ba02afabc2a24312b81d12ffb7e9104,
     type: 3}
   RetryTriggerAvatar: {fileID: 2800000, guid: 80ba897a99a254866823d382f7816035, type: 3}
+  UnunknownAvatar: {fileID: 2800000, guid: 6f2f14440482e4449b3a2877897f7909, type: 3}
 --- !u!1 &365713297
 GameObject:
   m_ObjectHideFlags: 0
@@ -7477,7 +7478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StatusLabels:
-  - {fileID: 1952588444}
+  - {fileID: 1828986998}
   RemoteControlInfoImage: {fileID: 539509755}
   RemoteControlInfoLabel: {fileID: 254256018}
   FilteredInfo: {fileID: 1268527783}
