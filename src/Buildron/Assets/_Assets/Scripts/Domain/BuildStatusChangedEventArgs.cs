@@ -3,25 +3,20 @@ using System;
 namespace Buildron.Domain
 {
     /// <summary>
-    /// Argumento for build status changed events.
+    /// Arguments for build status changed events.
     /// </summary>
-    public class BuildStatusChangedEventArgs : EventArgs
+    public class BuildStatusChangedEventArgs : BuildEventArgsBase
 	{
 		#region Constructors
-		public BuildStatusChangedEventArgs(Build build, BuildStatus previosStatus)
+		public BuildStatusChangedEventArgs(Build build, BuildStatus previousStatus)
+			: base(build)
 		{
-			Build = build;
-            PreviousStatus = previosStatus;
+            PreviousStatus = previousStatus;
 		}
         #endregion
 
         #region Properties        
-        /// <summary>
-        /// Gets the build.
-        /// </summary>
-        public Build Build { get; private set; }
-
-        /// <summary>
+   	    /// <summary>
         /// Gets the previous build status.
         /// </summary>
         public BuildStatus PreviousStatus { get; private set; }

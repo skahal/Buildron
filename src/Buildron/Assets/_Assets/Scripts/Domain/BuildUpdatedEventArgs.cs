@@ -4,17 +4,20 @@ using System;
 
 namespace Buildron.Domain
 {
-	public class BuildUpdatedEventArgs : EventArgs
+	/// <summary>
+	/// Build updated event arguments.
+	/// </summary>
+	public class BuildUpdatedEventArgs : BuildEventArgsBase
 	{
 		#region Constructors
-		public BuildUpdatedEventArgs (Build build)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildUpdatedEventArgs"/> class.
+		/// </summary>
+		/// <param name="build">Build.</param>
+		public BuildUpdatedEventArgs (Build build) 
+			: base (build)
 		{
-			Build = build;
 		}
-		#endregion
-		
-		#region Properties
-		public Build Build { get; private set; }
 		#endregion
 	}
 }

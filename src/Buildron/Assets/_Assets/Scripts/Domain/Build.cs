@@ -33,7 +33,7 @@ namespace Buildron.Domain
 		
 		#region Events
 		public event EventHandler<BuildStatusChangedEventArgs> StatusChanged;
-		public event EventHandler TriggeredByChanged;
+		public event EventHandler<BuildTriggeredByChangedEventArgs> TriggeredByChanged;
 		#endregion
 	
 		#region Fields
@@ -141,11 +141,11 @@ namespace Buildron.Domain
 		
 			set {
 				if (m_triggeredBy != value) {
-					
+					var previousTriggeredBy = m_triggeredBy;
 					m_triggeredBy = value;
 			
 					if (m_triggeredBy != null) {
-						OnTriggeredByChanged (EventArgs.Empty);
+						OnTriggeredByChanged (new BuildTriggeredByChangedEventArgs(this, previousTriggeredBy));
 					}
 				}
 			}
@@ -183,14 +183,14 @@ namespace Buildron.Domain
 			}
 		}
 
-		private void OnTriggeredByChanged(EventArgs args)
+		private void OnTriggeredByChanged(BuildTriggeredByChangedEventArgs args)
 		{
 			if (TriggeredByChanged != null) {
                 var buildEvent = CallInterceptors((i, e) => i.OnTriggeredByChanged(e));
 
                 if (!buildEvent.Canceled)
                 {
-                    TriggeredByChanged(this, EventArgs.Empty);
+                    TriggeredByChanged(this, args);
                 }
 			}
 		}
