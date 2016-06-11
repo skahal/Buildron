@@ -1,5 +1,6 @@
 # Buildron
 
+[![GitHub release](https://img.shields.io/github/release/skahal/buildron.svg?maxAge=2592000)]()
 [![License](http://img.shields.io/:license-MIT-blue.svg)](https://raw.githubusercontent.com/skahal/buildron/master/LICENSE)
 
 ![](docs/images/Buildron-header.png)
@@ -121,7 +122,3 @@ Did you change it? [Submit a pull request](https://github.com/skahal/buildron/pu
 ## License
 Licensed under the The MIT License (MIT).
 In others words, you can use this library for developement any kind of software: open source, commercial, proprietary and alien.
-
-
-## Change Log
- - 1.6.0 - First open source version.
