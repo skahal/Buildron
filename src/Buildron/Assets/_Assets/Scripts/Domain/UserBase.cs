@@ -7,14 +7,14 @@ namespace Buildron.Domain
 	/// <summary>
 	/// Defines a abstract user entity.
 	/// </summary>
-	public abstract class User
+	public abstract class UserBase
 	{
 		#region Fields
 		private string m_userName;
 		#endregion
 		
 		#region Constructors
-		protected User ()
+		protected UserBase ()
 		{
 			m_userName = String.Empty;
 			Password = String.Empty;

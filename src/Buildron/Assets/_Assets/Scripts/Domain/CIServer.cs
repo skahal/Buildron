@@ -8,11 +8,26 @@ namespace Buildron.Domain
 		Jenkins = 2,
 		TeamCity = 3
 	}
+
+	/// <summary>
+	/// CI server status.
+	/// </summary>
+	public enum CIServerStatus {
+		/// <summary>
+		/// Continous integration server is Up.
+		/// </summary>
+		Up,
+
+		/// <summary>
+		/// Continous integration server is down.
+		/// </summary>
+		Down
+	}
 	
 	/// <summary>
 	/// The Continuous Integration Server entity.
 	/// </summary>
-	public sealed class CIServer : User
+	public sealed class CIServer : UserBase
 	{
 		#region Properties
 		/// <summary>
@@ -52,6 +67,12 @@ namespace Buildron.Domain
 		/// Gets or sets builds totems number.
 		/// </summary>
 		public int BuildsTotemsNumber { get; set; }
+
+		/// <summary>
+		/// Gets or sets the status.
+		/// </summary>
+		/// <value>The status.</value>
+		public CIServerStatus Status { get; set; }
 		#endregion
 	}
 }
