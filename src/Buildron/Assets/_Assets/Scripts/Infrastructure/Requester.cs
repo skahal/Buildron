@@ -139,8 +139,15 @@ public class Requester : MonoBehaviour
 	{
 		return DoBasicGet (url, (response) => {
 			var doc = new XmlDocument ();
-			doc.LoadXml (response.text);
-			responseReceived (doc);
+
+			try {
+				doc.LoadXml (response.text);
+				responseReceived (doc);
+			}
+			catch(XmlException ex) {
+				SHLog.Warning("Error parsing xml from {0}: {1}", url, ex.Message);
+				ThrowError(url, null, errorReceived);
+			}
 		}, errorReceived);
 	}
 	
@@ -227,14 +234,16 @@ public class Requester : MonoBehaviour
 			
 		} else {
 			SHLog.Warning ("Error from server to URL '{0}': {1}", url, request.error);
-			
-			if (errorReceived != null) {
-				errorReceived ();	
-			} else if (request.error == null || (!request.error.Contains ("404 Not Found") && !request.text.Contains ("Status Code: 404"))) {
-				SHLog.Warning ("Error requesting URL '{0}': {1}", url, request.error == null ? status : request.error);
-				GetFailed.Raise (this, new RequestFailedEventArgs(url));
-			}
+			ThrowError (url, request, errorReceived);
 		}		
+	}
+
+	private void ThrowError(string url, WWW request, Action errorReceived) {
+		if (errorReceived != null) {
+			errorReceived ();	
+		} else if (request == null || request.error == null || (!request.error.Contains ("404 Not Found") && !request.text.Contains ("Status Code: 404"))) {
+			GetFailed.Raise (this, new RequestFailedEventArgs(url));
+		}
 	}
 	#endregion
 }
