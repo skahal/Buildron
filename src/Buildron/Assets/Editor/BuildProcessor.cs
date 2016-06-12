@@ -21,6 +21,9 @@ public class BuildProcessor {
         {
             case BuildTarget.StandaloneWindows:
             case BuildTarget.StandaloneWindows64:
+			case BuildTarget.StandaloneLinux:
+			case BuildTarget.StandaloneLinux64:
+			case BuildTarget.StandaloneLinuxUniversal:
                 pathToBuiltProject = Path.GetDirectoryName(pathToBuiltProject);
                 break;
         }
