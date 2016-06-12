@@ -65,11 +65,7 @@ public class BuildUserController : MonoBehaviour {
 			"OnCameraZoomOut");
 		
 		BuildService.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e) {
-			//var mostRelevantBuild = BuildService.GetMostRelevantBuildForUser (m_data);
-			
-			//if (mostRelevantBuild != null && e.Build.Configuration.Id.Equals (mostRelevantBuild.Configuration.Id)) {
-				UpdateFromData ();
-			//}
+			UpdateFromData ();
 		};
 	}
 	
