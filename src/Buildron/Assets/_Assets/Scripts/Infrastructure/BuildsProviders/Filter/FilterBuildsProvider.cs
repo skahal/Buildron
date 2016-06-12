@@ -131,7 +131,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
         #endregion
 
         #region Methods
-        public void AuthenticateUser(User user)
+        public void AuthenticateUser(UserBase user)
         {
             m_underlyingBuildsProvider.AuthenticateUser(user);
         }
@@ -141,12 +141,12 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
             m_underlyingBuildsProvider.RefreshAllBuilds();
         }
 
-        public void RunBuild(User user, Build build)
+        public void RunBuild(UserBase user, Build build)
         {
             m_underlyingBuildsProvider.RunBuild(user, build);
         }
 
-        public void StopBuild(User user, Build build)
+        public void StopBuild(UserBase user, Build build)
         {
             m_underlyingBuildsProvider.StopBuild(user, build);
         }

@@ -96,12 +96,12 @@ public class TestBuildsProvider : IBuildsProvider
 		BuildsRefreshed.Raise (this);
 	}
 	
-	public void RunBuild (User user, Build build)
+	public void RunBuild (UserBase user, Build build)
 	{
 		build.Status = BuildStatus.Running;
 	}
 	
-	public void StopBuild (User user, Build build)
+	public void StopBuild (UserBase user, Build build)
 	{
 		build.Status = BuildStatus.Canceled;
 	}
@@ -111,7 +111,7 @@ public class TestBuildsProvider : IBuildsProvider
 		return (BuildStatus)Random.Range (1, (int)BuildStatus.RunningDeploy);
 	}
 	
-	public void AuthenticateUser (User user)
+	public void AuthenticateUser (UserBase user)
 	{
 		if (string.IsNullOrEmpty (user.Password)) {
 			UserAuthenticationFailed (this, System.EventArgs.Empty);

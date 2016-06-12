@@ -41,9 +41,8 @@ namespace Buildron.Domain
 		/// </summary>
 		public static event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
 		
-		public static event EventHandler ServerUp;
-		public static event EventHandler ServerDown;
-		
+		public static event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
+
 		public static event EventHandler UserAuthenticationSuccessful;
 		public static event EventHandler UserAuthenticationFailed;
 		#endregion
@@ -128,24 +127,30 @@ namespace Buildron.Domain
                 BuildsRefreshed.Raise (typeof(BuildService), new BuildsRefreshedEventArgs(buildsStatusChanged, s_buildsFoundInLastRefresh.ToList(), removedBuilds));
                 s_buildsFoundInLastRefresh.Clear();
             };
-			
+
+			var ciServer = CIServerService.GetCIServer ();
+
 			s_buildsProvider.ServerDown += delegate {
 				s_serverDownFromProviderCount++;
-				
+				ciServer.Status = CIServerStatus.Down;
+
 				if (s_serverDownFromProviderCount >= MaxServerDownFromProvider) {
-					ServerDown.Raise (typeof(BuildService));
+					CIServerStatusChanged.Raise (typeof(BuildService), new CIServerStatusChangedEventArgs(ciServer));
 				}	
 			};
 			
 			s_buildsProvider.ServerUp += delegate {
 				s_serverDownFromProviderCount = 0;
-				ServerUp.Raise (typeof(BuildService));
+				ciServer.Status = CIServerStatus.Up;
+				CIServerStatusChanged.Raise (typeof(BuildService), new CIServerStatusChangedEventArgs(ciServer));
 			};
 			
 			s_buildsProvider.UserAuthenticationSuccessful += delegate {
 				Initialized = true;
 				UserAuthenticationSuccessful.Raise (typeof(BuildService));
-				ServerUp.Raise (typeof(BuildService));
+
+				ciServer.Status = CIServerStatus.Up;
+				CIServerStatusChanged.Raise (typeof(BuildService), new CIServerStatusChangedEventArgs(ciServer));
 			};
 			
 			s_buildsProvider.UserAuthenticationFailed += delegate {
@@ -178,7 +183,7 @@ namespace Buildron.Domain
 			}
 		}
 		
-		public static void AuthenticateUser (User user)
+		public static void AuthenticateUser (UserBase user)
 		{
 			s_buildsProvider.AuthenticateUser(user);
 		}

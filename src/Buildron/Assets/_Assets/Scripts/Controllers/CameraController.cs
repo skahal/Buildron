@@ -194,18 +194,13 @@ public class CameraController : MonoBehaviour
 		m_serverDownToneMappingEffect = GetComponent<Tonemapping> ();
 		m_serverDownToneMappingEffect.enabled = true;
 		
-		BuildService.ServerUp += delegate {
-			m_serverDownBlurEffect.enabled = false;
-			m_serverDownToneMappingEffect.enabled = false;
+		BuildService.CIServerStatusChanged += (e, args) => {
+			var isDown = args.Server.Status == CIServerStatus.Down;
+			m_serverDownBlurEffect.enabled = isDown;
+			m_serverDownToneMappingEffect.enabled = isDown;
 		};
 	}
-	
-	private void OnServerDown ()
-	{
-		m_serverDownBlurEffect.enabled = true;
-		m_serverDownToneMappingEffect.enabled = true;
-	}
-	
+
 	private void OnShowHistoryRequested ()
 	{
 		var histories = BuildsHistoryController.GetAll ();

@@ -98,17 +98,18 @@ public class MainSceneController : MonoBehaviour
 			m_isRefreshingBuilds = false;
 		};
 		
-		BuildService.ServerDown += delegate {
-			StartCoroutine (DelayServerIsDown ());
-			m_serverIsDown = true;
-			m_isRefreshingBuilds = false;
-		};
-		
-		BuildService.ServerUp += delegate {
-			m_serverIsDown = false;
-			
-			if (BuildService.BuildsCount != 0) {
-				SetLogMessage ("");	
+		BuildService.CIServerStatusChanged += (e, args) => {
+			if (args.Server.Status == CIServerStatus.Down) {
+				StartCoroutine (DelayServerIsDown ());
+				m_serverIsDown = true;
+				m_isRefreshingBuilds = false;
+			}
+			else {
+				m_serverIsDown = false;
+
+				if (BuildService.BuildsCount != 0) {
+					SetLogMessage ("");	
+				}
 			}
 		};
 	}

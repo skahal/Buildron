@@ -47,9 +47,9 @@ namespace Buildron.Infrastructure.BuildsProvider
 		public event EventHandler UserAuthenticationFailed;
 
 		public abstract void RefreshAllBuilds();
-		public abstract void RunBuild(User user, Build build);
-		public abstract void StopBuild(User user, Build build);
-		public abstract void AuthenticateUser(User user);
+		public abstract void RunBuild(UserBase user, Build build);
+		public abstract void StopBuild(UserBase user, Build build);
+		public abstract void AuthenticateUser(UserBase user);
 		#endregion
 		
 		#region Methods
@@ -66,7 +66,7 @@ namespace Buildron.Infrastructure.BuildsProvider
 			}
 		}
 		
-		protected string GetHttpBasicAuthUrl (User user, string urlEndPart, params object[] args)
+		protected string GetHttpBasicAuthUrl (UserBase user, string urlEndPart, params object[] args)
 		{	
 			var endPart = string.Format (urlEndPart, args);
 			

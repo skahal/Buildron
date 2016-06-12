@@ -118,21 +118,21 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			}
 		}
 		
-		public override void RunBuild (User user, Build build)
+		public override void RunBuild (UserBase user, Build build)
 		{
 			var url = GetHttpBasicAuthUrl (user, "action.html?add2Queue={0}", build.Configuration.Id);
 			SHLog.Debug ("RunBuild URL: {0}", url);
 			Requester.RequestImmediately (url);
 		}
 		
-		public override void StopBuild (User user, Build build)
+		public override void StopBuild (UserBase user, Build build)
 		{
 			var url = GetHttpBasicAuthUrl (user, "httpAuth/ajax.html?submit=Stop&buildId={0}&kill", build.Id);
 			SHLog.Debug ("StopBuild URL: {0}", url);
 			Requester.RequestImmediately (url);
 		}
 		
-		public override void AuthenticateUser (User user)
+		public override void AuthenticateUser (UserBase user)
 		{
 			var url = GetHttpBasicAuthUrl (user, "httpAuth/app/rest/users");
 			

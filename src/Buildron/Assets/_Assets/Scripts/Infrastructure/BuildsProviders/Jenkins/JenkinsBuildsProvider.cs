@@ -72,7 +72,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			});
 		}
 		
-		public override void RunBuild (User user, Build build)
+		public override void RunBuild (UserBase user, Build build)
 		{
 			var id = build.Configuration.Id;
 			var url = GetHttpBasicAuthUrl (user, "job/{0}/build", id);
@@ -82,7 +82,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			});
 		}
 
-		public override void StopBuild (User user, Build build)
+		public override void StopBuild (UserBase user, Build build)
 		{
 			var id = build.Configuration.Id;
 			var url = GetHttpBasicAuthUrl (user, "job/{0}/lastBuild/stop", id);
@@ -92,7 +92,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			});
 		}
 
-		public override void AuthenticateUser (User user)
+		public override void AuthenticateUser (UserBase user)
 		{
 			var url = GetHttpBasicAuthUrl (user, "");
 			
