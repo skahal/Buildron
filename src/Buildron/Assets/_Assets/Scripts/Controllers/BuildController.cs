@@ -134,11 +134,11 @@ public class BuildController : MonoBehaviour
 	{
 		var rc = RemoteControlService.GetConnectedRemoteControl ();
 		var rcUserName = rc == null ? null : rc.UserName.ToLowerInvariant ();
-		var buildUserName = Data.TriggeredBy == null ? null : Data.TriggeredBy.UserName.ToLowerInvariant ();
+		var userName = Data.TriggeredBy == null ? null : Data.TriggeredBy.UserName.ToLowerInvariant ();
 		
 		if (!String.IsNullOrEmpty (rcUserName) 
-			&& !String.IsNullOrEmpty (buildUserName)
-			&& rcUserName.Equals (buildUserName)) {
+			&& !String.IsNullOrEmpty (userName)
+			&& rcUserName.Equals (userName)) {
 			m_userAvatarIcon.enabled = true;
 		}
 	}
@@ -235,7 +235,7 @@ public class BuildController : MonoBehaviour
 	{
 		m_userAvatarIcon.enabled = !(!IsVisible || Data.IsRunning);
 		
-		BuildUserService.GetUserPhoto (Data.TriggeredBy, (photo) => {
+		UserService.GetUserPhoto (Data.TriggeredBy, (photo) => {
 			m_userAvatarIcon.enabled = !(!IsVisible || Data.IsRunning);
 			m_userAvatarIcon.sprite = photo.ToSprite();
 		});

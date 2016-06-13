@@ -254,7 +254,9 @@ public class ConfigPanelController : MonoBehaviour
 
             // Inject the FilterBuildsProvider.
             m_buildsProvider = new FilterBuildsProvider(m_buildsProvider);
-			
+
+			BuildsProvider.Initialize (m_buildsProvider);
+
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
 			BuildService.Initialize (m_buildsProvider);
 			BuildService.AuthenticateUser (m_CIServer);

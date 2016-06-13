@@ -8468,6 +8468,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FirstSpawnPosition: {x: -8, y: -3, z: -10}
-  DistanceBetweenBuildUsers: {x: 2, y: 0, z: 0}
-  NumberBuildUserPerRows: 9
-  DistanceBetweenBuildUsersRows: {x: 0, y: 0, z: -1.5}
+  DistanceBetweenUsers: {x: 2, y: 0, z: 0}
+  NumberUserPerRows: 5
+  DistanceBetweenUsersRows: {x: 0, y: 0, z: 2}

@@ -1,6 +1,6 @@
 using System.Collections;
 using Buildron.Domain;
-using Buildron.Infrastructure.BuildUserAvatarProviders;
+using Buildron.Infrastructure.UserAvatarProviders;
 using UnityEngine;
 
 public class ServerInfrastructureInitializer : MonoBehaviour {
@@ -14,16 +14,16 @@ public class ServerInfrastructureInitializer : MonoBehaviour {
     #region Methods
     void Awake()
     {
-        var humanFallbackBuildUserAvatarProvider = new StaticBuildUserAvatarProvider();
-        humanFallbackBuildUserAvatarProvider.AddPhoto(BuildUserKind.Human, UnunknownAvatar);
+        var humanFallbackUserAvatarProvider = new StaticUserAvatarProvider();
+        humanFallbackUserAvatarProvider.AddPhoto(UserKind.Human, UnunknownAvatar);
 
-        var nonHumanBuildUserAvatarProviders = new StaticBuildUserAvatarProvider();
-        nonHumanBuildUserAvatarProviders.AddPhoto(BuildUserKind.ScheduledTrigger, ScheduledTriggerAvatar);
-        nonHumanBuildUserAvatarProviders.AddPhoto(BuildUserKind.RetryTrigger, RetryTriggerAvatar);
+        var nonHumanUserAvatarProviders = new StaticUserAvatarProvider();
+        nonHumanUserAvatarProviders.AddPhoto(UserKind.ScheduledTrigger, ScheduledTriggerAvatar);
+        nonHumanUserAvatarProviders.AddPhoto(UserKind.RetryTrigger, RetryTriggerAvatar);
 
-        BuildUserService.Initialize(
-            new IBuildUserAvatarProvider[] { new GravatarBuildUserAvatarProvider(), new AcronymBuildUserAvatarProvider(), humanFallbackBuildUserAvatarProvider },
-            new IBuildUserAvatarProvider[] { nonHumanBuildUserAvatarProviders });
+        UserService.Initialize(
+            new IUserAvatarProvider[] { new GravatarUserAvatarProvider(), new AcronymUserAvatarProvider(), humanFallbackUserAvatarProvider },
+            new IUserAvatarProvider[] { nonHumanUserAvatarProviders });
     }
 	#endregion
 }

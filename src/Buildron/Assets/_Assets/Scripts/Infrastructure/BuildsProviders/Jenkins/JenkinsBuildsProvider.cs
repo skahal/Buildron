@@ -53,11 +53,11 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 									var build = JenkinsBuildParser.Parse (bc, bDoc, buildTimestamp);
 									
 									// Get user details.
-									if (build.TriggeredBy == null || build.TriggeredBy.Kind == BuildUserKind.ScheduledTrigger) {
+									if (build.TriggeredBy == null || build.TriggeredBy.Kind == UserKind.ScheduledTrigger) {
 										OnBuildUpdated (new BuildUpdatedEventArgs (build));
 									} else {
 										Get ("/user/" + build.TriggeredBy.UserName + "/api", (userDoc) => {
-											build.TriggeredBy = JenkinsBuildUserParser.ParseUserFromUserResponse (userDoc);	
+											build.TriggeredBy = JenkinsUserParser.ParseUserFromUserResponse (userDoc);	
 											OnBuildUpdated (new BuildUpdatedEventArgs (build));
 										});
 									}

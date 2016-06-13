@@ -7,10 +7,9 @@ using System.Collections.Generic;
 #endregion
 
 /// <summary>
-/// Build user animation controller.
+/// User animation controller.
 /// </summary>
-[AddComponentMenu("Buildron/Controllers/BuildUserAnimationController")]
-public class BuildUserAnimationController : MonoBehaviour {
+public class UserAnimationController : MonoBehaviour {
 	
 	#region Fields
 	private BuildStatus? m_currentStatus;
@@ -18,7 +17,7 @@ public class BuildUserAnimationController : MonoBehaviour {
 	#endregion
 	
 	#region Properties
-	public BuildUser Data { get; set; }
+	public User Data { get; set; }
 	public string SuccessAnimation = "ledgeFall";
 	public string RunningAnimation = "idle";
 	public string FailedAnimation = "gotHit";

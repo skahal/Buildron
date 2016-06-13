@@ -56,14 +56,26 @@ namespace Buildron.Domain
 		#endregion
 		
 		#region Properties
+		/// <summary>
+		/// Gets the builds count.
+		/// </summary>
+		/// <value>The builds count.</value>
 		public static int BuildsCount { 
 			get {
 				return s_builds.Count;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Buildron.Domain.BuildService"/> is initialized.
+		/// </summary>
+		/// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
 		public static bool Initialized { get; private set; }
-		
+
+		/// <summary>
+		/// Gets the name of the server.
+		/// </summary>
+		/// <value>The name of the server.</value>
 		public static string ServerName {
 			get {
 				return s_buildsProvider.Name;	
@@ -72,6 +84,10 @@ namespace Buildron.Domain
 		#endregion
 		
 		#region Methods
+		/// <summary>
+		/// Initialize the build service.
+		/// </summary>
+		/// <param name="buildsProvider">Builds provider.</param>
 	    public static void Initialize (IBuildsProvider buildsProvider)
 		{
 			s_buildConfigurationIdsRefreshed = new List<string> ();
@@ -157,38 +173,50 @@ namespace Buildron.Domain
 				UserAuthenticationFailed.Raise (typeof(BuildService));
 			};
 		}
-		
+
+		/// <summary>
+		/// Refreshs all builds.
+		/// </summary>
 		public static void RefreshAllBuilds ()
 		{
 			s_buildsProvider.RefreshAllBuilds ();
 		}
-		
+
+		/// <summary>
+		/// Runs the build.
+		/// </summary>
+		/// <param name="remoteControl">Remote control.</param>
+		/// <param name="buildId">Build identifier.</param>
 		public static void RunBuild (RemoteControl remoteControl, string buildId)
 		{
 			ExecuteBuildCommand(remoteControl, buildId, s_buildsProvider.RunBuild);
 		}
-		
+
+		/// <summary>
+		/// Stops the build.
+		/// </summary>
+		/// <param name="remoteControl">Remote control.</param>
+		/// <param name="buildId">Build identifier.</param>
 		public static void StopBuild (RemoteControl remoteControl, string buildId)
 		{
 			ExecuteBuildCommand (remoteControl, buildId, s_buildsProvider.StopBuild);
 		}
-		
-		private static void ExecuteBuildCommand (RemoteControl remoteControl, string buildId, Action<RemoteControl, Build> command)
-		{
-			var build = s_builds.FirstOrDefault (b => b.Id.Equals (buildId, StringComparison.OrdinalIgnoreCase));
-			
-			if (build != null) {
-				build.Status = BuildStatus.Queued;
-				command (remoteControl, build);
-			}
-		}
-		
+
+		/// <summary>
+		/// Authenticates the user.
+		/// </summary>
+		/// <param name="user">User.</param>
 		public static void AuthenticateUser (UserBase user)
 		{
 			s_buildsProvider.AuthenticateUser(user);
 		}
-		
-		public static Build GetMostRelevantBuildForUser (BuildUser user)
+
+		/// <summary>
+		/// Gets the most relevant build for user.
+		/// </summary>
+		/// <returns>The most relevant build for user.</returns>
+		/// <param name="user">User.</param>
+		public static Build GetMostRelevantBuildForUser (User user)
 		{
 			var userBuilds = s_builds.Where (b => b.TriggeredBy != null && b.TriggeredBy.UserName.Equals (user.UserName));
 			var build = userBuilds.FirstOrDefault (b => b.IsRunning);
@@ -203,12 +231,20 @@ namespace Buildron.Domain
 			
 			return build;
 		}
-		
+
+		/// <summary>
+		/// Reset this instance.
+		/// </summary>
 		public static void Reset ()
 		{
 			s_builds.Clear ();
 		}
-		
+
+		/// <summary>
+		/// Gets the comparer.
+		/// </summary>
+		/// <returns>The comparer.</returns>
+		/// <param name="sortBy">Sort by.</param>
 		public static IComparer<Build> GetComparer(SortBy sortBy)
 		{
 			switch (sortBy) {
@@ -217,6 +253,16 @@ namespace Buildron.Domain
 				
 			default:
 				return new BuildTextComparer ();
+			}
+		}
+
+		private static void ExecuteBuildCommand (RemoteControl remoteControl, string buildId, Action<RemoteControl, Build> command)
+		{
+			var build = s_builds.FirstOrDefault (b => b.Id.Equals (buildId, StringComparison.OrdinalIgnoreCase));
+
+			if (build != null) {
+				build.Status = BuildStatus.Queued;
+				command (remoteControl, build);
 			}
 		}
 		#endregion

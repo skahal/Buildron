@@ -38,7 +38,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 				build.Configuration = config;
 				build.Status = ParseStatus (build, e);
 				build.PercentageComplete = ParsePercentageComplete (e);
-				build.TriggeredBy = BuildUserParser.ParseFromTriggered (build, xmlDoc);
+				build.TriggeredBy = UserParser.ParseFromTriggered (build, xmlDoc);
 				build.Date = ParseDate(e);
 			}
 			

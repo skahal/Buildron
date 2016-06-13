@@ -19,7 +19,7 @@ namespace Skahal.Domain.Mods
 		public event EventHandler<BuildTriggeredByChangedEventArgs> BuildTriggeredByChanged;
 		public event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;    
 		public event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
-//		public event EventHandler<UserFoundEventArgs> UserFound;
+		public event EventHandler<UserFoundEventArgs> UserFound;
 //		public event EventHandler<UserUpdatedEventArgs> UserUpdated;
 //		public event EventHandler<UserTriggeredBuildEventArgs> UserTriggeredBuild;
 //		public event EventHandler<UserRemovedEventArgs> UserRemoved;

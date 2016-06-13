@@ -1,26 +1,21 @@
-#region Usings
 using Buildron.Domain;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-#endregion
-
-[AddComponentMenu("Buildron/Controllers/BuildUserController")]
-[RequireComponent(typeof(BuildUserAnimationController))]
-public class BuildUserController : MonoBehaviour {
+[RequireComponent(typeof(UserAnimationController))]
+public class UserController : MonoBehaviour {
 	
 	#region Fields
-	private static Object s_buildUserPrefab = Resources.Load ("BuildUserPrefab");
+	private static Object s_buildUserPrefab = Resources.Load ("UserPrefab");
 	private Vector3 m_targetPosition;
 	private bool m_canWalk;
 	private bool m_canAnimate;
-	private BuildUser m_data;
+	private User m_data;
 	private Vector3 m_spawnPosition;
 	private bool m_alreadyAwake;
 	private GameObject m_body;
 	private bool m_photoAlreadySet;
-	private BuildUserAnimationController m_animationController;
+	private UserAnimationController m_animationController;
 	private BuildStatus? m_currentStatus;
 	#endregion
 	
@@ -30,7 +25,7 @@ public class BuildUserController : MonoBehaviour {
 	#endregion
 	
 	#region Properties
-	public BuildUser Data {
+	public User Data {
 		get {
 			return m_data;
 		}
@@ -57,7 +52,7 @@ public class BuildUserController : MonoBehaviour {
 	
 	private void Awake ()
 	{
-		m_animationController = gameObject.GetComponent<BuildUserAnimationController> ();
+		m_animationController = gameObject.GetComponent<UserAnimationController> ();
 		m_body = transform.FindChild ("rootJoint").gameObject;
 		MarkAsVisible ();
 		Messenger.Register (gameObject,
@@ -79,7 +74,7 @@ public class BuildUserController : MonoBehaviour {
 	private void UpdateUserPhoto ()
 	{
 		if (!m_photoAlreadySet) {
-			BuildUserService.GetUserPhoto (m_data, (photo) => {
+			UserService.GetUserPhoto (m_data, (photo) => {
 				m_photoAlreadySet = true;
 				var photoHolder = transform.FindChild ("Canvas/Photo").GetComponent<Image> ();
 				photoHolder.enabled = true;
@@ -117,7 +112,7 @@ public class BuildUserController : MonoBehaviour {
 	
 	private void OnCollisionEnter (Collision collision)
 	{
-		if (collision.gameObject.tag.Equals ("BuildUser")) {
+		if (collision.gameObject.tag.Equals ("User")) {
 			m_canWalk = false;
 			GetComponent<Animation>().Play ("idle");	
 		}
@@ -136,12 +131,12 @@ public class BuildUserController : MonoBehaviour {
 	
 	#region Methods
 	
-	public static bool ExistsGameObject (BuildUser buildUser)
+	public static bool ExistsGameObject (User buildUser)
 	{
 		return GameObject.Find (buildUser.UserName) != null;
 	}
 	
-	public static GameObject GetGameObject (BuildUser buildUser)
+	public static GameObject GetGameObject (User buildUser)
 	{
 		return GetGameObject(buildUser.UserName);
 	}
@@ -153,17 +148,17 @@ public class BuildUserController : MonoBehaviour {
 	
 	public static GameObject[] GetAllGameObjects ()
 	{
-		return GameObject.FindGameObjectsWithTag("BuildUser");
+		return GameObject.FindGameObjectsWithTag("User");
 	}
 	
-	public static GameObject CreateGameObject (BuildUser buildUser)
+	public static GameObject CreateGameObject (User buildUser)
 	{
 		var go = GameObject.Find (buildUser.UserName);
 			
 		if (go == null) {
 			go = (GameObject)GameObject.Instantiate (s_buildUserPrefab);
 			go.name = buildUser.UserName.ToLowerInvariant();
-			var script = go.GetComponent<BuildUserController> ();
+			var script = go.GetComponent<UserController> ();
 			script.Data = buildUser;
 		}
 		

@@ -20,13 +20,13 @@ public class KickEasterEggController : EasterEggControllerBase
 	 	
 	private void OnKick ()
 	{		
-		var avatar = BuildUserController.GetGameObject (RemoteControlService.GetConnectedRemoteControl ().UserName);
+		var avatar = UserController.GetGameObject (RemoteControlService.GetConnectedRemoteControl ().UserName);
 		Kick (avatar);
 	}
 
 	private void OnKickAll ()
 	{
-		var avatars = BuildUserController.GetAllGameObjects ();	
+		var avatars = UserController.GetAllGameObjects ();	
 		StartCoroutine (KickAll (avatars));
 	}
 	
@@ -34,7 +34,7 @@ public class KickEasterEggController : EasterEggControllerBase
 	{
 		// Check for null because the connected remote control could be from a user without a current build.
 		if (avatar != null) {
-			avatar.GetComponent<BuildUserAnimationController> ().PlayKick ();
+			avatar.GetComponent<UserAnimationController> ().PlayKick ();
 			BallController.CreateGameObject(avatar.transform.position);
 		}
 	}

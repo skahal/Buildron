@@ -5,22 +5,22 @@ using Buildron.Domain;
 #endregion
 
 /// <summary>
-/// Manages the BuildUserController creations.
+/// Manages the UserController creations.
 /// </summary>
-[AddComponentMenu("Buildron/Controllers/BuildUsersManager")]
-public class BuildUsersManager : MonoBehaviour
+[AddComponentMenu("Buildron/Controllers/UsersManager")]
+public class UsersManager : MonoBehaviour
 {
 	#region Fields
 	private Vector3 m_currentSpawnPosition;
-	private int m_currentRowBuildUserCount;
+	private int m_currentRowUserCount;
 	private int m_rowsCount = 1;
 	#endregion
 	
 	#region Editor Properties
 	public Vector3 FirstSpawnPosition = new Vector3(-10, -3, -10);
-	public Vector3 DistanceBetweenBuildUsers = new Vector3(2, 0, 0);
-	public int NumberBuildUserPerRows = 5;
-	public Vector3 DistanceBetweenBuildUsersRows = new Vector3(0, 0, 2);
+	public Vector3 DistanceBetweenUsers = new Vector3(2, 0, 0);
+	public int NumberUserPerRows = 5;
+	public Vector3 DistanceBetweenUsersRows = new Vector3(0, 0, 2);
 	#endregion
 	
 	#region Methods
@@ -37,56 +37,56 @@ public class BuildUsersManager : MonoBehaviour
 
 	private void OnBuildFailed (GameObject buildGO)
 	{
-		CreateBuildUserGameObject (buildGO);
+		CreateUserGameObject (buildGO);
 	}
 	
 	private void OnBuildSuccess (GameObject buildGO)
 	{
-		CreateBuildUserGameObject (buildGO);
+		CreateUserGameObject (buildGO);
 	}
 	
 	private void OnBuildRunning (GameObject buildGO)
 	{
-		CreateBuildUserGameObject (buildGO);
+		CreateUserGameObject (buildGO);
 	}
 	
 	private void OnBuildQueued (GameObject buildGO)
 	{
-		CreateBuildUserGameObject (buildGO);
+		CreateUserGameObject (buildGO);
 	}
 	
-	private void CreateBuildUserGameObject (GameObject buildGO)
+	private void CreateUserGameObject (GameObject buildGO)
 	{
 		var build = buildGO.GetComponent<BuildController> ().Data;
 	
 		if (build.TriggeredBy == null) {
 			build.TriggeredByChanged += delegate {
-				CreateBuildUserGameObject (build);
+				CreateUserGameObject (build);
 			};
 			
 		} else {
-			CreateBuildUserGameObject (build);
+			CreateUserGameObject (build);
 		}
 	}
 
-	void CreateBuildUserGameObject (Build build)
+	void CreateUserGameObject (Build build)
 	{
-		var go = BuildUserController.GetGameObject (build.TriggeredBy);
+		var go = UserController.GetGameObject (build.TriggeredBy);
 		
 		if (go != null) {
-			go.GetComponent<BuildUserController> ().Data = build.TriggeredBy;
+			go.GetComponent<UserController> ().Data = build.TriggeredBy;
 		} else {
-			go = BuildUserController.CreateGameObject (build.TriggeredBy);
+			go = UserController.CreateGameObject (build.TriggeredBy);
 			go.transform.position = m_currentSpawnPosition;
 			go.transform.parent = transform;			
 			
-			m_currentSpawnPosition += DistanceBetweenBuildUsers;
-			m_currentRowBuildUserCount++;
+			m_currentSpawnPosition += DistanceBetweenUsers;
+			m_currentRowUserCount++;
 			
-			if (m_currentRowBuildUserCount >= NumberBuildUserPerRows) {
-				m_currentRowBuildUserCount = 0;
+			if (m_currentRowUserCount >= NumberUserPerRows) {
+				m_currentRowUserCount = 0;
 				m_currentSpawnPosition = FirstSpawnPosition;
-				m_currentSpawnPosition += DistanceBetweenBuildUsersRows * m_rowsCount;
+				m_currentSpawnPosition += DistanceBetweenUsersRows * m_rowsCount;
 				m_rowsCount++;
 			}
 		}

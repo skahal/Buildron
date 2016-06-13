@@ -29,7 +29,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			build.Id = xmlDoc.SelectSingleNode ("//id").InnerText;
 			build.Sequence = Convert.ToInt32 (xmlDoc.SelectSingleNode ("//number").InnerText);
 			build.LastChangeDescription = xmlDoc.SelectSingleNode ("//action/cause/shortDescription").InnerText;
-			build.TriggeredBy = JenkinsBuildUserParser.ParseUserFromBuildResponse (xmlDoc);
+			build.TriggeredBy = JenkinsUserParser.ParseUserFromBuildResponse (xmlDoc);
 			build.Status = ParseStatus (xmlDoc);
 			build.Date = ParseDate (buildTimestamp);
 			build.PercentageComplete = ParsePercentageComplete(build, xmlDoc);

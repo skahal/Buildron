@@ -30,7 +30,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 		#region IBuildsProvider implementation
 		public override void RefreshAllBuilds ()
 		{	
-			BuildUserParser.Reset ();
+			UserParser.Reset ();
             m_currentUpdatedBuildIds.Clear();
 
             Requester.GetText (GetNoRestUrl ("queue.html"), (html) => 
@@ -89,7 +89,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 											usernameNode = changeNode;
 										}
 
-										GetUser (BuildUserParser.ParseUserName (usernameNode.Attributes ["username"].Value), build, raiseBuildUpdated);
+										GetUser (UserParser.ParseUserName (usernameNode.Attributes ["username"].Value), build, raiseBuildUpdated);
 										
 									}, raiseBuildUpdated, "changes/id:{0}", changeNode.Attributes ["id"].Value);
 								}
@@ -107,10 +107,10 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 		
 		private void GetUser (string userName, Build build, Action raiseBuildUpdated)
 		{
-			if (BuildUserParser.IsHuman (userName)) {
+			if (UserParser.IsHuman (userName)) {
 				Get ((userResponse) => 
 				{
-					build.TriggeredBy = BuildUserParser.ParseFromUser (build, userResponse);
+					build.TriggeredBy = UserParser.ParseFromUser (build, userResponse);
 					raiseBuildUpdated ();
 				}, raiseBuildUpdated, "users/username:{0}", userName);	
 			} else {

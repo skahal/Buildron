@@ -7,15 +7,15 @@ using Skahal.Logging;
 using System.Collections.Generic;
 #endregion
 
-namespace Buildron.Infrastructure.BuildUserAvatarProviders
+namespace Buildron.Infrastructure.UserAvatarProviders
 {
     /// <summary>
-    /// Build user avatar that use user e-mail to look for an Gravatar image.
+    /// User avatar that use user e-mail to look for an Gravatar image.
     /// </summary>
-    public class GravatarBuildUserAvatarProvider : WebBuildUserAvatarProviderBase
+    public class GravatarUserAvatarProvider : WebUserAvatarProviderBase
     {
         #region Methods
-        protected override string BuildImageUrl(BuildUser user)
+        protected override string BuildImageUrl(User user)
         {
             var mailHash = GetMd5Sum(user.Email);
             return "http://www.gravatar.com/avatar/{0}.png?s=256&{1}&d=404".With(mailHash, DateTime.Now.Ticks);

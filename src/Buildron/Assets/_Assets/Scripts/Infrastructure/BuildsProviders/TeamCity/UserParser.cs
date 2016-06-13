@@ -6,12 +6,12 @@ using Skahal.Logging;
 #endregion
 
 /// <summary>
-/// A parser for BuildUser .
+/// A parser for User .
 /// </summary>
-public static class BuildUserParser
+public static class UserParser
 {
 	#region Fields
-	public static Dictionary<string, BuildUser> s_buildUsers = new Dictionary<string, BuildUser>();
+	public static Dictionary<string, User> s_buildUsers = new Dictionary<string, User>();
 	#endregion
 	
 	#region Methods
@@ -21,14 +21,14 @@ public static class BuildUserParser
 	}
 	
 	/// <summary>
-	/// Parse a BuildUser from a XmlDocument.
+	/// Parse a User from a XmlDocument.
 	/// </summary>
 	/// <param name='xmlDoc'>
 	/// Xml document.
 	/// </param>
-	public static BuildUser ParseFromTriggered (Build build, XmlDocument xmlDoc)
+	public static User ParseFromTriggered (Build build, XmlDocument xmlDoc)
 	{
-		BuildUser user = null;
+		User user = null;
 		var triggeredNode = xmlDoc.SelectSingleNode ("build/triggered");
 		var userNode = triggeredNode.SelectSingleNode ("user");
 		
@@ -45,13 +45,13 @@ public static class BuildUserParser
 			if (countAttr != null && countAttr.Value.Equals ("0")) {
 				switch (triggerDetails) {
 				case "SCHEDULE TRIGGER":
-					user = new BuildUser ();
-					user.Kind = BuildUserKind.ScheduledTrigger;
+					user = new User ();
+					user.Kind = UserKind.ScheduledTrigger;
 					break;
 						
 				case "RETRY BUILD TRIGGER":
-					user = new BuildUser ();
-					user.Kind = BuildUserKind.RetryTrigger;
+					user = new User ();
+					user.Kind = UserKind.RetryTrigger;
 					break;
 				}
 				
@@ -72,7 +72,7 @@ public static class BuildUserParser
 			
 			if (nameAttribute != null)
 			{
-				user = new BuildUser ();
+				user = new User ();
 				user.Name = nameAttribute.Value;
 				user.UserName = ParseUserName (userNode.Attributes ["username"].Value);
 				user.Builds.Add (build);	
@@ -97,13 +97,13 @@ public static class BuildUserParser
 		}
 	}
 	
-	public static BuildUser ParseFromUser (Build build, XmlDocument xmlDoc)
+	public static User ParseFromUser (Build build, XmlDocument xmlDoc)
 	{
-		BuildUser user = null;
+		User user = null;
 		var userNode = xmlDoc.SelectSingleNode ("user");
 		
 		if (userNode != null) {
-			user = new BuildUser ();
+			user = new User ();
 			
 			user.UserName = ParseUserName(userNode.Attributes ["username"].Value);
 			
@@ -141,9 +141,9 @@ public static class BuildUserParser
 	/// <param name='xmlDoc'>
 	/// Xml document.
 	/// </param>
-	public static BuildUser ParseFromChange (Build build, XmlDocument xmlDoc)
+	public static User ParseFromChange (Build build, XmlDocument xmlDoc)
 	{
-		BuildUser user = null;
+		User user = null;
 		
 		var userNode = xmlDoc.SelectSingleNode ("change/user");
 		
@@ -159,7 +159,7 @@ public static class BuildUserParser
 				}
 				
 			} else {
-				user = new BuildUser ();
+				user = new User ();
 				user.Name = username;
 				user.UserName = username;
 				user.Builds.Add (build);

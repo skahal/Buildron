@@ -82,7 +82,7 @@ public class TestBuildsProvider : IBuildsProvider
 			
 			b.PercentageComplete = Random.Range (0f, 1f);
 			
-			b.TriggeredBy = new BuildUser ();
+			b.TriggeredBy = new User ();
 			b.TriggeredBy.Name = "User " + Random.Range (0, 10);
 			b.TriggeredBy.UserName = b.TriggeredBy.Name;
 			b.TriggeredBy.Email = SHRandomHelper.NextBool () ? "giacomelli@gmail.com" : "giusepe@gmail.com";

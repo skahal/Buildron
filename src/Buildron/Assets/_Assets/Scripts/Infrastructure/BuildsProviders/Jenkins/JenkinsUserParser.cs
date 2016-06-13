@@ -9,18 +9,18 @@ using System.Globalization;
 namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 {	
 	/// <summary>
-	/// A parser for BuildUser.
+	/// A parser for User.
 	/// </summary>
-	public static class JenkinsBuildUserParser
+	public static class JenkinsUserParser
 	{
 		#region Fields
 		private static Regex s_findTimerRegex = new Regex ("(Started by timer|Iniciado pelo temporizador)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 		#endregion
 
 		
-		public static BuildUser ParseUserFromBuildResponse (XmlDocument xmlDoc)
+		public static User ParseUserFromBuildResponse (XmlDocument xmlDoc)
 		{
-			BuildUser user = null;
+			User user = null;
 			var userNode = xmlDoc.SelectSingleNode ("//action/cause/userName");
 			
 			if (userNode == null) {
@@ -28,7 +28,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			}
 			
 			if (userNode != null) {
-				user = new BuildUser ();
+				user = new User ();
 				user.UserName = userNode.InnerText;
 			}
 			
@@ -36,9 +36,9 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 				var shortDescription = xmlDoc.SelectSingleNode ("//action/cause/shortDescription");
 				
 				if (shortDescription != null && s_findTimerRegex.IsMatch(shortDescription.InnerText)) {
-					user = new BuildUser ();
+					user = new User ();
 					user.UserName = "timer";
-					user.Kind = BuildUserKind.ScheduledTrigger;
+					user.Kind = UserKind.ScheduledTrigger;
 				}
 			}
 			
@@ -46,9 +46,9 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			return user;
 		}
 		
-		public static BuildUser ParseUserFromUserResponse (XmlDocument xmlDoc)
+		public static User ParseUserFromUserResponse (XmlDocument xmlDoc)
 		{
-			var user = new BuildUser ();
+			var user = new User ();
 			user.UserName = xmlDoc.SelectSingleNode ("//user/id").InnerText;
 			user.Name = xmlDoc.SelectSingleNode ("//user/fullName").InnerText;
 			
