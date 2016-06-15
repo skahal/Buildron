@@ -31,8 +31,7 @@ public class Requester : MonoBehaviour
 	{
 		Instance = new GameObject ("BuildronRequester").AddComponent<Requester> ();
 	}
-	#endregion
-		
+	#endregion		
 		
 	#region Properties
 	public static Requester Instance { get; private set; }
@@ -192,10 +191,10 @@ public class Requester : MonoBehaviour
 			request = new WWW (url);
 		}
 
-        
         // Timeout
+        bool hasTimeout = false;
         SHThread.Start(
-            30, 
+            60, 
             () =>
             {
                 if(request != null && !request.isDone)
@@ -203,38 +202,60 @@ public class Requester : MonoBehaviour
                     try
                     {
                         SHLog.Warning("Request timeout for url {0}.", url);
+                        hasTimeout = true;
                         request.Dispose();
                     }
                     catch(ObjectDisposedException)
                     {
                         SHLog.Warning("Request already disposed.", url);
+                        return;
                     }
                 }
             });
 
         yield return request;
-		
-		var status = request.responseHeaders.ContainsKey ("STATUS") ? request.responseHeaders ["STATUS"] : "";
-		
-		if (request.error == null 
-		&& !status.Equals ("HTTP/1.0 302 Found", StringComparison.InvariantCultureIgnoreCase)
-		&& !request.text.Contains ("Status Code: 404")) {
-			SHLog.Debug ("Response from server to URL '{0}': {1}", url, request.text);
-		
-			if (responseReceived != null) {
-				responseReceived (request);
-			}
-			
-		} else {
-			SHLog.Warning ("Error from server to URL '{0}': {1}", url, request.error);
-			
-			if (errorReceived != null) {
-				errorReceived ();	
-			} else if (request.error == null || (!request.error.Contains ("404 Not Found") && !request.text.Contains ("Status Code: 404"))) {
-				SHLog.Warning ("Error requesting URL '{0}': {1}", url, request.error == null ? status : request.error);
-				GetFailed.Raise (this, new RequestFailedEventArgs(url));
-			}
-		}		
+		        
+        if (hasTimeout)
+        {
+            if (errorReceived != null)
+            {
+                errorReceived();
+            }
+            else
+            {
+                GetFailed.Raise(this, new RequestFailedEventArgs(url));
+            }            
+        }
+        else
+        {
+            var status = request.responseHeaders.ContainsKey("STATUS") ? request.responseHeaders["STATUS"] : "";
+
+            if (request.error == null
+            && !status.Equals("HTTP/1.0 302 Found", StringComparison.InvariantCultureIgnoreCase)
+            && !request.text.Contains("Status Code: 404"))
+            {
+                SHLog.Debug("Response from server to URL '{0}': {1}", url, request.text);
+
+                if (responseReceived != null)
+                {
+                    responseReceived(request);
+                }
+
+            }
+            else {
+                SHLog.Warning("Error from server to URL '{0}': {1}", url, request.error);
+
+                if (errorReceived != null)
+                {
+                    errorReceived();
+                }
+                else if (request.error == null || (!request.error.Contains("404 Not Found") && !request.text.Contains("Status Code: 404")))
+                {
+                    SHLog.Warning("Error requesting URL '{0}': {1}", url, request.error == null ? status : request.error);
+                    GetFailed.Raise(this, new RequestFailedEventArgs(url));
+                }
+            }
+        }
 	}
 	#endregion
 }
