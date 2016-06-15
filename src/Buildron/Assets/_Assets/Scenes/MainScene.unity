@@ -2257,7 +2257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f840055c02f3e4e4d8de5e02ef802863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_version: 1.11.3
+  m_version: 1.11.4
   m_isBetaVersion: 0
   m_multiplayerVersion: 
 --- !u!1 &639640094
