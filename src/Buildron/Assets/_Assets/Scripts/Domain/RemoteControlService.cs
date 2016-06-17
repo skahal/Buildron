@@ -1,5 +1,7 @@
+using System;
 using Buildron.Domain;
 using UnityEngine;
+using Skahal.Common;
 #region Usings
 #endregion
 
@@ -10,8 +12,13 @@ namespace Buildron.Domain
 	/// </summary>
 	public static class RemoteControlService
 	{
-		#region Fields
-		private static RemoteControl s_remoteControl;
+        #region Events
+        public static event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
+        #endregion
+
+
+        #region Fields
+        private static RemoteControl s_remoteControl;
 		#endregion
 		
 		#region Constructors
@@ -46,15 +53,19 @@ namespace Buildron.Domain
 		public static void ConnectRemoteControl (RemoteControl rcToConnect)
 		{
 			s_remoteControl = rcToConnect;
-		
+            s_remoteControl.Connected = true;
 			BuildService.AuthenticateUser (rcToConnect);
 			HasRemoteControlConnectedSomeDay = true;
-		}
+
+            RemoteControlChanged.Raise(typeof(RemoteControlService), new RemoteControlChangedEventArgs(s_remoteControl));
+        }
 		
 		public static void DisconnectRemoteControl ()
 		{
-			s_remoteControl = null;
-		}
+            s_remoteControl.Connected = false;
+            RemoteControlChanged.Raise(typeof(RemoteControlService), new RemoteControlChangedEventArgs(s_remoteControl));
+            s_remoteControl = null;
+        }
 		
 		public static RemoteControl GetConnectedRemoteControl ()
 		{

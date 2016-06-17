@@ -92,7 +92,7 @@ public class BuildSoundEffectController : MonoBehaviour
 	{
 		var controller = buildGO.GetComponent<BuildController> ();
 		
-		if (controller.Data.Status == BuildStatus.Running) {
+		if (controller.Model.Status == BuildStatus.Running) {
 			PlayAudio (buildGO);
 		}
 	}
@@ -109,7 +109,7 @@ public class BuildSoundEffectController : MonoBehaviour
 	
 	private void PlayAudio (GameObject buildGO)
 	{
-		var build =  buildGO.GetComponent<BuildController> ().Data;
+		var build =  buildGO.GetComponent<BuildController> ().Model;
 
 		if (build.TriggeredBy != null) {
 			var username = build.TriggeredBy.UserName;

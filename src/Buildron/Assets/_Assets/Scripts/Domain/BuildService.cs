@@ -163,15 +163,9 @@ namespace Buildron.Domain
 			
 			s_buildsProvider.UserAuthenticationSuccessful += delegate {
 				Initialized = true;
-				UserAuthenticationSuccessful.Raise (typeof(BuildService));
-
 				ciServer.Status = CIServerStatus.Up;
 				CIServerStatusChanged.Raise (typeof(BuildService), new CIServerStatusChangedEventArgs(ciServer));
-			};
-			
-			s_buildsProvider.UserAuthenticationFailed += delegate {
-				UserAuthenticationFailed.Raise (typeof(BuildService));
-			};
+			};		
 		}
 
 		/// <summary>

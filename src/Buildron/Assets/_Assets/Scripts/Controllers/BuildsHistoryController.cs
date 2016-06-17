@@ -2,6 +2,10 @@
 using UnityEngine;
 using System.Collections;
 using Buildron.Domain;
+using Zenject;
+using Buildron.Application;
+
+
 #endregion
 
 /// <summary>
@@ -14,9 +18,12 @@ public class BuildsHistoryController : MonoBehaviour {
 	private int m_historyCount;
 	#endregion
 	
-	#region Editor properties
+	#region Properties
 	public Vector3 HistoryTotemPosition = new Vector3(0, 0, 20);
 	public float YCreationMultiplier = 12;
+
+	[Inject]
+	public BuildGOService Service { get; set; }
 	#endregion
 	
 	#region Methods
@@ -55,21 +62,21 @@ public class BuildsHistoryController : MonoBehaviour {
 		var originalController = buildGO.GetComponent<BuildController> ();
 		
 		if (!originalController.IsHistoryBuild) {
-			var originalBuild = originalController.Data;
+			var originalBuild = originalController.Model;
 			
 			if (originalBuild.Date.Date == System.DateTime.Now.Date) {
 				m_historyCount ++;
 				Build historyBuild = (Build)originalBuild.Clone (); 
 				historyBuild.Id = string.Format ("{0}_{1}_history", historyBuild.Id, System.DateTime.Now.Ticks);
 				
-				var cloneGO = BuildController.CreateGameObject (historyBuild);
+				var cloneGO = Service.CreateGameObject (historyBuild);
 				cloneGO.tag = "History";
 				var controller = cloneGO.GetComponent<BuildController> ();
 				controller.IsHistoryBuild = true;
 				controller.ProjectText = string.Format ("{0} - {1}", m_historyCount, historyBuild.Configuration.Project.Name);
 				cloneGO.transform.position = new Vector3 (HistoryTotemPosition.x, YCreationMultiplier + (m_historyCount * YCreationMultiplier), HistoryTotemPosition.z);
 				cloneGO.transform.parent = m_container.transform;
-				
+
 				Messenger.Send ("OnBuildHistoryCreated");
 			}
 		}

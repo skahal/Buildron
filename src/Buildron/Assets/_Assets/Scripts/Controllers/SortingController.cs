@@ -6,6 +6,8 @@ using Skahal.Logging;
 using Skahal.Threading;
 using Skahal.Tweening;
 using UnityEngine;
+using Zenject;
+using Buildron.Application;
 
 /// <summary>
 /// Sorting controller.
@@ -15,6 +17,11 @@ public class SortingController : MonoBehaviour
     #region Fields
     private bool m_shouldUpdateStatusBar;
     #endregion
+
+	#region Properties
+	[Inject]
+	public BuildGOService BuildGOService { get; set; }
+	#endregion
 
     #region Methods
     private void Start()
@@ -44,7 +51,7 @@ public class SortingController : MonoBehaviour
             SHThread.WaitFor(
             () =>
             {
-                var areAllSleeping = BuildController.AreAllSleeping();
+                var areAllSleeping = BuildGOService.AreAllSleeping();
                 SHLog.Warning(
                     "Waiting all builds physics sleep. Are all sleeping: {0}",
                     areAllSleeping);
@@ -77,13 +84,13 @@ public class SortingController : MonoBehaviour
             m_shouldUpdateStatusBar = !(sorting is NoneSortingAlgorithm<Build>);
             UpdateStatusBar("Sorting by " + comparer + " using: " + sorting.Name);
 
-            var buildsGO = BuildController.GetVisiblesOrderByPosition();
+            var buildsGO = BuildGOService.GetVisiblesOrderByPosition();
             var builds = new List<Build>();
 
             foreach (var go in buildsGO)
             {
                 go.GetComponent<Rigidbody>().isKinematic = true;
-                builds.Add(go.GetComponent<BuildController>().Data);
+                builds.Add(go.GetComponent<BuildController>().Model);
             }
 
             sorting.Sort(builds, comparer);
@@ -95,8 +102,8 @@ public class SortingController : MonoBehaviour
         var b1 = (Build)items[0];
         var b2 = (Build)items[1];
 
-        var b1GO = BuildController.GetGameObject(b1);
-        var b2GO = BuildController.GetGameObject(b2);
+        var b1GO = BuildGOService.GetGameObject(b1);
+        var b2GO = BuildGOService.GetGameObject(b2);
 
         SHLog.Debug("Swapping position between {0} and {1}...", b1GO.name, b2GO.name);
 
@@ -118,7 +125,7 @@ public class SortingController : MonoBehaviour
 
     private void OnSortingEnded()
     {
-        foreach (var go in BuildController.GetVisiblesOrderByPosition())
+        foreach (var go in BuildGOService.GetVisiblesOrderByPosition())
         {
             go.GetComponent<Rigidbody>().isKinematic = false;
         }

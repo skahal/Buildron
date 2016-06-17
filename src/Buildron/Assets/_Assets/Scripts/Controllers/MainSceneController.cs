@@ -6,6 +6,10 @@ using Buildron.Domain;
 using Skahal.Logging;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
+using Buildron.Application;
+
+
 #endregion
 
 [AddComponentMenu("Buildron/Scenes/MainSceneController")]
@@ -18,7 +22,7 @@ public class MainSceneController : MonoBehaviour
 	private bool m_serverIsDown;
 	#endregion
 	
-	#region Editor properties
+	#region Properties
 	public float DeployBuildSeconds = 0.5f;
 	public int MaxDeployedBuilds = 32;
 	public Vector3 FirstColumnDeployPosition = new Vector3(-2.5f, 10, 0);
@@ -29,6 +33,9 @@ public class MainSceneController : MonoBehaviour
 	public Text ServerIPLabel;
 	public InputField Title;
 	public float DelaySecondsUntilMarkAsServerIsDown = 10;
+
+	[Inject]
+	public BuildGOService BuildGOService { get; set; }
 	#endregion
 	
 	#region Methods
@@ -77,10 +84,10 @@ public class MainSceneController : MonoBehaviour
 
 	private void ExecuteFocusedBuildCommand (Action<RemoteControl, string> command)
 	{
-		var visibles = BuildController.GetVisibles ();
+		var visibles = BuildGOService.GetVisibles ();
 		
 		if (visibles.Count == 1) {
-			command (RemoteControlService.GetConnectedRemoteControl (), visibles [0].GetComponent<BuildController> ().Data.Id);
+			command (RemoteControlService.GetConnectedRemoteControl (), visibles [0].GetComponent<BuildController> ().Model.Id);
 		}
 	}
 	

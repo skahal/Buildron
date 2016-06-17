@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace Buildron.Infrastructure.FunctionalTests.Repositories
 {
+    [Category("Buildron.Infrastructure")]
     public class PlayerPrefsServerStateRepositoryTest
     {
         [Test]

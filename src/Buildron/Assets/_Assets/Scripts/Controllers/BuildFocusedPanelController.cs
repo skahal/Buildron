@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using Skahal.Tweening;
+using Buildron.Application;
+using Zenject;
 
 
 #endregion
@@ -16,8 +18,11 @@ public class BuildFocusedPanelController : MonoBehaviour
 	private Text m_text;
 	#endregion
 	
-	#region Editor properties
+	#region  Properties
 	public float YHeight = 1f;
+
+	[Inject]
+	public BuildGOService Service { get; set; }
 	#endregion
 	
 	#region Life cycle
@@ -37,7 +42,7 @@ public class BuildFocusedPanelController : MonoBehaviour
 	
 	private void OnBuildHidden ()
 	{
-		if (BuildController.VisiblesCount == 1 && m_buildController.IsVisible) {
+		if (Service.CountVisibles() == 1 && m_buildController.IsVisible) {
 			Show ();
 		} else {
 			Hide ();
@@ -51,8 +56,8 @@ public class BuildFocusedPanelController : MonoBehaviour
 		
 	private void Show ()
 	{
-		var date = m_buildController.Data.Date;
-		var focusedText = m_buildController.Data.LastChangeDescription;
+		var date = m_buildController.Model.Date;
+		var focusedText = m_buildController.Model.LastChangeDescription;
 		
 		if (!m_isVisible) {
 			m_text.enabled = true;

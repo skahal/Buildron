@@ -8,44 +8,57 @@ using Skahal.Logging;
 using Skahal.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
+using Skahal;
+using Buildron.Application;
+
+
 #endregion
 
 /// <summary>
 /// Build controller.
 /// </summary>
-public class BuildController : MonoBehaviour
+public class BuildController : SHController<Build>
 {
 	#region Fields
 	private static UnityEngine.Object s_buildPrefab = Resources.Load ("BuildPrefab");
 	private static UnityEngine.Object s_buildFailedExplosionPrefab = Resources.Load ("BuildFailedExplosionPrefab");
 	private static UnityEngine.Object s_buildSuccessFireworksPrefab = Resources.Load ("BuildSuccessFireworksPrefab");
 	private static UnityEngine.Object s_buildHidingEffectPrefab = Resources.Load ("BuildHidingEffectPrefab");
+
 	private BuildProgressBarController m_progressBar;
 	private bool m_groundReachdAlreadRaised;
 	private Text m_projectLabel;
 	private Text m_configurationLabel;
 	private Image m_runningStatusIcon;
 	private Image m_userAvatarIcon;
-	private GameObject m_body;
-    private Rigidbody m_rigidbody;
     private Collider m_bodyCollider;
-    private Collider m_topEdge;
-	private Collider m_bottomEdge;
-	private Collider m_leftEdge;
-	private Collider m_rightEdge;
     private Renderer m_bodyRenderer;
     private Renderer m_focusedPanelRenderer;
 	private bool m_isFirstCheckState = true;
     private BuildStatus m_lastCheckStateStatus;
 	private GameObject m_focusedPanel;
-    
-	#endregion
-	
+    #endregion
+
 	#region Properties
-	public Build Data { get; set; }
-	public bool IsHistoryBuild { get; set; }
+    /// <summary>
+    /// Gets or sets user service.
+    /// </summary>
+    [Inject]
+	public IUserService UserService { get; set; }    
+
+   	public bool IsHistoryBuild { get; set; }
 	public bool IsVisible { get; private set; }
 	public bool HasReachGround { get; private set; }
+
+	public GameObject Body { get; private set; }
+
+	public Rigidbody Rigidbody { get; private set; }
+
+	public Collider TopEdge { get; private set; }
+	public Collider BottomEdge { get; private set; }
+	public Collider LeftEdge { get; private set; }
+	public Collider RightEdge { get; private set; }
 	
 	public string ProjectText {
 		get {
@@ -60,8 +73,6 @@ public class BuildController : MonoBehaviour
 			m_projectLabel.text = value;
 		}
 	}
-	public static int GroundReachedCount { get; private set; }
-	public static int VisiblesCount { get { return CountVisibles(); } }
 	#endregion
 	
 	#region Editor properties
@@ -85,42 +96,42 @@ public class BuildController : MonoBehaviour
 		IsVisible = true;
 		
 		if (m_projectLabel == null) {
-			ProjectText = Data.Configuration.Project.Name;
+			ProjectText = Model.Configuration.Project.Name;
 		}
 		
 		m_configurationLabel = transform.FindChild ("Canvas/ConfigurationLabel").GetComponent<Text> ();
-		m_configurationLabel.text = Data.Configuration.Name;
+		m_configurationLabel.text = Model.Configuration.Name;
 		
 		m_runningStatusIcon = transform.FindChild ("Canvas/RunningStatusIcon").GetComponent<Image> ();
 		m_runningStatusIcon.enabled = false;
 		m_userAvatarIcon = transform.FindChild ("Canvas/UserAvatarIcon").GetComponent<Image> ();
 		m_userAvatarIcon.enabled = false;
 		
-		m_body = transform.FindChild ("Buildron-Totem").gameObject;
+		Body = transform.FindChild ("Buildron-Totem").gameObject;
 		m_focusedPanel = transform.FindChild ("FocusedPanel").gameObject;		
-		m_topEdge = transform.FindChild ("Edges/TopEdge").GetComponent<Collider>();
-		m_bottomEdge = transform.FindChild ("Edges/BottomEdge").GetComponent<Collider>();
-		m_leftEdge = transform.FindChild ("Edges/LeftEdge").GetComponent<Collider>();
-		m_rightEdge = transform.FindChild ("Edges/RightEdge").GetComponent<Collider>();
+		TopEdge = transform.FindChild ("Edges/TopEdge").GetComponent<Collider>();
+		BottomEdge = transform.FindChild ("Edges/BottomEdge").GetComponent<Collider>();
+		LeftEdge = transform.FindChild ("Edges/LeftEdge").GetComponent<Collider>();
+		RightEdge = transform.FindChild ("Edges/RightEdge").GetComponent<Collider>();
 
-        m_rigidbody = GetComponent<Rigidbody>();
+        Rigidbody = GetComponent<Rigidbody>();
         m_bodyCollider = GetComponent<Collider>();
-        m_bodyRenderer = m_body.GetComponent<Renderer>();
+        m_bodyRenderer = Body.GetComponent<Renderer>();
         m_focusedPanelRenderer = m_focusedPanel.GetComponent<Renderer>();
 
         m_progressBar = GetComponentInChildren<BuildProgressBarController> ();
 		CheckState ();
 	
 		if (!IsHistoryBuild) {
-			Data.StatusChanged += delegate {
-				if (Data.Status <= BuildStatus.Running && Data.Status != BuildStatus.Queued) {
-					m_rigidbody.AddForce (StatusChangedForce);
+			Model.StatusChanged += delegate {
+				if (Model.Status <= BuildStatus.Running && Model.Status != BuildStatus.Queued) {
+					Rigidbody.AddForce (StatusChangedForce);
 				}
 				
 				CheckState ();
 			};
 				
-			Data.TriggeredByChanged += delegate {
+			Model.TriggeredByChanged += delegate {
 				UpdateUserAvatar ();	
 			};
 		}
@@ -134,7 +145,7 @@ public class BuildController : MonoBehaviour
 	{
 		var rc = RemoteControlService.GetConnectedRemoteControl ();
 		var rcUserName = rc == null ? null : rc.UserName.ToLowerInvariant ();
-		var userName = Data.TriggeredBy == null ? null : Data.TriggeredBy.UserName.ToLowerInvariant ();
+		var userName = Model.TriggeredBy == null ? null : Model.TriggeredBy.UserName.ToLowerInvariant ();
 		
 		if (!String.IsNullOrEmpty (rcUserName) 
 			&& !String.IsNullOrEmpty (userName)
@@ -151,10 +162,10 @@ public class BuildController : MonoBehaviour
 	
 	private void CheckState ()
 	{
-        SHLog.Debug("{0} | {1} | {2}", m_isFirstCheckState, m_lastCheckStateStatus, Data.Status);
-        var statusChanged = m_isFirstCheckState || m_lastCheckStateStatus != Data.Status;      
+        SHLog.Debug("{0} | {1} | {2}", m_isFirstCheckState, m_lastCheckStateStatus, Model.Status);
+        var statusChanged = m_isFirstCheckState || m_lastCheckStateStatus != Model.Status;      
 
-        if (Data.IsRunning) {
+        if (Model.IsRunning) {
 			m_progressBar.Show ();
 		} else {
 			m_progressBar.Hide ();
@@ -162,7 +173,7 @@ public class BuildController : MonoBehaviour
 
         Color color;
 
-        switch (Data.Status)
+        switch (Model.Status)
         {
             case BuildStatus.Failed:
             case BuildStatus.Error:
@@ -202,7 +213,7 @@ public class BuildController : MonoBehaviour
                 color = RunningColor;
                 UpdateRunningStatusIcon(false);
 
-                m_progressBar.UpdateValue(Data.PercentageComplete);
+                m_progressBar.UpdateValue(Model.PercentageComplete);
 
                 if (statusChanged)
                 {
@@ -217,15 +228,15 @@ public class BuildController : MonoBehaviour
         m_focusedPanelRenderer.materials[1].SetColor("_Color", color);
 
         m_isFirstCheckState = false;
-        m_lastCheckStateStatus = Data.Status;
+        m_lastCheckStateStatus = Model.Status;
     }		
 				
 	private void UpdateRunningStatusIcon (bool hide)
 	{	
-		if (Data.LastRanStep == null) {
+		if (Model.LastRanStep == null) {
 			m_runningStatusIcon.sprite = BuildRunningIcons[(int)BuildStepType.None];
 		} else {
-			m_runningStatusIcon.sprite = BuildRunningIcons[(int)Data.LastRanStep.StepType];
+			m_runningStatusIcon.sprite = BuildRunningIcons[(int)Model.LastRanStep.StepType];
 		}			
 		
 		m_runningStatusIcon.enabled = IsVisible || !hide;
@@ -233,10 +244,10 @@ public class BuildController : MonoBehaviour
 	
 	private void UpdateUserAvatar ()
 	{
-		m_userAvatarIcon.enabled = !(!IsVisible || Data.IsRunning);
+		m_userAvatarIcon.enabled = !(!IsVisible || Model.IsRunning);
 		
-		UserService.GetUserPhoto (Data.TriggeredBy, (photo) => {
-			m_userAvatarIcon.enabled = !(!IsVisible || Data.IsRunning);
+		UserService.GetUserPhoto (Model.TriggeredBy, (photo) => {
+			m_userAvatarIcon.enabled = !(!IsVisible || Model.IsRunning);
 			m_userAvatarIcon.sprite = photo.ToSprite();
 		});
 	}
@@ -245,7 +256,6 @@ public class BuildController : MonoBehaviour
 	{
 		if (!m_groundReachdAlreadRaised && !IsHistoryBuild) {
 			m_groundReachdAlreadRaised = true;
-			GroundReachedCount++;
 			HasReachGround = true;
 			Messenger.Send ("OnBuildReachGround", gameObject);
 		}
@@ -258,14 +268,14 @@ public class BuildController : MonoBehaviour
 			CheckState ();
 			CreateHiddingEffect ();
 
-            m_rigidbody.isKinematic = true;
+            Rigidbody.isKinematic = true;
 			m_bodyCollider.enabled = false;
-            m_topEdge.enabled = false;
-            m_rightEdge.enabled = false;
-            m_bottomEdge.enabled = false;
-            m_leftEdge.enabled = false;
+            TopEdge.enabled = false;
+            RightEdge.enabled = false;
+            BottomEdge.enabled = false;
+            LeftEdge.enabled = false;
             
-			m_body.SetActive(false);
+			Body.SetActive(false);
 			IsVisible = false;
 			m_runningStatusIcon.enabled = false;
 			m_userAvatarIcon.enabled = false;
@@ -275,30 +285,9 @@ public class BuildController : MonoBehaviour
             HasReachGround = false;
             m_groundReachdAlreadRaised = false;
             Messenger.Send ("OnBuildHidden");
-
-            WakeUpSleepingBuilds();
         }
 	}
 
-    /// <summary>
-    /// Issue #9: https://github.com/skahal/Buildron/issues/9
-    /// If a build was removed, maybe there are space between builds totems and some can be sleeping.
-    /// Wake everyone!
-    /// </summary>
-    private void WakeUpSleepingBuilds()
-    {      
-        foreach (var visibleBuild in BuildController.GetVisibles())
-        {
-            var rb = visibleBuild.GetComponent<BuildController>().m_rigidbody;
-
-            if (rb.IsSleeping())
-            {
-                SHLog.Debug("Wake up build game object: {0}", visibleBuild.name);
-                rb.WakeUp();
-            }
-        }
-    }
-	
 	private void Show ()
 	{
 		if (!IsVisible)
@@ -306,20 +295,20 @@ public class BuildController : MonoBehaviour
 			CheckState ();
 			transform.position += Vector3.up * 20;
 
-            m_rigidbody.isKinematic = false;
+            Rigidbody.isKinematic = false;
 			m_bodyCollider.enabled = true;
-            m_topEdge.enabled = true;
-            m_rightEdge.enabled = true;
-            m_bottomEdge.enabled = true;
-            m_leftEdge.enabled = true;
+            TopEdge.enabled = true;
+            RightEdge.enabled = true;
+            BottomEdge.enabled = true;
+            LeftEdge.enabled = true;
 
-            m_body.SetActive(true);
+            Body.SetActive(true);
 			IsVisible = true;			
 			UpdateUserAvatar ();
 			m_projectLabel.enabled = true;
 			m_configurationLabel.enabled = true;
 
-            if (Data.IsRunning)
+            if (Model.IsRunning)
             {
                 m_runningStatusIcon.enabled = true;
                 m_progressBar.Show();
@@ -355,127 +344,12 @@ public class BuildController : MonoBehaviour
 		effect.transform.position = transform.position;
 		effect.GetComponent<ParticleSystem> ().Play ();
 	}
-	
-	#region Static methods
-	private static string GetName (Build b)
-	{
-		return b.Id;
-	}
-	
-	public static GameObject GetGameObject (Build b)
-	{
-		return GameObject.Find (GetName(b));
-	}
-	
-	public static bool ExistsGameObject (Build b)
-	{
-		return GetGameObject (b) != null;
-	}
-	
-	public static GameObject CreateGameObject (Build b)
-	{
-		var go = GetGameObject (b);
-		
-		if (go == null) {
-			go = (GameObject)GameObject.Instantiate (s_buildPrefab);
-			var build = go.GetComponent<BuildController> ();
-			build.Data = b;
-			go.name = GetName (b);		
-		}
-		
-		return go;
-	}
-	
-	private static IEnumerable<GameObject> GetVisiblesQuery ()
-	{
-		var builds = GameObject.FindGameObjectsWithTag ("Build").Select (b => b.GetComponent<BuildController> ());	
-		
-		return builds.Where (
-				b => b != null 
-			&& b.m_body != null 
-			&& b.IsVisible
-			&& !b.IsHistoryBuild).Select (b => b.gameObject);
-	}
-	
-	public static IList<GameObject> GetVisibles ()
-	{
-		return GetVisiblesQuery().ToList ();
-		
-	}
-	
-	public static int CountVisibles ()
-	{
-		return GetVisiblesQuery ().Count ();
-	}
-	
-	public static bool HasNotVisiblesFromTop ()
-	{
-		var builds = GameObject.FindGameObjectsWithTag ("Build").Select (b => b.GetComponent<BuildController> ());	
-	
-		return builds.Any (
-				b => b != null 
-			&& b.HasReachGround
-			&& b.IsVisible
-			&& !b.IsHistoryBuild
-			&& Mathf.Abs (b.m_rigidbody.velocity.y) <= b.VisibleMaxYVelocity
-			&& !b.m_topEdge.IsVisibleFrom (Camera.main)
-			&& (b.m_leftEdge.IsVisibleFrom (Camera.main) 
-			|| b.m_rightEdge.IsVisibleFrom (Camera.main)
-			|| b.m_bottomEdge.IsVisibleFrom (Camera.main)));
-	}
-	
-	public static bool HasNotVisiblesFromSides ()
-	{
-		var builds = GameObject.FindGameObjectsWithTag ("Build").Select (b => b.GetComponent<BuildController> ());	
-
-		return builds.Any (
-				b => b != null 
-			&& b.HasReachGround
-			&& b.IsVisible
-			&& !b.IsHistoryBuild
-			&& Mathf.Abs (b.m_rigidbody.velocity.y) <= b.VisibleMaxYVelocity
-			&& b.m_topEdge.IsVisibleFrom (Camera.main)
-			&& (!b.m_leftEdge.IsVisibleFrom (Camera.main) 
-			|| !b.m_rightEdge.IsVisibleFrom (Camera.main)
-			|| !b.m_bottomEdge.IsVisibleFrom (Camera.main)));
-	}
-	
-	public static IList<GameObject> GetVisiblesOrderByPosition ()
-	{
-		var buildsGO = GameObject.FindGameObjectsWithTag ("Build");
-		var buildsControllers = buildsGO.Select (b => b.GetComponent<BuildController> ());
-		
-		var query = from c in buildsControllers
-					where c.m_body != null 
-						&& c.IsVisible
-						&& !c.IsHistoryBuild
-					orderby 
-						Mathf.CeilToInt (c.m_body.transform.position.x) ascending, 
-						Mathf.CeilToInt (c.m_body.transform.position.y) descending,
-						c.gameObject.name ascending
-					select c.gameObject;
-		
-		
-		return query.ToList ();
-	}
+    #endregion
 
     /// <summary>
-    /// Verify if all builds physics are sleeping.
+    /// The build controller factory.
     /// </summary>
-    /// <remarks>
-    /// Works well with the value of "Sleep Threshold" in the "Project settings\Physics" as "0.05".
-    /// </remarks>
-    /// <returns>True if all builds are sleeping.</returns>
-    public static bool AreAllSleeping()
-    {
-        return BuildController.GetVisibles().All(b => b.GetComponent<BuildController>().m_rigidbody.IsSleeping());
-    }
-
-    public static bool HasAllReachGround()
-    {
-        return BuildController.GetVisibles().All(b => b.GetComponent<BuildController>().HasReachGround);
-    }
-    #endregion
-
-    #endregion
+    public class Factory : Factory<BuildController>
+	{
+	}
 }

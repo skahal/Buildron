@@ -21,9 +21,10 @@ public class ServerInfrastructureInitializer : MonoBehaviour {
         nonHumanUserAvatarProviders.AddPhoto(UserKind.ScheduledTrigger, ScheduledTriggerAvatar);
         nonHumanUserAvatarProviders.AddPhoto(UserKind.RetryTrigger, RetryTriggerAvatar);
 
-        UserService.Initialize(
-            new IUserAvatarProvider[] { new GravatarUserAvatarProvider(), new AcronymUserAvatarProvider(), humanFallbackUserAvatarProvider },
-            new IUserAvatarProvider[] { nonHumanUserAvatarProviders });
+        // TODO: realizar essa inicialização via strange. Ver MainRoot.cs e MainContext.cs
+        //UserService.Initialize(
+        //    new IUserAvatarProvider[] { new GravatarUserAvatarProvider(), new AcronymUserAvatarProvider(), humanFallbackUserAvatarProvider },
+        //    new IUserAvatarProvider[] { nonHumanUserAvatarProviders });
     }
-	#endregion
+    #endregion
 }

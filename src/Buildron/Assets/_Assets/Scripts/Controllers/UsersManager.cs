@@ -2,6 +2,9 @@
 using UnityEngine;
 using System.Collections;
 using Buildron.Domain;
+using Zenject;
+
+
 #endregion
 
 /// <summary>
@@ -16,11 +19,13 @@ public class UsersManager : MonoBehaviour
 	private int m_rowsCount = 1;
 	#endregion
 	
-	#region Editor Properties
+	#region Properties
 	public Vector3 FirstSpawnPosition = new Vector3(-10, -3, -10);
 	public Vector3 DistanceBetweenUsers = new Vector3(2, 0, 0);
 	public int NumberUserPerRows = 5;
 	public Vector3 DistanceBetweenUsersRows = new Vector3(0, 0, 2);
+	[Inject]
+	public UserController.Factory Factory { get; set; }
 	#endregion
 	
 	#region Methods
@@ -57,7 +62,7 @@ public class UsersManager : MonoBehaviour
 	
 	private void CreateUserGameObject (GameObject buildGO)
 	{
-		var build = buildGO.GetComponent<BuildController> ().Data;
+		var build = buildGO.GetComponent<BuildController> ().Model;
 	
 		if (build.TriggeredBy == null) {
 			build.TriggeredByChanged += delegate {
@@ -76,7 +81,7 @@ public class UsersManager : MonoBehaviour
 		if (go != null) {
 			go.GetComponent<UserController> ().Data = build.TriggeredBy;
 		} else {
-			go = UserController.CreateGameObject (build.TriggeredBy);
+			go = UserController.CreateGameObject (build.TriggeredBy, Factory);
 			go.transform.position = m_currentSpawnPosition;
 			go.transform.parent = transform;			
 			

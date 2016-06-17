@@ -334,6 +334,50 @@ MonoBehaviour:
   adaptionSpeed: 1.5
   tonemapper: {fileID: 4800000, guid: 003377fc2620a44939dadde6fe3f8190, type: 3}
   validRenderTextureFormat: 1
+--- !u!1 &127631115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 127631116}
+  - 114: {fileID: 127631117}
+  m_Layer: 0
+  m_Name: SceneContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &127631116
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 127631115}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.91699463, y: 0.34202015, z: 8.916211}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 916345610}
+  m_RootOrder: 1
+--- !u!114 &127631117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 127631115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _installers:
+  - {fileID: 361587082}
+  _installerPrefabs: []
+  _scriptableObjectInstallers: []
+  _parentNewObjectsUnderRoot: 0
 --- !u!1 &132614245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,9 +1262,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 361587081}
   - 114: {fileID: 361587082}
-  - 114: {fileID: 361587083}
   m_Layer: 0
-  m_Name: InfrastructureInitializer
+  m_Name: IoCInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1246,24 +1289,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 361587080}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3433896ec115646cf8f13c7121ef39b6, type: 3}
+  m_Script: {fileID: 11500000, guid: a3691916c71cc431cbedf03d96ece8e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &361587083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 361587080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bd6e7481e08f4c90b6a1c8a16e314b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ScheduledTriggerAvatar: {fileID: 2800000, guid: 6ba02afabc2a24312b81d12ffb7e9104,
-    type: 3}
-  RetryTriggerAvatar: {fileID: 2800000, guid: 80ba897a99a254866823d382f7816035, type: 3}
-  UnunknownAvatar: {fileID: 2800000, guid: 6f2f14440482e4449b3a2877897f7909, type: 3}
 --- !u!1 &365713297
 GameObject:
   m_ObjectHideFlags: 0
@@ -3117,6 +3145,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 361587081}
+  - {fileID: 127631116}
   m_Father: {fileID: 0}
   m_RootOrder: 3
 --- !u!1 &919858243

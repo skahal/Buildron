@@ -7,6 +7,10 @@ using Skahal.Common;
 using Skahal.Logging;
 using Skahal.Serialization;
 using UnityEngine;
+using Zenject;
+using Buildron.Application;
+
+
 #endregion
 
 [RequireComponent(typeof(NetworkView))]
@@ -16,7 +20,12 @@ public class ServerMessagesListener : MonoBehaviour
 	public event System.EventHandler BuildFilterUpdated;
 	public event System.EventHandler<BuildSortUpdatedEventArgs> BuildSortUpdated;
 	#endregion
-	
+
+	#region Properties
+	[Inject]
+	public BuildGOService BuildGOService { get; set; }
+	#endregion
+
 	#region Life cycle
 	private void Awake ()
 	{
@@ -52,7 +61,7 @@ public class ServerMessagesListener : MonoBehaviour
 		SHLog.Debug ("Remote control connected.");	
 		
 		SendToRCCurrentServerState ();
-		OnVisibleBuildsCount (BuildController.VisiblesCount);
+		OnVisibleBuildsCount (BuildGOService.CountVisibles());
 	}
 	
 	private void OnPlayerDisconnected ()
@@ -64,13 +73,13 @@ public class ServerMessagesListener : MonoBehaviour
 	
 	private void OnBuildHidden ()
 	{
-		OnVisibleBuildsCount (BuildController.VisiblesCount);
+		OnVisibleBuildsCount (BuildGOService.CountVisibles());
 	
 	}
 	
 	private void OnBuildVisible ()
 	{
-		OnVisibleBuildsCount (BuildController.VisiblesCount);
+		OnVisibleBuildsCount (BuildGOService.CountVisibles());
 	}
 	
 	private void OnScreenshotTaken (Texture2D texture)

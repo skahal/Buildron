@@ -10,6 +10,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Skahal.Threading;
+using Zenject;
+
+
 #endregion
 
 /// <summary>
@@ -22,10 +25,15 @@ public class ConfigPanelController : MonoBehaviour
 	private CIServer m_CIServer;
 	private IBuildsProvider m_buildsProvider;
 	private Animator m_animator;
-	#endregion
-	
-	#region Editor properties
-	public Toggle CIServerTypeHudsonToggle;
+    #endregion
+
+    #region IoC properties
+	[Inject]
+    public IUserService UserService { get; set; }
+    #endregion
+
+    #region Editor properties
+    public Toggle CIServerTypeHudsonToggle;
 	public Toggle CIServerTypeJenkinsToggle;
 	public Toggle CIServerTypeTeamCityToggle;
 
@@ -90,9 +98,8 @@ public class ConfigPanelController : MonoBehaviour
 		if (AutoStart || HasAutoStartArgument ()) {
 			StartBuildron ();
 		}
-		
-		BuildService.UserAuthenticationSuccessful += HandleBuildServiceUserAuthenticationSuccessful;
-		BuildService.UserAuthenticationFailed += HandleBuildServiceUserAuthenticationFailed;
+
+        UserService.UserAuthenticationCompleted += HandleUserAuthenticationCompleted;
 		
 		InitializeVersion ();
 		//m_animator = GetComponent<Animator> ();
@@ -163,25 +170,26 @@ public class ConfigPanelController : MonoBehaviour
 		}
 	}
 
-	private void HandleBuildServiceUserAuthenticationSuccessful (object sender, System.EventArgs e)
+	private void HandleUserAuthenticationCompleted(object sender, UserAuthenticationCompletedEventArgs e)
 	{
-		CIServerStatusLabel.text = "Authenticated. Loading...";
-		
-		BuildService.UserAuthenticationSuccessful -= HandleBuildServiceUserAuthenticationSuccessful;
-		BuildService.UserAuthenticationFailed -= HandleBuildServiceUserAuthenticationFailed;
-		
-		//m_animator.enabled = true;
-		PanelTransitionController.Instance.ShowMainPanel ();
-		Messenger.Send ("OnCIServerReady");
-	}
-	
-	private void HandleBuildServiceUserAuthenticationFailed (object sender, System.EventArgs e)
-	{
-		CIServerStatusLabel.text = "IP, Username or Password invalid!";
-
-        if(HasAutoStartArgument())
+        if (e.Success)
         {
-            SHThread.Start(1f, StartBuildron);
+            CIServerStatusLabel.text = "Authenticated. Loading...";
+
+            UserService.UserAuthenticationCompleted -= HandleUserAuthenticationCompleted;
+
+            //m_animator.enabled = true;
+            PanelTransitionController.Instance.ShowMainPanel();
+            Messenger.Send("OnCIServerReady");
+        }
+        else
+        {
+            CIServerStatusLabel.text = "IP, Username or Password invalid!";
+
+            if (HasAutoStartArgument())
+            {
+                SHThread.Start(1f, StartBuildron);
+            }
         }
 	}
 
@@ -256,6 +264,7 @@ public class ConfigPanelController : MonoBehaviour
             m_buildsProvider = new FilterBuildsProvider(m_buildsProvider);
 
 			BuildsProvider.Initialize (m_buildsProvider);
+			UserService.ListenBuildsProvider (m_buildsProvider);
 
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
 			BuildService.Initialize (m_buildsProvider);

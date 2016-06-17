@@ -8,6 +8,7 @@ namespace Skahal.Domain.Mods
 {
 	/// <summary>
 	/// Represents the mod context.
+    /// ModContext is, basically, a facade to many events that occurs in Buildron.
 	/// </summary>
 	public class ModContext
 	{    
@@ -20,13 +21,11 @@ namespace Skahal.Domain.Mods
 		public event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;    
 		public event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
 		public event EventHandler<UserFoundEventArgs> UserFound;
-//		public event EventHandler<UserUpdatedEventArgs> UserUpdated;
-//		public event EventHandler<UserTriggeredBuildEventArgs> UserTriggeredBuild;
-//		public event EventHandler<UserRemovedEventArgs> UserRemoved;
-//		public event EventHandler<UserAuthenticationSuccessfulEventArgs> UserAuthenticationSuccessful;
-//		public event EventHandler<UserAuthenticationFailedEventArgs> UserAuthenticationFailed;  
-//		public event EventHandler<RemoteControlConnectedEventArgs> RemoteControlConnected;  
-//		public event EventHandler<RemoteControlDisconnectedEventArgs> RemoteControlDisconnected;  
+		public event EventHandler<UserUpdatedEventArgs> UserUpdated;
+		public event EventHandler<UserTriggeredBuildEventArgs> UserTriggeredBuild;
+		public event EventHandler<UserRemovedEventArgs> UserRemoved;
+		public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
+		public event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;  
 		#endregion
 
 		#region Properties

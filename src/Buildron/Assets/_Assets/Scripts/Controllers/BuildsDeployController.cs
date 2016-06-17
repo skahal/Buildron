@@ -5,6 +5,8 @@ using Buildron.Domain;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Skahal.Logging;
+using Zenject;
+using Buildron.Application;
 
 
 #endregion
@@ -50,6 +52,9 @@ public class BuildsDeployController : MonoBehaviour
             return m_buildsToDeploy.Count > 0;
         }
     }
+		
+	[Inject]
+	public BuildGOService Service { get; set; }
     #endregion
 
     private void Awake ()
@@ -83,16 +88,16 @@ public class BuildsDeployController : MonoBehaviour
 	{
         GameObject go;
 
-		if (BuildController.ExistsGameObject (b)) {
+		if (Service.ExistsGameObject (b)) {
             SHLog.Debug("BuildsDeploy: existing build updated {0}", b.Id);
 
-            go = BuildController.GetGameObject (b);
+            go = Service.GetGameObject (b);
 			go.SendMessage ("Show");
 		}
 		else {
             SHLog.Debug("BuildsDeploy: new build updated {0}", b.Id);
 
-            go = BuildController.CreateGameObject (b);
+			go = Service.CreateGameObject (b);
 			go.transform.parent = m_container.transform;						
 		}
 
@@ -113,8 +118,8 @@ public class BuildsDeployController : MonoBehaviour
 
 	private void RemoveBuild (Build b)
 	{
-		if (BuildController.ExistsGameObject (b)) {
-			var go = BuildController.GetGameObject (b);
+		if (Service.ExistsGameObject (b)) {
+			var go = Service.GetGameObject (b);
 			go.SendMessage ("Hide");
             m_deployedBuildsCount--;            
         }

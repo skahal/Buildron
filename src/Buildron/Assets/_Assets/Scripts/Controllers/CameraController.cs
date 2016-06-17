@@ -5,6 +5,8 @@ using Skahal.Logging;
 using UnityEngine;
 using Skahal.Rendering;
 using Skahal.Threading;
+using Buildron.Application;
+using Zenject;
 
 #region Enums
 /// <summary>
@@ -41,7 +43,7 @@ public class CameraController : MonoBehaviour
 	private bool m_autoPosition = true;
     #endregion
 	
-	#region Editor properties
+	#region Properties
 	public int MaxBuildsBeforeMove = 16;
 	public Vector3 DistanceFromFocusBuild = new Vector3(0, 0, -3);
 	public Vector3 DistanceFromOriginalPosition = new Vector3(0, 0, -1);
@@ -54,6 +56,9 @@ public class CameraController : MonoBehaviour
 	public float VelocityToShowTop = 0.1f;
 	public float VelocityToShowSides = 0.1f;
 	public float MinY = 0;
+
+	[Inject]
+	public BuildGOService BuildGOService { get; set; }
 	#endregion
 	
 	#region Methods
@@ -135,17 +140,17 @@ public class CameraController : MonoBehaviour
 	private Vector3 CalculatePositionToShowAllBuilds ()
 	{
 		if (m_autoPosition) {
-			var currentVisiblesCount = BuildController.VisiblesCount;
+			var currentVisiblesCount = BuildGOService.CountVisibles();
 			var diff = m_lastVisiblesCount - currentVisiblesCount;
 		
 			if (diff > 0) {
 				m_originalPosition = m_firstPosition;
 			} else {
 				var hasNotVisiblesFromTop = false;
-				var hasNotVisiblesFromSides = BuildController.HasNotVisiblesFromSides ();
+				var hasNotVisiblesFromSides = BuildGOService.HasNotVisiblesFromSides ();
 
 				if (!hasNotVisiblesFromSides) {
-					hasNotVisiblesFromTop = BuildController.HasNotVisiblesFromTop ();
+					hasNotVisiblesFromTop = BuildGOService.HasNotVisiblesFromTop ();
 				}
 			
 				m_originalPosition += new Vector3 (
@@ -174,8 +179,8 @@ public class CameraController : MonoBehaviour
 	
 	private void ChangeByBuilds ()
 	{
-		if (BuildController.VisiblesCount == 1) {
-			var visibleOne = BuildController.GetVisibles () [0];
+		if (BuildGOService.CountVisibles() == 1) {
+			var visibleOne = BuildGOService.GetVisibles () [0];
 			m_target = visibleOne.transform;
 			m_state = CameraState.ShowingFocusBuild;
 			Messenger.Send ("OnCameraZoomIn");

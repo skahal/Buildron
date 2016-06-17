@@ -3,7 +3,7 @@ using System;
 namespace Buildron.Domain
 {
     /// <summary>
-    /// Base class to arguments for user found events.
+    /// Arguments for user found events.
     /// </summary>
     public class UserFoundEventArgs: UserEventArgsBase
 	{
