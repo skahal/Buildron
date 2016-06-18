@@ -5286,7 +5286,7 @@ GameObject:
   - 4: {fileID: 1419537929}
   - 114: {fileID: 1419537930}
   m_Layer: 0
-  m_Name: NotifcationController
+  m_Name: NotificationController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5315,7 +5315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b85683b2860a42e2a7f772a6e11a827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MinutesCheckNotificationsInterval: 10
+  MinutesCheckNotificationsInterval: 0.1
   MinutesUntilHideNotification: 2
   NotificationLabel: {fileID: 1828986998}
 --- !u!1 &1451383048

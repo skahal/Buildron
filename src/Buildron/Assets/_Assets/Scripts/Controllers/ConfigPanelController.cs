@@ -19,7 +19,7 @@ using Zenject;
 /// Controller for configuration panel.
 /// </summary>
 [AddComponentMenu("Buildron/Controllers/ConfigPanelController")]
-public class ConfigPanelController : MonoBehaviour
+public class ConfigPanelController : MonoBehaviour, IInitializable
 {
 	#region Fields
 	private CIServer m_CIServer;
@@ -72,7 +72,7 @@ public class ConfigPanelController : MonoBehaviour
 	#endregion
 	
 	#region Life cycle
-	private void Start ()
+	public void Initialize ()
 	{		
 		m_CIServer = CIServerService.GetCIServer ();
 		Debug.LogFormat ("Server type: {0}", m_CIServer.ServerType);

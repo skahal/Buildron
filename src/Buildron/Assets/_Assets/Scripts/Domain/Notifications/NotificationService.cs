@@ -1,43 +1,51 @@
 using Buildron.Domain.Versions;
 using Skahal.Common;
 using Skahal.Infrastructure.Framework.Commons;
+using System;
 
 namespace Buildron.Domain.Notifications
 {
-	public static class NotificationService
+	/// <summary>
+	/// Notification service to handle messages sent from Buildron Backend server to clients.
+	/// </summary>
+	public class NotificationService
 	{
 		#region Fields
-		private static INotificationClient s_notificationClient;
-		private static System.EventHandler<NotificationReceivedEventArgs> s_notificationReceived;
+		private INotificationClient m_notificationClient;
 		#endregion
 			
 		#region Events
-		public static event System.EventHandler<NotificationReceivedEventArgs> NotificationReceived {
-			add { s_notificationReceived += value; }
-			remove { s_notificationReceived -= value; }	
-		}
+		/// <summary>
+		/// Occurs when notification received.
+		/// </summary>
+		public event EventHandler<NotificationReceivedEventArgs> NotificationReceived;
 		#endregion 
 		
 		#region Constructors
-		static NotificationService ()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Notifications.NotificationService"/> class.
+		/// </summary>
+		/// <param name="notificationClient">Notification client.</param>
+		public NotificationService (INotificationClient notificationClient)
 		{
-			s_notificationClient = DependencyService.Create<INotificationClient> ();
-			
-			s_notificationClient.NotificationReceived += delegate(object sender, NotificationReceivedEventArgs e) {
-				s_notificationReceived.Raise(typeof(NotificationService), e);
-			};
-			
+			m_notificationClient = notificationClient;
+			m_notificationClient.NotificationReceived += (sender, e) => NotificationReceived.Raise (this, e);
 		}
 		#endregion
 		
 		#region Methods
-		public static void CheckNotifications(ClientKind kind, SHDeviceFamily device)
+		/// <summary>
+		/// Checks the notifications.
+		/// </summary>
+		/// <param name="kind">Kind.</param>
+		/// <param name="device">Device.</param>
+		public void CheckNotifications(ClientKind kind, SHDeviceFamily device)
 		{
 			var version = VersionService.GetVersion();
 			
 			if (version != null)
 			{
-				s_notificationClient.CheckNotifications(version.ClientId, kind, device);
+				m_notificationClient.CheckNotifications(version.ClientId, kind, device);
 			}
 		}
 		#endregion

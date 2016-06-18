@@ -6,6 +6,7 @@ using Buildron.Domain.Versions;
 using Buildron.Domain;
 using Skahal.Logging;
 using UnityEngine.UI;
+using Zenject;
 
 
 #endregion
@@ -14,8 +15,16 @@ using UnityEngine.UI;
 /// Notification controller for messages from Builcron back-end
 /// </summary>
 [AddComponentMenu("Buildron/Controllers/NotificationController")]
-public class NotificationController : MonoBehaviour 
+public class NotificationController : MonoBehaviour, IInitializable 
 {
+	#region Fields
+	[Inject]
+	private NotificationService m_notificationService;
+
+	[Inject]
+	private ISHLogStrategy m_log;
+	#endregion
+
 	#region Editor properties
 	public float MinutesCheckNotificationsInterval = 10;
 	public float MinutesUntilHideNotification = 2;
@@ -23,38 +32,39 @@ public class NotificationController : MonoBehaviour
 	#endregion
 	
 	#region Methods
-	private void Awake ()
+	public void Initialize()
 	{
-		NotificationService.NotificationReceived += delegate(object sender, NotificationReceivedEventArgs e) {		
-			SHLog.Debug ("NotificationController: notification received '{0}'.", e.Notification.Text);
+		m_notificationService.NotificationReceived += (sender, e) => 
+		{		
+			m_log.Debug ("NotificationController: notification received '{0}'.", e.Notification.Text);
 			if (!RemoteControlService.HasRemoteControlConnected) {
-				
-							
+
+
 				// Someday a RC has connect to this Buildron instance, so stop to boring about RC ;)
 				if (e.Notification.Name.Equals ("DOWNLOAD_RC") && RemoteControlService.HasRemoteControlConnectedSomeDay) {
 					return;
 				}
-	
+
 				NotificationLabel.text = e.Notification.Text;
 				NotificationLabel.enabled = true;
-			
+
 				StartCoroutine (DelayHideNotification ());
 			}
 		};
-		
+
 		Messenger.Register (gameObject, "OnRemoteControlConnected");
-		
+
 		StartCoroutine (CheckNotification ());
 	}
 	
 	private IEnumerator CheckNotification ()
 	{
 		while (true) {
-			SHLog.Debug ("NotificationController: next check in {0} minutes", MinutesCheckNotificationsInterval);
+			m_log.Debug ("NotificationController: next check in {0} minutes", MinutesCheckNotificationsInterval);
 			yield return new WaitForSeconds(60f * MinutesCheckNotificationsInterval);
 			
-			SHLog.Debug ("NotificationController: checking notifications...");
-			NotificationService.CheckNotifications (ClientKind.Buildron, SHDevice.Family);
+			m_log.Debug ("NotificationController: checking notifications...");
+			m_notificationService.CheckNotifications (ClientKind.Buildron, SHDevice.Family);
 		}
 	}
 	

@@ -12,98 +12,105 @@ using Buildron.Domain.Notifications;
 using Buildron.Application;
 using Buildron.Domain.EasterEggs;
 
-public class IoCInstaller : MonoInstaller
+namespace Buildron.Infrastructure.IoC
 {
-	#region Editor properties
-	public Texture2D ScheduledTriggerAvatar;
-	public Texture2D RetryTriggerAvatar;
-	public Texture2D UnunknownAvatar;
-	#endregion
-
-	public override void InstallBindings ()
+	public class IoCInstaller : MonoInstaller
 	{
-		var log = InstallLog ();
+		#region Editor properties
 
-		log.Debug ("IOC :: Installing user bindings...");
-		InstallUser ();
+		public Texture2D ScheduledTriggerAvatar;
+		public Texture2D RetryTriggerAvatar;
+		public Texture2D UnunknownAvatar;
 
-		log.Debug ("IOC :: Installing build bindings...");
-		InstallBuild ();  
+		#endregion
 
-		log.Debug ("IOC :: Installing misc bindings...");
-		InstallMisc ();
+		public override void InstallBindings ()
+		{
+			var log = InstallLog ();
 
+			log.Debug ("IOC :: Installing user bindings...");
+			InstallUser ();
 
-        DependencyService.Register<IServerStateRepository>(new PlayerPrefsServerStateRepository());
-        DependencyService.Register<IVersionClient>(() => {
-            return new BackEndClient();
-        });
+			log.Debug ("IOC :: Installing build bindings...");
+			InstallBuild ();  
 
-        DependencyService.Register<IVersionRepository>(() => {
-            return new PlayerPrefsVersionRepository();
-        });
-
-        DependencyService.Register<INotificationClient>(() => {
-            return new BackEndClient();
-        });
-
-		log.Debug ("IOC :: Bindings installed.");
-	}
+			log.Debug ("IOC :: Installing misc bindings...");
+			InstallMisc ();
 
 
-	ISHLogStrategy InstallLog ()
-	{
-		var logStrategy = SHLog.LogStrategy;
-		Container.Bind<ISHLogStrategy> ().FromInstance (logStrategy).AsSingle ();
+			DependencyService.Register<IServerStateRepository> (new PlayerPrefsServerStateRepository ());
+			DependencyService.Register<IVersionClient> (() => {
+				return new BackEndClient ();
+			});
 
-		return logStrategy;
-	}
+			DependencyService.Register<IVersionRepository> (() => {
+				return new PlayerPrefsVersionRepository ();
+			});
 
-	void InstallUser ()
-	{
-		var humanFallbackUserAvatarProvider = new StaticUserAvatarProvider ();
-		humanFallbackUserAvatarProvider.AddPhoto(UserKind.Human, UnunknownAvatar);
+			log.Debug ("IOC :: Bindings installed.");
+		}
 
-		var nonHumanUserAvatarProviders = new StaticUserAvatarProvider ();
-		nonHumanUserAvatarProviders.AddPhoto(UserKind.ScheduledTrigger, ScheduledTriggerAvatar);
-		nonHumanUserAvatarProviders.AddPhoto(UserKind.RetryTrigger, RetryTriggerAvatar);
 
-		var userService = new UserService (new IUserAvatarProvider[] {
-			new GravatarUserAvatarProvider (),
-			new AcronymUserAvatarProvider (),
-			humanFallbackUserAvatarProvider
-		}, new IUserAvatarProvider[] {
-			nonHumanUserAvatarProviders
-		}, Container.Resolve<ISHLogStrategy> ());
-		Container.Bind<IUserService> ().FromInstance (userService);
+		ISHLogStrategy InstallLog ()
+		{
+			var logStrategy = SHLog.LogStrategy;
+			Container.Bind<ISHLogStrategy> ().FromInstance (logStrategy).AsSingle ();
 
-		Container.BindFactory<UserController, UserController.Factory>()
+			return logStrategy;
+		}
+
+		void InstallUser ()
+		{
+			var humanFallbackUserAvatarProvider = new StaticUserAvatarProvider ();
+			humanFallbackUserAvatarProvider.AddPhoto (UserKind.Human, UnunknownAvatar);
+
+			var nonHumanUserAvatarProviders = new StaticUserAvatarProvider ();
+			nonHumanUserAvatarProviders.AddPhoto (UserKind.ScheduledTrigger, ScheduledTriggerAvatar);
+			nonHumanUserAvatarProviders.AddPhoto (UserKind.RetryTrigger, RetryTriggerAvatar);
+
+			var userService = new UserService (new IUserAvatarProvider[] {
+				new GravatarUserAvatarProvider (),
+				new AcronymUserAvatarProvider (),
+				humanFallbackUserAvatarProvider
+			}, new IUserAvatarProvider[] {
+				nonHumanUserAvatarProviders
+			}, Container.Resolve<ISHLogStrategy> ());
+			Container.Bind<IUserService> ().FromInstance (userService);
+
+			Container.BindFactory<UserController, UserController.Factory> ()
 			.FromPrefabResource ("UserPrefab")
-			.UnderGameObjectGroup("Users");
-	}
+			.UnderGameObjectGroup ("Users");
+		}
 
-	void InstallBuild ()
-	{
-		Container.Bind<BuildGOService> ().AsSingle();
-		Container.BindFactory<BuildController, BuildController.Factory>()
+		void InstallBuild ()
+		{
+			Container.Bind<BuildGOService> ().AsSingle ();
+			Container.BindFactory<BuildController, BuildController.Factory> ()
 			.FromPrefabResource ("BuildPrefab")
-			.UnderGameObjectGroup("Builds");
-	}
+			.UnderGameObjectGroup ("Builds");
+		}
 
-	void InstallMisc ()
-	{
-		var easterEggService = new EasterEggService (
-			new IEasterEggProvider[] { 
-				GameObject.Find ("MatrixEasterEggController").GetComponent<MatrixEasterEggController>(),
-				GameObject.Find ("KickEasterEggController").GetComponent<KickEasterEggController>()
-			}, 
-			Container.Resolve<ISHLogStrategy> ());
-		Container.Bind<EasterEggService> ().FromInstance(easterEggService).AsSingle();
+		void InstallMisc ()
+		{
+			Container.BindController<MatrixEasterEggController> ();
+			Container.BindController<KickEasterEggController> ();
 
-		var serverMessagesListener = new GameObject ("ServerMessagesListener").AddComponent<ServerMessagesListener> ();
-		Container.Inject (serverMessagesListener);
+			var easterEggService = new EasterEggService (
+				new IEasterEggProvider[] { 
+					Container.Resolve<MatrixEasterEggController> (),
+					Container.Resolve<KickEasterEggController> ()
+				}, 
+				Container.Resolve<ISHLogStrategy> ());
+			Container.Bind<EasterEggService> ().FromInstance (easterEggService).AsSingle ();
 
-		Container.Bind<IInitializable> ().FromInstance (serverMessagesListener).AsSingle ();
-		Container.Bind<ServerMessagesListener> ().FromInstance (serverMessagesListener).AsSingle ();
+			var backEndClient = new BackEndClient ();
+			Container.Bind<INotificationClient> ().FromInstance (backEndClient);
+			Container.Bind<IVersionClient> ().FromInstance (backEndClient);
+			Container.Bind<NotificationService> ().To<NotificationService> ().AsSingle ();
+
+			Container.BindController<ServerMessagesListener> (true);	
+			Container.BindController<NotificationController>();
+			Container.BindController<ConfigPanelController> ();
+		}
 	}
 }
