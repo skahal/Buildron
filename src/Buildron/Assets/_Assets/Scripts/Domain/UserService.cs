@@ -7,182 +7,190 @@ using UnityEngine;
 
 namespace Buildron.Domain
 {
-    /// <summary>
-    /// Domain service to user from continuous integration server.
-    /// </summary>
-    public class UserService : IUserService
-    {
-        #region Events
-        /// <summary>
-        /// Occurs when an user is found.
-        /// </summary>
-        public event EventHandler<UserFoundEventArgs> UserFound;
+	/// <summary>
+	/// Domain service to user from continuous integration server.
+	/// </summary>
+	public class UserService : IUserService
+	{
+		#region Events
 
-        /// <summary>
-        /// Occurs when an user is updated.
-        /// </summary>
-        public event EventHandler<UserUpdatedEventArgs> UserUpdated;
+		/// <summary>
+		/// Occurs when an user is found.
+		/// </summary>
+		public event EventHandler<UserFoundEventArgs> UserFound;
 
-        /// <summary>
-        /// Occurs when an user triggered a build.
-        /// </summary>
-        public event EventHandler<UserTriggeredBuildEventArgs> UserTriggeredBuild;
+		/// <summary>
+		/// Occurs when an user is updated.
+		/// </summary>
+		public event EventHandler<UserUpdatedEventArgs> UserUpdated;
 
-        /// <summary>
-        /// Occurs when an user is removed.
-        /// </summary>
-        public event EventHandler<UserRemovedEventArgs> UserRemoved;
+		/// <summary>
+		/// Occurs when an user triggered a build.
+		/// </summary>
+		public event EventHandler<UserTriggeredBuildEventArgs> UserTriggeredBuild;
 
-        /// <summary>
-        /// Occurs when an user authentication is completed.
-        /// </summary>
-        public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
-        #endregion
+		/// <summary>
+		/// Occurs when an user is removed.
+		/// </summary>
+		public event EventHandler<UserRemovedEventArgs> UserRemoved;
 
-        #region Fields
-        private IUserAvatarProvider[] m_humanUserAvatarProviders;
-        private IUserAvatarProvider[] m_nonHumanUserAvatarProviders;
-        private ISHLogStrategy m_log;
-        #endregion
+		/// <summary>
+		/// Occurs when an user authentication is completed.
+		/// </summary>
+		public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 
-        #region Constructors               
-        /// <summary>
-        /// Inicia uma nova inst�ncia da classe <see cref="UserService"/>.
-        /// </summary>
-        /// <param name="humanUserAvatarProviders">The human user avatar providers.</param>
-        /// <param name="nonHumanAvatarProviders">The non human avatar providers.</param>
-        /// <param name="log">The log strategy.</param>
-        public UserService(
-            IUserAvatarProvider[] humanUserAvatarProviders, 
-            IUserAvatarProvider[] nonHumanAvatarProviders,
-            ISHLogStrategy log)
-        {
-            Users = new List<User>();
-            m_humanUserAvatarProviders = humanUserAvatarProviders;
-            m_nonHumanUserAvatarProviders = nonHumanAvatarProviders;
-            m_log = log;
-        }
-        #endregion
+		#endregion
 
-        #region Properties
-	    /// <summary>
-        /// Gets the users.
-        /// </summary>
-        public IList<User> Users { get; private set; }
-        #endregion
+		#region Fields
 
-        #region Methods
+		private StaticUserAvatarProvider m_userAvatarCache;
+		private IList<IUserAvatarProvider> m_humanUserAvatarProviders;
+		private IList<IUserAvatarProvider> m_nonHumanUserAvatarProviders;
+		private ISHLogStrategy m_log;
+
+		#endregion
+
+		#region Constructors
+
+		/// <summary>
+		/// Inicia uma nova inst�ncia da classe <see cref="UserService"/>.
+		/// </summary>
+		/// <param name="humanUserAvatarProviders">The human user avatar providers.</param>
+		/// <param name="nonHumanAvatarProviders">The non human avatar providers.</param>
+		/// <param name="log">The log strategy.</param>
+		public UserService (
+			IUserAvatarProvider[] humanUserAvatarProviders, 
+			IUserAvatarProvider[] nonHumanAvatarProviders,
+			ISHLogStrategy log)
+		{
+			Users = new List<User> ();
+
+			// Use a StaticUserAvatarProvier as a cached user avatar providers.
+			m_userAvatarCache = new StaticUserAvatarProvider ();
+			m_humanUserAvatarProviders = new List<IUserAvatarProvider> (humanUserAvatarProviders);
+			m_humanUserAvatarProviders.Insert (0, m_userAvatarCache);
+
+			m_nonHumanUserAvatarProviders = new List<IUserAvatarProvider> (nonHumanAvatarProviders);
+			m_nonHumanUserAvatarProviders.Insert (0, m_userAvatarCache);
+
+			m_log = log;
+		}
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Gets the users.
+		/// </summary>
+		public IList<User> Users { get; private set; }
+
+		#endregion
+
+		#region Methods
+
 		/// <summary>
 		/// Listens the builds provider.
 		/// </summary>
 		/// <param name="buildsProvider">Builds provider.</param>
-		public void ListenBuildsProvider(IBuildsProvider buildsProvider) 
+		public void ListenBuildsProvider (IBuildsProvider buildsProvider)
 		{
 			var serviceSender = typeof(UserService);
-			var usersInLastBuildsUpdate = new List<User>();
+			var usersInLastBuildsUpdate = new List<User> ();
 		
-			buildsProvider.BuildUpdated += (sender, e) =>
-			{
+			buildsProvider.BuildUpdated += (sender, e) => {
 				var user = e.Build.TriggeredBy;
 
-				if (user != null)
-				{
-                    var previousUser = Users.FirstOrDefault(f => f == user);
+				if (user != null) {
+					var previousUser = Users.FirstOrDefault (f => f == user);
 
-                    if (previousUser == null)
-                    {
-                        // New user found.
-                        Users.Add(user);
-                        UserFound.Raise(serviceSender, new UserFoundEventArgs(user));
-                        RaiseUserTriggeredBuildEvents(serviceSender, user, user.Builds);                       
+					if (previousUser == null) {
+						// New user found.
+						Users.Add (user);
+						UserFound.Raise (serviceSender, new UserFoundEventArgs (user));
+						RaiseUserTriggeredBuildEvents (serviceSender, user, user.Builds);                       
+					} else {
+						var triggeredBuilds = user.Builds.Except (previousUser.Builds);
+						RaiseUserTriggeredBuildEvents (serviceSender, user, triggeredBuilds);
+
+						Users.Remove (previousUser);
+						Users.Add (user);
 					}
-					else
-					{
-                        var triggeredBuilds = user.Builds.Except(previousUser.Builds);
-                        RaiseUserTriggeredBuildEvents(serviceSender, user, triggeredBuilds);
 
-                        Users.Remove(previousUser);
-                        Users.Add(user);
-                    }
-
-					UserUpdated.Raise(serviceSender, new UserUpdatedEventArgs(user));
-					usersInLastBuildsUpdate.Add(user);
+					UserUpdated.Raise (serviceSender, new UserUpdatedEventArgs (user));
+					usersInLastBuildsUpdate.Add (user);
 				}
 			};
 
-			buildsProvider.BuildsRefreshed += delegate
-			{
-				var removedUsers = Users.Except(usersInLastBuildsUpdate).ToArray();
+			buildsProvider.BuildsRefreshed += delegate {
+				var removedUsers = Users.Except (usersInLastBuildsUpdate).ToArray ();
 
-				m_log.Warning("UserService.BuildsRefreshed: there is {0} users and {1} were refreshed. {2} will be removed", Users.Count, usersInLastBuildsUpdate.Count(), removedUsers.Length);
+				m_log.Warning ("UserService.BuildsRefreshed: there is {0} users and {1} were refreshed. {2} will be removed", Users.Count, usersInLastBuildsUpdate.Count (), removedUsers.Length);
 
-				foreach (var user in removedUsers)
-				{
-					Users.Remove(user);
-					UserRemoved.Raise(typeof(BuildService), new UserRemovedEventArgs(user));
+				foreach (var user in removedUsers) {
+					Users.Remove (user);
+					UserRemoved.Raise (typeof(BuildService), new UserRemovedEventArgs (user));
 				}
 
-				usersInLastBuildsUpdate.Clear();
+				usersInLastBuildsUpdate.Clear ();
 			};
 
 			buildsProvider.UserAuthenticationSuccessful += delegate {
 				// TODO: change buildsProvider.UserAuthenticationSuccessful to pass user.
-				UserAuthenticationCompleted.Raise(this, new UserAuthenticationCompletedEventArgs(null, true));                
+				UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (null, true));                
 			};
 
 			buildsProvider.UserAuthenticationFailed += delegate {
-				UserAuthenticationCompleted.Raise(this, new UserAuthenticationCompletedEventArgs(null, false));
+				UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (null, false));
 			};
 		}
 
-        /// <summary>
-        /// Gets the user photo.
-        /// </summary>
-        /// <param name="user">User.</param>
-        /// <param name="photoReceived">Photo received callback.</param>
-        public void GetUserPhoto(User user, Action<Texture2D> photoReceived)
-        {
-            if (user != null)
-            {
-                if (user.Kind == UserKind.Human)
-                {
-                    GetUserPhoto(user, photoReceived, m_humanUserAvatarProviders);
-                }
-                else {
-                    GetUserPhoto(user, photoReceived, m_nonHumanUserAvatarProviders);
-                }
-            }
-        }
+		/// <summary>
+		/// Gets the user photo.
+		/// </summary>
+		/// <param name="user">User.</param>
+		/// <param name="photoReceived">Photo received callback.</param>
+		public void GetUserPhoto (User user, Action<Texture2D> photoReceived)
+		{
+			if (user != null) {
+				if (user.Kind == UserKind.Human) {
+					GetUserPhoto (user, photoReceived, m_humanUserAvatarProviders);
+				} else {
+					GetUserPhoto (user, photoReceived, m_nonHumanUserAvatarProviders);
+				}
+			}
+		}
 
-        private void GetUserPhoto(User user, Action<Texture2D> photoReceived, IUserAvatarProvider[] providersChain, int providerStartIndex = 0)
-        {
-            if (providerStartIndex < providersChain.Length)
-            {
-                providersChain[providerStartIndex].GetUserPhoto(user, (photo) =>
-                {
-                    if (photo == null)
-                    {
-                        GetUserPhoto(user, photoReceived, providersChain, ++providerStartIndex);
-                    }
-                    else
-                    {
-                        photoReceived(photo);
-                    }
-                });
-            }
-            else
-            {
-                photoReceived(null);
-            }
-        }
+		private void GetUserPhoto (User user, Action<Texture2D> photoReceived, IList<IUserAvatarProvider> providersChain, int providerStartIndex = 0)
+		{
+			if (providerStartIndex < providersChain.Count) {
+				var currentProvider = providersChain [providerStartIndex];
 
-        private void RaiseUserTriggeredBuildEvents(Type serviceSender, User user, IEnumerable<Build> triggeredBuilds)
-        {
-            foreach (var build in triggeredBuilds)
-            {
-                UserTriggeredBuild.Raise(serviceSender, new UserTriggeredBuildEventArgs(user, build));
-            }
-        }
-        #endregion
-    }
+				currentProvider.GetUserPhoto (user, (photo) => {
+					if (photo == null) {
+						GetUserPhoto (user, photoReceived, providersChain, ++providerStartIndex);
+					} else {
+						// Add found photo to cache.
+						if (!object.ReferenceEquals (currentProvider, m_userAvatarCache)) {
+							m_userAvatarCache.AddPhoto (user.UserName, photo);
+						}
+
+						// Callback photo recieved.
+						photoReceived (photo);
+					}
+				});
+			} else {
+				photoReceived (null);
+			}
+		}
+
+		private void RaiseUserTriggeredBuildEvents (Type serviceSender, User user, IEnumerable<Build> triggeredBuilds)
+		{
+			foreach (var build in triggeredBuilds) {
+				UserTriggeredBuild.Raise (serviceSender, new UserTriggeredBuildEventArgs (user, build));
+			}
+		}
+
+		#endregion
+	}
 }
