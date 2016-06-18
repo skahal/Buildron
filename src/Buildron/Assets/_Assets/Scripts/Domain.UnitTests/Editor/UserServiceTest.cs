@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Skahal.Logging;
 
-namespace Buildron.Infrastructure.FunctionalTests.Repositories
+namespace Buildron.Domain.UnitTests
 {
     [Category("Buildron.Domain")]
     public class UserServiceTest
