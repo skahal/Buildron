@@ -16,8 +16,9 @@ namespace Buildron.Infrastructure.UserAvatarProviders
         protected override string BuildImageUrl(User user)
         {
             var acronym = user.Name.ToAcronym();
+			var backgroundColor = (user.Name.GetHashCode () & 0x00FFFFFF).ToString ().ToUpperInvariant ();
 
-            return "http://dummyimage.com/256/000/fff&text={0}".With(acronym);
+			return "http://dummyimage.com/256/{0}/fff&text={1}".With(backgroundColor, acronym);
         }
     }
 }
