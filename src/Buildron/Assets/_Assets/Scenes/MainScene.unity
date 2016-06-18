@@ -5315,7 +5315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b85683b2860a42e2a7f772a6e11a827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MinutesCheckNotificationsInterval: 0.1
+  MinutesCheckNotificationsInterval: 10
   MinutesUntilHideNotification: 2
   NotificationLabel: {fileID: 1828986998}
 --- !u!1 &1451383048

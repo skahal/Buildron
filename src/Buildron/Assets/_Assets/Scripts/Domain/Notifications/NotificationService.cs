@@ -11,7 +11,8 @@ namespace Buildron.Domain.Notifications
 	public class NotificationService
 	{
 		#region Fields
-		private INotificationClient m_notificationClient;
+		private readonly INotificationClient m_notificationClient;
+		private readonly IVersionService m_versionService;
 		#endregion
 			
 		#region Events
@@ -26,10 +27,13 @@ namespace Buildron.Domain.Notifications
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Notifications.NotificationService"/> class.
 		/// </summary>
 		/// <param name="notificationClient">Notification client.</param>
-		public NotificationService (INotificationClient notificationClient)
+		/// <param name="versionService">Version service.</param>
+		public NotificationService (INotificationClient notificationClient, IVersionService versionService)
 		{
 			m_notificationClient = notificationClient;
 			m_notificationClient.NotificationReceived += (sender, e) => NotificationReceived.Raise (this, e);
+
+			m_versionService = versionService;
 		}
 		#endregion
 		
@@ -41,7 +45,7 @@ namespace Buildron.Domain.Notifications
 		/// <param name="device">Device.</param>
 		public void CheckNotifications(ClientKind kind, SHDeviceFamily device)
 		{
-			var version = VersionService.GetVersion();
+			var version = m_versionService.GetVersion();
 			
 			if (version != null)
 			{

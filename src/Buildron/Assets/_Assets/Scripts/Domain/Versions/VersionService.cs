@@ -4,52 +4,55 @@ using Skahal.Infrastructure.Framework.Commons;
 
 namespace Buildron.Domain.Versions
 {
-	public static class VersionService
+	/// <summary>
+	/// Buildron's version service.
+	/// </summary>
+	public class VersionService : IVersionService
 	{	
 		#region Fields
-		private static IVersionClient s_versionClient;
-		private static IVersionRepository s_versionRepository;
-		private static System.EventHandler<ClientRegisteredEventArgs> s_clientRegistered;
-		private static System.EventHandler<UpdateInfoReceivedEventArgs> s_updateInfoReceived;
+		private IVersionClient s_versionClient;
+		private IVersionRepository s_versionRepository;
 		#endregion
 		
 		#region Events
-		public static event System.EventHandler<ClientRegisteredEventArgs> ClientRegistered {
-			add { s_clientRegistered += value; }
-			remove { s_clientRegistered -= value; }	
-		}
-		
-		public static event System.EventHandler<UpdateInfoReceivedEventArgs> UpdateInfoReceived {
-			add { s_updateInfoReceived += value; }
-			remove { s_updateInfoReceived -= value; }
-		}
+		/// <summary>
+		/// Occurs when client is registered.
+		/// </summary>
+		public event EventHandler<ClientRegisteredEventArgs> ClientRegistered;
+
+		/// <summary>
+		/// Occurs when update info received.
+		/// </summary>
+		public event EventHandler<UpdateInfoReceivedEventArgs> UpdateInfoReceived;
 		#endregion
 		
-		#region Methods
-		public static void Initialize ()
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Versions.VersionService"/> class.
+		/// </summary>
+		/// <param name="versionClient">Version client.</param>
+		/// <param name="versionRepository">Version repository.</param>
+		public VersionService (IVersionClient versionClient, IVersionRepository versionRepository)
 		{
-			s_clientRegistered = null;
-			s_updateInfoReceived = null;
+			s_versionClient = versionClient;
+			s_versionRepository = versionRepository;
 			
-			s_versionClient = DependencyService.Create<IVersionClient> ();
-			s_versionRepository = DependencyService.Create<IVersionRepository> ();
-			
-			s_versionClient.ClientRegistered += delegate(object sender, ClientRegisteredEventArgs e) {
+			s_versionClient.ClientRegistered += (sender, e) => {
 				
 				var version = new Version ();
 				version.ClientId = e.ClientId;
 				version.ClientInstance = e.ClientInstance;
 				s_versionRepository.Save (version);
 				
-				s_clientRegistered.Raise (typeof(VersionService), e);
+				ClientRegistered.Raise (this, e);
 			};
 			
-			s_versionClient.UpdateInfoReceived += delegate(object sender, UpdateInfoReceivedEventArgs e) {
-				s_updateInfoReceived.Raise (typeof(VersionService), e);
-			};
+			s_versionClient.UpdateInfoReceived += (sender, e) => UpdateInfoReceived.Raise (this, e);
 		}
-		
-		public static void Register(ClientKind kind, SHDeviceFamily device)
+		#endregion
+
+		#region Methods
+		public void Register(ClientKind kind, SHDeviceFamily device)
 		{
 			var version = s_versionRepository.Find();
 			
@@ -61,12 +64,12 @@ namespace Buildron.Domain.Versions
 			{
 				var args = new ClientRegisteredEventArgs(version.ClientId, version.ClientInstance);
 				
-				s_clientRegistered.Raise(typeof(VersionService), args);
+				ClientRegistered.Raise(typeof(VersionService), args);
 			}
 
 		}
 		
-		public static void CheckUpdates(ClientKind kind, SHDeviceFamily device)
+		public void CheckUpdates(ClientKind kind, SHDeviceFamily device)
 		{
 			var version = GetVersion();
 			
@@ -77,7 +80,7 @@ namespace Buildron.Domain.Versions
 		
 		}
 		
-		public static Version GetVersion()
+		public Version GetVersion()
 		{
 			return s_versionRepository.Find();
 		}

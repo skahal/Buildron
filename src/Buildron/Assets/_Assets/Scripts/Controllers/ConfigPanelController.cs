@@ -25,11 +25,12 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	private CIServer m_CIServer;
 	private IBuildsProvider m_buildsProvider;
 	private Animator m_animator;
-    #endregion
 
-    #region IoC properties
 	[Inject]
-    public IUserService UserService { get; set; }
+	private IUserService m_userService;
+
+	[Inject]
+	private IVersionService m_versionService; 
     #endregion
 
     #region Editor properties
@@ -99,7 +100,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			StartBuildron ();
 		}
 
-        UserService.UserAuthenticationCompleted += HandleUserAuthenticationCompleted;
+        m_userService.UserAuthenticationCompleted += HandleUserAuthenticationCompleted;
 		
 		InitializeVersion ();
 		//m_animator = GetComponent<Animator> ();
@@ -133,17 +134,15 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	void InitializeVersion ()
 	{
 		InstallationNumberLabel.text = string.Empty;
-		
-		VersionService.Initialize ();
-		
-		VersionService.ClientRegistered += delegate(object sender, ClientRegisteredEventArgs e) {
+
+		m_versionService.ClientRegistered += (object sender, ClientRegisteredEventArgs e) => { 
 			InstallationNumberLabel.text = string.Format ("Installation number: {0}", e.ClientInstance);
 		};
 		
-		VersionService.Register (ClientKind.Buildron, SHDevice.Family);		
+		m_versionService.Register (ClientKind.Buildron, SHDevice.Family);		
 
 		if (!SHGameInfo.IsBetaVersion) {
-			VersionService.UpdateInfoReceived += delegate(object sender, UpdateInfoReceivedEventArgs e) {		
+			m_versionService.UpdateInfoReceived += delegate(object sender, UpdateInfoReceivedEventArgs e) {		
 				UpdateButtonLabel.text = e.UpdateInfo.Description;
 		
 				if (!string.IsNullOrEmpty (e.UpdateInfo.Url)) {
@@ -154,7 +153,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 				}
 			};
 			
-			VersionService.CheckUpdates (ClientKind.Buildron, SHDevice.Family);
+			m_versionService.CheckUpdates (ClientKind.Buildron, SHDevice.Family);
 		}
 		
 		VersionNumberButtonLabel.text = string.Format ("Version: {0}", SHGameInfo.Version);
@@ -176,7 +175,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
         {
             CIServerStatusLabel.text = "Authenticated. Loading...";
 
-            UserService.UserAuthenticationCompleted -= HandleUserAuthenticationCompleted;
+            m_userService.UserAuthenticationCompleted -= HandleUserAuthenticationCompleted;
 
             //m_animator.enabled = true;
             PanelTransitionController.Instance.ShowMainPanel();
@@ -264,7 +263,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
             m_buildsProvider = new FilterBuildsProvider(m_buildsProvider);
 
 			BuildsProvider.Initialize (m_buildsProvider);
-			UserService.ListenBuildsProvider (m_buildsProvider);
+			m_userService.ListenBuildsProvider (m_buildsProvider);
 
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
 			BuildService.Initialize (m_buildsProvider);

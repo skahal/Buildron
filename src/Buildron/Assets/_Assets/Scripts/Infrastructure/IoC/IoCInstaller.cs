@@ -28,6 +28,12 @@ namespace Buildron.Infrastructure.IoC
 		{
 			var log = InstallLog ();
 
+			log.Debug ("IOC :: Installing domain...");
+			InstallDomain ();
+
+			log.Debug ("IOC :: Installing repositories...");
+			InstallRepositories ();
+
 			log.Debug ("IOC :: Installing user bindings...");
 			InstallUser ();
 
@@ -37,16 +43,8 @@ namespace Buildron.Infrastructure.IoC
 			log.Debug ("IOC :: Installing misc bindings...");
 			InstallMisc ();
 
-
 			DependencyService.Register<IServerStateRepository> (new PlayerPrefsServerStateRepository ());
-			DependencyService.Register<IVersionClient> (() => {
-				return new BackEndClient ();
-			});
-
-			DependencyService.Register<IVersionRepository> (() => {
-				return new PlayerPrefsVersionRepository ();
-			});
-
+		
 			log.Debug ("IOC :: Bindings installed.");
 		}
 
@@ -57,6 +55,16 @@ namespace Buildron.Infrastructure.IoC
 			Container.Bind<ISHLogStrategy> ().FromInstance (logStrategy).AsSingle ();
 
 			return logStrategy;
+		}
+
+		void InstallDomain ()
+		{
+			Container.Bind<IVersionService> ().To<VersionService> ().AsSingle ();
+		}
+
+		void InstallRepositories ()
+		{
+			Container.Bind<IVersionRepository> ().To<PlayerPrefsVersionRepository> ().AsSingle ();
 		}
 
 		void InstallUser ()
