@@ -1,22 +1,25 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using NUnit.Framework;
+using Buildron.Domain.EasterEgss;
 
-public class EasterEggServiceTest {
+namespace Buildron.Domain.UnitTests
+{
+	[Category ("Buildron.Domain")]
+	public class EasterEggServiceTest
+	{
+		[Test]
+		public void IsEasterEggMessage_NoStartsWithDash_False ()
+		{
+			var target = new EasterEggService ();
+			Assert.IsFalse (target.IsEasterEggMessage ("teste/"));
+		}
 
-    [Test]
-    public void EditorTest()
-    {
-        //Arrange
-        var gameObject = new GameObject();
-
-        //Act
-        //Try to rename the GameObject
-        var newGameObjectName = "My game object";
-        gameObject.name = newGameObjectName;
-
-        //Assert
-        //The object has a new name
-        Assert.AreEqual(newGameObjectName, gameObject.name);
-    }
+		[Test]
+		public void IsEasterEggMessage_StartsWithDash_True()
+		{
+			var target = new EasterEggService ();
+			Assert.IsTrue (target.IsEasterEggMessage ("/teste"));
+		}
+	}
 }
