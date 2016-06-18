@@ -12,7 +12,7 @@ namespace Buildron.Infrastructure.FunctionalTests.Repositories
         public void Constructor_BuildsProviderRaiseEvents_UserEventsRaised()
         {
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
-            var target = new UserService(null, null, MockRepository.GenerateMock<ISHLogStrategy>());
+			var target = new UserService(new IUserAvatarProvider[0], new IUserAvatarProvider[0], MockRepository.GenerateMock<ISHLogStrategy>());
 			target.ListenBuildsProvider (provider);
 
             var user1 = new User
@@ -92,7 +92,7 @@ namespace Buildron.Infrastructure.FunctionalTests.Repositories
             Assert.AreEqual(2, userFoundCalledCount);
             Assert.AreEqual(2, userTriggeredBuildCount);
             Assert.AreEqual(3, userUpdatedCount);
-            Assert.AreEqual(1, userRemovedCount);
+            Assert.AreEqual(0, userRemovedCount);
 
             provider.Raise((p) => p.BuildsRefreshed += null, null, new BuildsRefreshedEventArgs(null, null, null));
             provider.Raise((p) => p.BuildUpdated += null, null, new BuildUpdatedEventArgs(build1));

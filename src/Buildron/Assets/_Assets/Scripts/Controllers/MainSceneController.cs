@@ -36,6 +36,9 @@ public class MainSceneController : MonoBehaviour
 
 	[Inject]
 	public BuildGOService BuildGOService { get; set; }
+
+	[Inject]
+	public ServerMessagesListener ServerMessagesListener { get; set; }
 	#endregion
 	
 	#region Methods
@@ -138,7 +141,7 @@ public class MainSceneController : MonoBehaviour
 
 	private void InitializeServer ()
 	{
-		ServerService.Initialize ();
+		ServerService.Initialize (ServerMessagesListener);
 	}
 	#endregion
 	

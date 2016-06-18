@@ -14,16 +14,22 @@ using Buildron.Application;
 #endregion
 
 [RequireComponent(typeof(NetworkView))]
-public class ServerMessagesListener : MonoBehaviour
+public class ServerMessagesListener : MonoBehaviour, IInitializable
 {
 	#region Events
 	public event System.EventHandler BuildFilterUpdated;
 	public event System.EventHandler<BuildSortUpdatedEventArgs> BuildSortUpdated;
 	#endregion
 
-	#region Properties
+	#region Fields
 	[Inject]
-	public BuildGOService BuildGOService { get; set; }
+	private BuildGOService m_buildGOService { get; set; }
+
+	[Inject]
+	private IUserService m_userService { get; set; }
+
+	[Inject]
+	private EasterEggService m_easterEggService { get; set; }
 	#endregion
 
 	#region Life cycle
@@ -39,21 +45,24 @@ public class ServerMessagesListener : MonoBehaviour
 			"OnSortingBegin",
 			"OnSortingEnded",
 			"OnBuildHistoryCreated");
-		
-		BuildService.UserAuthenticationSuccessful += delegate {
-			SendToRCAuthenticationSuccessful ();
-		};
-		
-		BuildService.UserAuthenticationFailed += delegate {
-			SendToRCAuthenticationFailed ();
-		};
-		
-		SHLog.Warning ("Server initialize: {0}", error);
-	}
 	
-	private void Start()
+		SHLog.Warning ("Network server initialize: {0}", error);
+	}
+
+	public void Initialize ()
 	{
+		m_userService.UserAuthenticationCompleted += (sender, args) => {
+			if(args.Success) {
+				SendToRCAuthenticationSuccessful ();
+			}
+			else {
+				SendToRCAuthenticationFailed ();
+			}
+		};
+
 		SendFilterLocally();
+
+		SHLog.Warning ("ServerMessagesListener initialized");
 	}
 	
 	private void OnPlayerConnected ()
@@ -61,7 +70,7 @@ public class ServerMessagesListener : MonoBehaviour
 		SHLog.Debug ("Remote control connected.");	
 		
 		SendToRCCurrentServerState ();
-		OnVisibleBuildsCount (BuildGOService.CountVisibles());
+		OnVisibleBuildsCount (m_buildGOService.CountVisibles());
 	}
 	
 	private void OnPlayerDisconnected ()
@@ -73,13 +82,13 @@ public class ServerMessagesListener : MonoBehaviour
 	
 	private void OnBuildHidden ()
 	{
-		OnVisibleBuildsCount (BuildGOService.CountVisibles());
+		OnVisibleBuildsCount (m_buildGOService.CountVisibles());
 	
 	}
 	
 	private void OnBuildVisible ()
 	{
-		OnVisibleBuildsCount (BuildGOService.CountVisibles());
+		OnVisibleBuildsCount (m_buildGOService.CountVisibles());
 	}
 	
 	private void OnScreenshotTaken (Texture2D texture)
@@ -247,7 +256,7 @@ public class ServerMessagesListener : MonoBehaviour
 	[RPC]
 	public void ShowBuildsWithName (string partialName)
 	{
-		if (!EasterEggService.ReceiveEasterEgg (partialName)) {
+		if (!m_easterEggService.ReceiveEasterEgg (partialName)) {
 			SHLog.Debug ("ShowBuildsWithName:" + partialName);
 			ServerState.Instance.BuildFilter.KeyWord = partialName;
 			SendFilterLocally ();	
@@ -319,4 +328,11 @@ public class ServerMessagesListener : MonoBehaviour
 		BuildFilterUpdated.Raise(this);
 	}
 	#endregion
+
+	/// <summary>
+	/// The ServerMessagesListener factory.
+	/// </summary>
+	public class Factory : Factory<ServerMessagesListener>
+	{
+	}
 }

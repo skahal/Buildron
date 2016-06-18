@@ -10,6 +10,7 @@ using Buildron.Domain.Versions;
 using Buildron.Infrastructure.Clients;
 using Buildron.Domain.Notifications;
 using Buildron.Application;
+using Buildron.Domain.EasterEgss;
 
 public class IoCInstaller : MonoInstaller
 {
@@ -21,6 +22,18 @@ public class IoCInstaller : MonoInstaller
 
 	public override void InstallBindings ()
 	{
+		var log = InstallLog ();
+
+		log.Debug ("IOC :: Installing user bindings...");
+		InstallUser ();
+
+		log.Debug ("IOC :: Installing build bindings...");
+		InstallBuild ();  
+
+		log.Debug ("IOC :: Installing misc bindings...");
+		InstallMisc ();
+
+
         DependencyService.Register<IServerStateRepository>(new PlayerPrefsServerStateRepository());
         DependencyService.Register<IVersionClient>(() => {
             return new BackEndClient();
@@ -34,16 +47,16 @@ public class IoCInstaller : MonoInstaller
             return new BackEndClient();
         });
 
-        InstallLog ();
-		InstallUser ();
-		InstallBuild ();        
+		log.Debug ("IOC :: Bindings installed.");
 	}
 
-	void InstallLog ()
+
+	ISHLogStrategy InstallLog ()
 	{
 		var logStrategy = SHLog.LogStrategy;
-		logStrategy.Debug ("IOC :: Installing bindings...");
 		Container.Bind<ISHLogStrategy> ().FromInstance (logStrategy).AsSingle ();
+
+		return logStrategy;
 	}
 
 	void InstallUser ()
@@ -75,5 +88,16 @@ public class IoCInstaller : MonoInstaller
 		Container.BindFactory<BuildController, BuildController.Factory>()
 			.FromPrefabResource ("BuildPrefab")
 			.UnderGameObjectGroup("Builds");
+	}
+
+	void InstallMisc ()
+	{
+		Container.Bind<EasterEggService> ().AsSingle();
+
+		var serverMessagesListener = new GameObject ("ServerMessagesListener").AddComponent<ServerMessagesListener> ();
+		Container.Inject (serverMessagesListener);
+
+		Container.Bind<IInitializable> ().FromInstance (serverMessagesListener).AsSingle ();
+		Container.Bind<ServerMessagesListener> ().FromInstance (serverMessagesListener).AsSingle ();
 	}
 }

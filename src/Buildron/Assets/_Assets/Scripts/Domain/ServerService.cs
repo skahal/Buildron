@@ -31,10 +31,10 @@ public static class ServerService
     /// <summary>
     /// Initializes this instance.
     /// </summary>
-    public static void Initialize()
+	public static void Initialize(ServerMessagesListener listener)
     {
-        Listener = new GameObject("ServerMessagesListener").AddComponent<ServerMessagesListener>();
-
+		Listener = listener;
+	
 		s_repository = DependencyService.Create<IServerStateRepository>();
 		var all = s_repository.All().ToList();
         var lastServerState = all.FirstOrDefault();

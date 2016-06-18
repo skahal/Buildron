@@ -8,7 +8,7 @@ namespace Buildron.Domain.EasterEgss
 	/// <summary>
 	/// Easter egg service.
 	/// </summary>
-	public static class EasterEggService
+	public class EasterEggService
 	{
 		#region Methods
 		/// <summary>
@@ -20,7 +20,7 @@ namespace Buildron.Domain.EasterEgss
 		/// <param name='message'>
 		/// The message received from a Remote Control.
 		/// </param>
-		public static bool IsEasterEggMessage (string message)
+		public bool IsEasterEggMessage (string message)
 		{
 			return !String.IsNullOrEmpty (message) && message.StartsWith ("/");
 		}
@@ -34,7 +34,7 @@ namespace Buildron.Domain.EasterEgss
 		/// <param name='message'>
 		/// If set to <c>true</c> message.
 		/// </param>
-		public static bool ReceiveEasterEgg (string message)
+		public bool ReceiveEasterEgg (string message)
 		{
 			var isEasterEgg = IsEasterEggMessage (message);
 			
