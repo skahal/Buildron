@@ -13,6 +13,12 @@ using Buildron.Application;
 
 public class IoCInstaller : MonoInstaller
 {
+	#region Editor properties
+	public Texture2D ScheduledTriggerAvatar;
+	public Texture2D RetryTriggerAvatar;
+	public Texture2D UnunknownAvatar;
+	#endregion
+
 	public override void InstallBindings ()
 	{
         DependencyService.Register<IServerStateRepository>(new PlayerPrefsServerStateRepository());
@@ -43,11 +49,11 @@ public class IoCInstaller : MonoInstaller
 	void InstallUser ()
 	{
 		var humanFallbackUserAvatarProvider = new StaticUserAvatarProvider ();
-		//humanFallbackUserAvatarProvider.AddPhoto(UserKind.Human, UnunknownAvatar);
+		humanFallbackUserAvatarProvider.AddPhoto(UserKind.Human, UnunknownAvatar);
 
 		var nonHumanUserAvatarProviders = new StaticUserAvatarProvider ();
-		//nonHumanUserAvatarProviders.AddPhoto(UserKind.ScheduledTrigger, ScheduledTriggerAvatar);
-		//nonHumanUserAvatarProviders.AddPhoto(UserKind.RetryTrigger, RetryTriggerAvatar);
+		nonHumanUserAvatarProviders.AddPhoto(UserKind.ScheduledTrigger, ScheduledTriggerAvatar);
+		nonHumanUserAvatarProviders.AddPhoto(UserKind.RetryTrigger, RetryTriggerAvatar);
 
 		var userService = new UserService (new IUserAvatarProvider[] {
 			new GravatarUserAvatarProvider (),
@@ -65,7 +71,6 @@ public class IoCInstaller : MonoInstaller
 
 	void InstallBuild ()
 	{
-		//Container.Bind<IFactory<BuildController>> ().FromInstance(new BuildController.Factory());
 		Container.Bind<BuildGOService> ().AsSingle();
 		Container.BindFactory<BuildController, BuildController.Factory>()
 			.FromPrefabResource ("BuildPrefab")
