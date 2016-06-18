@@ -1,7 +1,7 @@
 #region Usings
 using Buidron.Domain;
 using Buildron.Domain;
-using Buildron.Domain.EasterEgss;
+using Buildron.Domain.EasterEggs;
 using Buildron.Domain.Sorting;
 using Skahal.Common;
 using Skahal.Logging;
@@ -23,13 +23,13 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 
 	#region Fields
 	[Inject]
-	private BuildGOService m_buildGOService { get; set; }
+	private BuildGOService m_buildGOService;
 
 	[Inject]
-	private IUserService m_userService { get; set; }
+	private IUserService m_userService;
 
 	[Inject]
-	private EasterEggService m_easterEggService { get; set; }
+	private EasterEggService m_easterEggService;
 	#endregion
 
 	#region Life cycle
@@ -256,7 +256,12 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 	[RPC]
 	public void ShowBuildsWithName (string partialName)
 	{
-		if (!m_easterEggService.ReceiveEasterEgg (partialName)) {
+		if (m_easterEggService.IsEasterEggMessage (partialName))
+		{
+			m_easterEggService.ReceiveEasterEgg (partialName);
+		}
+		else 
+		{
 			SHLog.Debug ("ShowBuildsWithName:" + partialName);
 			ServerState.Instance.BuildFilter.KeyWord = partialName;
 			SendFilterLocally ();	

@@ -1,39 +1,65 @@
-#region Usings
 using UnityEngine;
 using System.Collections;
 using Buildron.Domain;
 using Skahal.Common;
 using System.Collections.Generic;
 using System.Linq;
-#endregion
+using Buildron.Domain.EasterEggs;
 
-public abstract class EasterEggControllerBase : MonoBehaviour 
+/// <summary>
+/// Easter egg controller base.
+/// </summary>
+public abstract class EasterEggControllerBase : MonoBehaviour, IEasterEggProvider
 {	
 	#region Constructors
-	public EasterEggControllerBase()
+	/// <summary>
+	/// Initializes a new instance of the <see cref="EasterEggControllerBase"/> class.
+	/// </summary>
+	protected EasterEggControllerBase()
 	{
 		EasterEggsNames = new List<string>();
 	}
 	#endregion
 	
 	#region Properties
+	/// <summary>
+	/// Gets the easter eggs names.
+	/// </summary>
+	/// <value>The easter eggs names.</value>
 	public IList<string> EasterEggsNames { get; private set; }
 	#endregion
 	
 	#region Methods
-	private void Awake ()
-	{
-		Messenger.Register (gameObject, "EasterEggReceived");
-	}
-	
-	private void EasterEggReceived (string easterEgg)
+	/// <summary>
+	/// Verify if the provider can execute the easter egg.
+	/// </summary>
+	/// <param name="easterEggName">The name of easter egg to execute</param>
+	/// <returns><c>true</c> if this instance can execute the specified easterEggName; otherwise, <c>false</c>.</returns>
+	/// <param name="easterEggName">Easter egg name.</param>
+	public bool CanExecute (string easterEggName)
 	{		
-		var easterEggeName = EasterEggsNames.FirstOrDefault (e => e.Equals (easterEgg, System.StringComparison.OrdinalIgnoreCase));
+		return EasterEggsNames.Any (e => e.Equals (easterEggName, System.StringComparison.OrdinalIgnoreCase));
+	}
+
+	/// <summary>
+	/// Execute the easter egg.
+	/// </summary>
+	/// <param name="easterEggName">The name of easter egg to execute</param>
+	/// <returns>If an easter egg was executed.</returns>
+	/// <param name="easterEggName">Easter egg name.</param>
+	public bool Execute (string easterEggName)
+	{		
+		var availableEasterEggNames = EasterEggsNames
+			.Where (e => e.Equals (easterEggName, System.StringComparison.OrdinalIgnoreCase))
+			.ToArray ();
 		
-		if (easterEggeName != null)
-		{
-			SendMessage("On" + easterEggeName);
+		foreach (var availableEasterEggName in availableEasterEggNames) {	
+			if (availableEasterEggName != null) {
+				SendMessage ("On" + availableEasterEggName);
+			}
 		}
+
+		return availableEasterEggNames.Length > 0;
 	}
 	#endregion
 }

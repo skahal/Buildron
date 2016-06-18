@@ -10,7 +10,7 @@ using Buildron.Domain.Versions;
 using Buildron.Infrastructure.Clients;
 using Buildron.Domain.Notifications;
 using Buildron.Application;
-using Buildron.Domain.EasterEgss;
+using Buildron.Domain.EasterEggs;
 
 public class IoCInstaller : MonoInstaller
 {
@@ -92,7 +92,13 @@ public class IoCInstaller : MonoInstaller
 
 	void InstallMisc ()
 	{
-		Container.Bind<EasterEggService> ().AsSingle();
+		var easterEggService = new EasterEggService (
+			new IEasterEggProvider[] { 
+				GameObject.Find ("MatrixEasterEggController").GetComponent<MatrixEasterEggController>(),
+				GameObject.Find ("KickEasterEggController").GetComponent<KickEasterEggController>()
+			}, 
+			Container.Resolve<ISHLogStrategy> ());
+		Container.Bind<EasterEggService> ().FromInstance(easterEggService).AsSingle();
 
 		var serverMessagesListener = new GameObject ("ServerMessagesListener").AddComponent<ServerMessagesListener> ();
 		Container.Inject (serverMessagesListener);
