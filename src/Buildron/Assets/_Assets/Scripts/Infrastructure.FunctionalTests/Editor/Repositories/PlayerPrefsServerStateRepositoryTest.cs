@@ -8,6 +8,7 @@ using System.Linq;
 namespace Buildron.Infrastructure.FunctionalTests.Repositories
 {
     [Category("Buildron.Infrastructure")]
+	[Category("Unity")]
     public class PlayerPrefsServerStateRepositoryTest
     {
         [Test]
