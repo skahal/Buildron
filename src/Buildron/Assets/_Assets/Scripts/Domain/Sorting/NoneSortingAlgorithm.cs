@@ -21,7 +21,8 @@ namespace Buildron.Domain.Sorting
 
         protected override IEnumerator PerformSort(IList<TItem> items)
         {
-            return items.GetEnumerator();
+      		OnSortingEnded (EventArgs.Empty);
+			yield break;
         }
     }
 }

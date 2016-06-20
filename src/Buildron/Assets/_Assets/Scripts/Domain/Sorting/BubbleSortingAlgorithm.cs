@@ -13,11 +13,21 @@ namespace Buildron.Domain.Sorting
 	/// </summary>
 	public class BubbleSortingAlgorithm<TItem> : SortingAlgorithmBase<TItem> where TItem : System.IComparable<TItem>
 	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Sorting.BubbleSortingAlgorithm{TItem}"/> class.
+		/// </summary>
 		public BubbleSortingAlgorithm () : base("Bubble Sort")
 		{
-			
 		}
-		
+		#endregion
+
+		#region Methods
+		/// <summary>
+		/// Performs the sort.
+		/// </summary>
+		/// <returns>The sort.</returns>
+		/// <param name="items">Items.</param>
 		protected override IEnumerator PerformSort (IList<TItem> items)
 		{
 			for (int iterator = 0; iterator < items.Count; iterator++) {
@@ -26,7 +36,10 @@ namespace Buildron.Domain.Sorting
 						yield return Swap (items, index, index + 1);
 					}
 				}
-			}					
+			}
+
+			OnSortingEnded (EventArgs.Empty);
 		}
+		#endregion`
 	}
 }

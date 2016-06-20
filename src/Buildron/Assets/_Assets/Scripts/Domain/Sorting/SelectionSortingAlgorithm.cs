@@ -31,7 +31,9 @@ namespace Buildron.Domain.Sorting
 				}
 				
 				yield return Swap (items, iterator, indexOfMin);
-			}							
+			}		
+
+			OnSortingEnded (EventArgs.Empty);
 		}
 	}
 }

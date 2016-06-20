@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using Buildron.Infrastructure.Repositories;
 using Skahal.Logging;
+using Buildron.Domain.Sorting;
 
 
 #endregion
@@ -52,7 +53,7 @@ public static class ServerService
 		Listener.BuildSortUpdated += (sender, e) => {
 
             SHLog.Warning("BuildSortUpdated: {0} {1}", e.SortingAlgorithm, e.SortBy);			
-			ServerState.Instance.BuildSortingAlgorithmType = e.SortingAlgorithm;
+			ServerState.Instance.BuildSortingAlgorithmType = SortingAlgorithmFactory.GetAlgorithmType(e.SortingAlgorithm);
             ServerState.Instance.BuildSortBy = e.SortBy;
             SaveState();
 		};        

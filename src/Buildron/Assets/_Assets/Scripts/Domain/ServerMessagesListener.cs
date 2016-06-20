@@ -42,8 +42,8 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 			"OnBuildHidden",
 			"OnBuildVisible",
 			"OnScreenshotTaken",
-			"OnSortingBegin",
-			"OnSortingEnded",
+			//"OnSortingBegin",
+			//"OnSortingEnded",
 			"OnBuildHistoryCreated");
 	
 		SHLog.Warning ("Network server initialize: {0}", error);
@@ -96,19 +96,6 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 		SendToRCScreenshot (texture.width, texture.height, texture.EncodeToPNG ());
 	}
 	
-	private void OnSortingBegin ()
-	{
-		ServerState.Instance.IsSorting = true;
-		SendToRCCurrentServerState ();
-	}
-	
-	private void OnSortingEnded ()
-	{
-		ServerState.Instance.IsSorting = false;
-		SendToRCSortingEnded ();
-		SendToRCCurrentServerState ();
-	}
-	
 	private void OnBuildHistoryCreated ()
 	{
 		ServerState.Instance.HasHistory = true;
@@ -143,11 +130,25 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 	[RPC]
 	public void SendToServerSortBuilds (int sortingAlgorithmType, int sortBy)
 	{
-		var sorting = (SortingAlgorithmType)sortingAlgorithmType;
+		var sortingType = (SortingAlgorithmType)sortingAlgorithmType;
 		var sortByProperty = (SortBy)sortBy;
-		SHLog.Debug ("SendToServerSortBuilds: {0}, {1}", sorting, sortByProperty);
+		SHLog.Debug ("SendToServerSortBuilds: {0}, {1}", sortingType, sortByProperty);
 
+		// TODO: args.SortingAlgorithm is ignored because RC is not passing this at this time.            
+		var sorting = SortingAlgorithmFactory.CreateRandomSortingAlgorithm<Build>();	
 		var args = new BuildSortUpdatedEventArgs (sorting, sortByProperty);
+
+		sorting.SortingBegin += (sender, e) => {
+			ServerState.Instance.IsSorting = true;
+			SendToRCCurrentServerState ();
+		};
+
+		sorting.SortingEnded += (sender, e) => {
+			ServerState.Instance.IsSorting = false;
+			SendToRCSortingEnded ();
+			SendToRCCurrentServerState ();
+		};
+
 		Messenger.Send ("OnBuildSortUpdated", args);
 
 		if (BuildSortUpdated != null) {

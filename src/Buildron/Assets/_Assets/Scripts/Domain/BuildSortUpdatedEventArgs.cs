@@ -1,14 +1,12 @@
 using System;
 using Buildron.Domain.Sorting;
-#region Usings
-#endregion
 
-namespace Buidron.Domain
+namespace Buildron.Domain
 {
 	public class BuildSortUpdatedEventArgs : EventArgs
 	{
 		#region Constructors
-		public BuildSortUpdatedEventArgs (SortingAlgorithmType sortingAlgorithm, SortBy sortBy)
+		public BuildSortUpdatedEventArgs (ISortingAlgorithm<Build> sortingAlgorithm, SortBy sortBy)
 		{
 			SortingAlgorithm = sortingAlgorithm;
 			SortBy = sortBy;
@@ -16,7 +14,7 @@ namespace Buidron.Domain
 		#endregion
 		
 		#region Properties
-		public SortingAlgorithmType SortingAlgorithm { get; private set; }
+		public ISortingAlgorithm<Build> SortingAlgorithm { get; private set; }
 		public SortBy SortBy { get; private set; }
 		#endregion
 	}

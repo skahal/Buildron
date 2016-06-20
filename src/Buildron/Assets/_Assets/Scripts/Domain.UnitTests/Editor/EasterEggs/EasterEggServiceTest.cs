@@ -6,7 +6,7 @@ using Rhino.Mocks;
 using System.Collections.Generic;
 using Skahal.Logging;
 
-namespace Buildron.Domain.UnitTests
+namespace Buildron.Domain.UnitTests.EasterEggs
 {
 	[Category ("Buildron.Domain")]
 	public class EasterEggServiceTest

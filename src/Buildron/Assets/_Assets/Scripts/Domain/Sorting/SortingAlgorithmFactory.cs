@@ -46,6 +46,28 @@ namespace Buildron.Domain.Sorting
 
             return CreateSortingAlgorithm<TItem>(algorithmType);
         }
+
+		public static SortingAlgorithmType GetAlgorithmType<TItem>(ISortingAlgorithm<TItem> algorithm)
+			where TItem : System.IComparable<TItem>
+		{
+			if (algorithm is BubbleSortingAlgorithm<TItem>) {
+				return SortingAlgorithmType.Bubble;
+			}
+
+			if (algorithm is InsertionSortingAlgorithm<TItem>) {
+				return SortingAlgorithmType.Insertion;
+			}
+
+			if (algorithm is SelectionSortingAlgorithm<TItem>) {
+				return SortingAlgorithmType.Selection;
+			}
+
+			if (algorithm is ShellSortingAlgorithm<TItem>) {
+				return SortingAlgorithmType.Shell;
+			}
+
+			return SortingAlgorithmType.None;
+		}
         #endregion
     }
 }
