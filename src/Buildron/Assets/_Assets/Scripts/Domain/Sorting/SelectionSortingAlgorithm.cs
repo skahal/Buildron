@@ -12,11 +12,22 @@ namespace Buildron.Domain.Sorting
 	/// </summary>
 	public class SelectionSortingAlgorithm<TItem> : SortingAlgorithmBase<TItem> where TItem : System.IComparable<TItem>
 	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Sorting.SelectionSortingAlgorithm`1"/> class.
+		/// </summary>
 		public SelectionSortingAlgorithm () : base("Selection Sort")
 		{
 			
 		}
-		
+		#endregion
+
+		#region Methods
+		/// <summary>
+		/// Performs the sort.
+		/// </summary>
+		/// <returns>The sort.</returns>
+		/// <param name="items">Items.</param>
 		protected override IEnumerator PerformSort (IList<TItem> items)
 		{
 			int indexOfMin = 0;
@@ -35,5 +46,6 @@ namespace Buildron.Domain.Sorting
 
 			OnSortingEnded (EventArgs.Empty);
 		}
+		#endregion
 	}
 }

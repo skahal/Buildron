@@ -13,9 +13,21 @@ namespace Buildron.Domain.Sorting
 	/// </summary>
 	public class ShellSortingAlgorithm<TItem> : SortingAlgorithmBase<TItem> where TItem : System.IComparable<TItem>
 	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Sorting.ShellSortingAlgorithm`1"/> class.
+		/// </summary>
 		public ShellSortingAlgorithm () : base("Shell Sort")
-		{}
-		
+		{
+		}
+		#endregion
+
+		#region Methods
+		/// <summary>
+		/// Performs the sort.
+		/// </summary>
+		/// <returns>The sort.</returns>
+		/// <param name="items">Items.</param>
 		protected override IEnumerator PerformSort (IList<TItem> items)
 		{
 			TItem temp;
@@ -43,5 +55,6 @@ namespace Buildron.Domain.Sorting
 
 			OnSortingEnded (EventArgs.Empty);
 		}
+		#endregion
 	}
 }

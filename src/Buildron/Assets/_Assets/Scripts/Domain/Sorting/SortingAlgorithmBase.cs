@@ -1,13 +1,9 @@
-#region Usings
-using System.Collections.Generic;
 using System;
-using System.Linq;
 using System.Collections;
-using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 using Skahal.Common;
-
-
-#endregion
+using UnityEngine;
 
 namespace Buildron.Domain.Sorting
 {
@@ -67,12 +63,9 @@ namespace Buildron.Domain.Sorting
 		/// <param name="equalityComparer">The equality comparer.</param>
 		public IEnumerator Sort (IList<TItem> items, IComparer<TItem> equalityComparer)
 		{
-			//Messenger.Send ("OnSortingBegin");
 			SortingBegin.Raise(this);
 			Comparer = equalityComparer;
-			//SH.StartCoroutine (CallPerformSort(items));
 
-			//return CallPerformSort (items);
 			return PerformSort(items);
 		}
 
@@ -118,7 +111,6 @@ namespace Buildron.Domain.Sorting
 			items [item1Index] = item2;
 			items [item2Index] = item1;
 			
-			//Messenger.Send ("OnSortingItemsSwapped", new TItem[] { item1, item2 });
 			SortingItemsSwapped.Raise(this, new SortingItemsSwappedEventArgs<TItem>(item1, item2));
 			return new WaitForSeconds(SortingAlgorithmFactory.SwappingTime);
 		}
@@ -133,15 +125,6 @@ namespace Buildron.Domain.Sorting
 				SortingEnded (this, args);
 			}
 		}
-
-//        private IEnumerator CallPerformSort(IList<TItem> items)
-//        {
-//            var enumerator = PerformSort(items);
-//            yield return enumerator;
-//
-//			SortingEnded.Raise (this);
-//            //Messenger.Send("OnSortingEnded");
-//        }
 		#endregion
 	}
 }
