@@ -92,10 +92,9 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
 		FxSounsToggle.isOn = m_CIServer.FxSoundsEnabled;
 		HistoryTotemToggle.isOn = m_CIServer.HistoryTotemEnabled;
+
 		UpdateBuildsProvider ();
 
-		UpdateStartButton ();	
-		
 		if (AutoStart || HasAutoStartArgument ()) {
 			StartBuildron ();
 		}
@@ -212,7 +211,6 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 		
 		CIServerIPLabel.text = string.Format ("{0} IP", m_buildsProvider.Name);
 		CIServerAuthenticationTipLabel.text = m_buildsProvider.AuthenticationTip;
-		UpdateStartButton ();
 	}
 
 	public void DestroyPanel()
@@ -228,11 +226,6 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	public void UpdateBuildTotemsLabel()
 	{
 		BuildsTotemsLabel.text = String.Format ("Build totems: {0}", BuildsTotemsSlider.value);
-	}
-
-	public void UpdateStartButton ()
-	{
-		StartButton.interactable = CanStart;
 	}
 	#endregion
 	
