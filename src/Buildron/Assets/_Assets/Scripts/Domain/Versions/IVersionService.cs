@@ -1,6 +1,4 @@
 using System;
-using Skahal.Common;
-using Skahal.Infrastructure.Framework.Commons;
 
 namespace Buildron.Domain.Versions
 {

@@ -52,6 +52,13 @@ namespace Buildron.Domain.Versions
 		#endregion
 
 		#region Methods
+		/// <summary>
+		/// Register the specified Buildron's client.
+		/// </summary>
+		/// <param name="buildron">Buildron.</param>
+		/// <param name="family">Family.</param>
+		/// <param name="kind">Kind.</param>
+		/// <param name="device">Device.</param>
 		public void Register(ClientKind kind, SHDeviceFamily device)
 		{
 			var version = s_versionRepository.Find();
@@ -68,7 +75,14 @@ namespace Buildron.Domain.Versions
 			}
 
 		}
-		
+
+		/// <summary>
+		/// Checks available updates to specified Buildron's client.
+		/// </summary>
+		/// <param name="buildron">Buildron.</param>
+		/// <param name="family">Family.</param>
+		/// <param name="kind">Kind.</param>
+		/// <param name="device">Device.</param>
 		public void CheckUpdates(ClientKind kind, SHDeviceFamily device)
 		{
 			var version = GetVersion();
@@ -79,7 +93,11 @@ namespace Buildron.Domain.Versions
 			}
 		
 		}
-		
+
+		/// <summary>
+		/// Gets the version.
+		/// </summary>
+		/// <returns>The version.</returns>
 		public Version GetVersion()
 		{
 			return s_versionRepository.Find();
