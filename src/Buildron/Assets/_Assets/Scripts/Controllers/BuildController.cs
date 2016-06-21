@@ -20,11 +20,10 @@ using Buildron.Application;
 /// </summary>
 public class BuildController : SHController<Build>
 {
-	#region Fields
-	private static UnityEngine.Object s_buildPrefab = Resources.Load ("BuildPrefab");
-	private static UnityEngine.Object s_buildFailedExplosionPrefab = Resources.Load ("BuildFailedExplosionPrefab");
-	private static UnityEngine.Object s_buildSuccessFireworksPrefab = Resources.Load ("BuildSuccessFireworksPrefab");
-	private static UnityEngine.Object s_buildHidingEffectPrefab = Resources.Load ("BuildHidingEffectPrefab");
+    #region Fields
+    private static UnityEngine.Object s_buildFailedExplosionPrefab;
+    private static UnityEngine.Object s_buildSuccessFireworksPrefab;
+    private static UnityEngine.Object s_buildHidingEffectPrefab;
 
 	private BuildProgressBarController m_progressBar;
 	private bool m_groundReachdAlreadRaised;
@@ -321,6 +320,12 @@ public class BuildController : SHController<Build>
 	private void CreateFailedEffects ()
 	{
 		if (!IsHistoryBuild) {
+
+            if (s_buildFailedExplosionPrefab == null)
+            {
+                s_buildFailedExplosionPrefab = Resources.Load("BuildFailedExplosionPrefab");
+            }
+
 			var explosion = (GameObject)GameObject.Instantiate (s_buildFailedExplosionPrefab);
 			explosion.transform.parent = transform;
 			explosion.transform.position = transform.position;
@@ -331,6 +336,12 @@ public class BuildController : SHController<Build>
 	private void CreateSuccessEffects ()
 	{
 		if (!m_isFirstCheckState && !IsHistoryBuild) {
+
+            if (s_buildSuccessFireworksPrefab == null)
+            {
+                s_buildSuccessFireworksPrefab = Resources.Load("BuildSuccessFireworksPrefab");
+            }
+
 			var fireworks = (GameObject)GameObject.Instantiate (s_buildSuccessFireworksPrefab);
 			fireworks.transform.parent = transform;
 			fireworks.transform.position = transform.position;
@@ -339,6 +350,11 @@ public class BuildController : SHController<Build>
 	
 	private void CreateHiddingEffect ()
 	{
+        if (s_buildHidingEffectPrefab == null)
+        {
+            s_buildHidingEffectPrefab = Resources.Load("BuildHidingEffectPrefab");
+        }
+
 		var effect = (GameObject)GameObject.Instantiate (s_buildHidingEffectPrefab);
 		effect.transform.parent = transform;
 		effect.transform.position = transform.position;
