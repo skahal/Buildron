@@ -75,7 +75,14 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 
 		private static BuildStatus ParseRunningStates (Build build, XmlNode e)
 		{
-			var statusText = e.SelectSingleNode ("running-info").Attributes ["currentStageText"].Value;
+            var runningInfoNode = e.SelectSingleNode("running-info");
+            
+            if (runningInfoNode == null)
+            {
+                return BuildStatus.Running;
+            }
+
+            var statusText = runningInfoNode.Attributes ["currentStageText"].Value;
 			var status = BuildStatus.Running;
 			var m = s_getStepNumberRegex.Match (statusText);
 			
