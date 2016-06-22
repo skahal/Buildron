@@ -239,7 +239,11 @@ namespace Buildron.Domain
 
             set
             {
-                if (m_triggeredBy != value)
+				if (m_triggeredBy == null 
+				|| (value != null
+					&& (!value.UserName.Equals(m_triggeredBy.UserName)
+						|| !value.Name.Equals(m_triggeredBy.Name)
+							|| !value.Email.Equals(m_triggeredBy.Email))))
                 {
                     var previousTriggeredBy = m_triggeredBy;
                     m_triggeredBy = value;

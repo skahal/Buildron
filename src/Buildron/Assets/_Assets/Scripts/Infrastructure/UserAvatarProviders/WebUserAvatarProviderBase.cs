@@ -35,20 +35,23 @@ namespace Buildron.Infrastructure.UserAvatarProviders
                         var url = BuildImageUrl(user);				
 						var r = Requester.Instance;
 			
-						r.GetTexture (
-                        url, 
-                       (photo) => 
-						{              
-                            // Success.     
-							SetCache(cacheKey, photo);
-							photoReceived (photo);
-						},
-                       () =>
-                       {
-                           // Error.
-						   SetCache(cacheKey, null);
-                           photoReceived(null);
-                       });
+						if (String.IsNullOrEmpty (url)) {
+							SetCache (cacheKey, null);
+							photoReceived (null);
+						} else {
+							r.GetTexture (
+								url, 
+								(photo) => {              
+									// Success.     
+									SetCache (cacheKey, photo);
+									photoReceived (photo);
+								},
+								() => {
+									// Error.
+									SetCache (cacheKey, null);
+									photoReceived (null);
+								});
+						}
 					}
 				}
 			}

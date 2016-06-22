@@ -11,13 +11,19 @@ namespace Buildron.Infrastructure.UserAvatarProviders
 {
     /// <summary>
     /// User avatar that use user e-mail to look for an Gravatar image.
-    /// </summary>
+    /// </summary> 
     public class GravatarUserAvatarProvider : WebUserAvatarProviderBase
     {
         #region Methods
         protected override string BuildImageUrl(User user)
         {
-            var mailHash = GetMd5Sum(user.Email);
+			var email = user.Email;
+
+			if (String.IsNullOrEmpty (email)) {
+				return null;
+			}
+				
+            var mailHash = GetMd5Sum(email);
             return "http://www.gravatar.com/avatar/{0}.png?s=256&{1}&d=404".With(mailHash, DateTime.Now.Ticks);
         }
 
