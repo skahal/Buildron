@@ -42,8 +42,6 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 			"OnBuildHidden",
 			"OnBuildVisible",
 			"OnScreenshotTaken",
-			//"OnSortingBegin",
-			//"OnSortingEnded",
 			"OnBuildHistoryCreated");
 	
 		SHLog.Warning ("Network server initialize: {0}", error);
