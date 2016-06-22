@@ -29,8 +29,7 @@ namespace Buildron.Domain.Sorting
 		/// <returns>The sort.</returns>
 		/// <param name="items">Items.</param>
         protected override IEnumerator PerformSort(IList<TItem> items)
-        {
-      		OnSortingEnded (EventArgs.Empty);
+        {      		
 			yield break;
         }
 		#endregion

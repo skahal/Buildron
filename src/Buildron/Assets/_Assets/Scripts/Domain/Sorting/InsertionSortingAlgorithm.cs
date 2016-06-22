@@ -33,9 +33,7 @@ namespace Buildron.Domain.Sorting
 				for (int k = i; k > 0 && IsLowerThan(items[k], items[k-1]); k--) {
 					yield return Swap (items, k, k - 1);
 				}
-			}	
-
-			OnSortingEnded (EventArgs.Empty);
+			}				
 		}
 		#endregion
 	}

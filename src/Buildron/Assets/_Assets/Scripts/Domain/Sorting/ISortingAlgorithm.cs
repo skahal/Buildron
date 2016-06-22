@@ -13,7 +13,7 @@ namespace Buildron.Domain.Sorting
 		/// <summary>
 		/// Occurs when sorting begin.
 		/// </summary>
-		event EventHandler SortingBegin;
+		event EventHandler<SortingBeginEventArgs> SortingBegin;
 
 		/// <summary>
 		/// Occurs when sorting items swapped.
@@ -23,7 +23,7 @@ namespace Buildron.Domain.Sorting
 		/// <summary>
 		/// Occurs when sorting end.
 		/// </summary>
-		event EventHandler SortingEnded;
+		event EventHandler<SortingEndedEventArgs> SortingEnded;
 		#endregion
 
 		#region Properties
@@ -33,11 +33,16 @@ namespace Buildron.Domain.Sorting
         string Name { get; }
 
         /// <summary>
+        /// Gets the comparer.
+        /// </summary>
+        IComparer<TItem> Comparer { get; }
+
+        /// <summary>
         /// Sorts the specified items.
         /// </summary>
         /// <param name="items">The items.</param>
-        /// <param name="equalityComparer">The equality comparer.</param>
-        IEnumerator Sort(IList<TItem> items, IComparer<TItem> equalityComparer);
-		#endregion
-	}
+        /// <param name="comparer">The equality comparer.</param>
+        IEnumerator Sort(IList<TItem> items, IComparer<TItem> comparer);
+        #endregion
+    }
 }

@@ -8,6 +8,7 @@ using Skahal.Tweening;
 using UnityEngine;
 using Zenject;
 using Buildron.Application;
+using System.Linq;
 
 /// <summary>
 /// Sorting controller.
@@ -15,8 +16,6 @@ using Buildron.Application;
 public class SortingController : MonoBehaviour
 {
 	#region Fields
-	private bool m_shouldUpdateStatusBar;
-
 	[Inject]
 	private BuildGOService m_buildGOService;
 	#endregion
@@ -63,27 +62,32 @@ public class SortingController : MonoBehaviour
 	}
 
 	private void OnBuildSortUpdated (BuildSortUpdatedEventArgs args)
-	{
-		ServerState.Instance.IsSorting = true;
-
+	{		
 		var sorting = args.SortingAlgorithm;
-		var comparer = BuildService.GetComparer (args.SortBy);            
-		m_shouldUpdateStatusBar = !(sorting is NoneSortingAlgorithm<Build>);
-		UpdateStatusBar ("Sorting by " + comparer + " using: " + sorting.Name);
+		var comparer = BuildService.GetComparer (args.SortBy);
+        var builds = m_buildGOService
+            .GetVisiblesOrderByPosition()
+            .Select(go => go.GetComponent<BuildController>().Model)
+            .ToList();        
 
-		var buildsGO = m_buildGOService.GetVisiblesOrderByPosition ();
-		var builds = new List<Build> ();
+        sorting.SortingBegin += SortingBegin;
+        sorting.SortingItemsSwapped += SortingItemsSwapped;
+        sorting.SortingEnded += SortingEnded;
 
-		foreach (var go in buildsGO) {
-			go.GetComponent<Rigidbody> ().isKinematic = true;
-			builds.Add (go.GetComponent<BuildController> ().Model);
-		}
-
-		sorting.SortingItemsSwapped += SortingItemsSwapped;
-		sorting.SortingEnded += OnSortingEnded;
-	
-		StartCoroutine (sorting.Sort (builds, comparer));
+        StartCoroutine(sorting.Sort(builds, comparer));        
 	}
+
+    private void SortingBegin (object sender, SortingBeginEventArgs args)
+    {
+        if (!args.WasAlreadySorted)
+        {
+            ServerState.Instance.IsSorting = true;
+            m_buildGOService.FreezeAll();
+
+            var sorting = sender as ISortingAlgorithm<Build>;
+            UpdateStatusBar("Sorting by {0}  using: {1}".With(sorting.Comparer, sorting.Name));
+        }
+    }
 
 	private void SortingItemsSwapped (object sender, SortingItemsSwappedEventArgs<Build> args)
 	{
@@ -110,23 +114,21 @@ public class SortingController : MonoBehaviour
 			iT.MoveTo.easetype, iTween.EaseType.easeInOutBack);
 	}
 
-	private void OnSortingEnded (object sender, System.EventArgs args)
+	private void SortingEnded (object sender, SortingEndedEventArgs args)
 	{
-		foreach (var go in m_buildGOService.GetVisiblesOrderByPosition()) {
-			go.GetComponent<Rigidbody> ().isKinematic = false;
-		}
+        if (!args.WasAlreadySorted)
+        {
+            m_buildGOService.UnfreezeAll();
 
-		ServerState.Instance.IsSorting = false;
-		UpdateStatusBar ("Sorting finished.", 2f);
+            ServerState.Instance.IsSorting = false;
+            UpdateStatusBar("Sorting finished.", 2f);
+        }
 	}
 
 	private void UpdateStatusBar (string text, float secondsTimeout = 0)
 	{
 		SHLog.Warning (text);
-
-		if (m_shouldUpdateStatusBar) {            
-			StatusBarController.SetStatusText (text, secondsTimeout);
-		}
+		StatusBarController.SetStatusText (text, secondsTimeout);		
 	}
 
 	#endregion

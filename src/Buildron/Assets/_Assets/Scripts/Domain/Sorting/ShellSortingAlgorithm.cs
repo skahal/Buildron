@@ -51,9 +51,7 @@ namespace Buildron.Domain.Sorting
 				} else {
 					increment = 1;
 				}
-			}	
-
-			OnSortingEnded (EventArgs.Empty);
+			}				
 		}
 		#endregion
 	}

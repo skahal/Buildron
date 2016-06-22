@@ -20,9 +20,9 @@ namespace Buildron.Domain.UnitTests.Sorting
 		public void Sort_Items_Sorted()
 		{
 			var target = new InsertionSortingAlgorithm<int> ();
-			var sortingBeginRaised = target.CreateAssert<EventArgs> ("SortingBegin", 1);
+			var sortingBeginRaised = target.CreateAssert<SortingBeginEventArgs> ("SortingBegin", 1);
 			var sortingItemsSwappedRaised = target.CreateAssert<SortingItemsSwappedEventArgs<int>> ("SortingItemsSwapped", 20);
-			var sortingEndedRaised = target.CreateAssert<EventArgs> ("SortingEnded", 1);
+			var sortingEndedRaised = target.CreateAssert<SortingEndedEventArgs> ("SortingEnded", 1);
 
 			var items = new List<int> (new int[] { 9, 1, 8, 2, 7, 3, 6, 4, 5 });
 			var result = target.Sort (items, Comparer<int>.Default);
