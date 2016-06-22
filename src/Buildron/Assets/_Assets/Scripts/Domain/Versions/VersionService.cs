@@ -10,8 +10,8 @@ namespace Buildron.Domain.Versions
 	public class VersionService : IVersionService
 	{	
 		#region Fields
-		private IVersionClient s_versionClient;
-		private IVersionRepository s_versionRepository;
+		private readonly IVersionClient m_versionClient;
+		private readonly IVersionRepository m_versionRepository;
 		#endregion
 		
 		#region Events
@@ -34,20 +34,23 @@ namespace Buildron.Domain.Versions
 		/// <param name="versionRepository">Version repository.</param>
 		public VersionService (IVersionClient versionClient, IVersionRepository versionRepository)
 		{
-			s_versionClient = versionClient;
-			s_versionRepository = versionRepository;
+			m_versionClient = versionClient;
+			m_versionRepository = versionRepository;
 			
-			s_versionClient.ClientRegistered += (sender, e) => {
+			m_versionClient.ClientRegistered += (sender, e) => {
 				
 				var version = new Version ();
 				version.ClientId = e.ClientId;
 				version.ClientInstance = e.ClientInstance;
-				s_versionRepository.Save (version);
+				m_versionRepository.Save (version);
 				
 				ClientRegistered.Raise (this, e);
 			};
-			
-			s_versionClient.UpdateInfoReceived += (sender, e) => UpdateInfoReceived.Raise (this, e);
+
+            m_versionClient.UpdateInfoReceived += (sender, e) =>
+            {
+                UpdateInfoReceived.Raise(this, e);
+            };
 		}
 		#endregion
 
@@ -61,11 +64,11 @@ namespace Buildron.Domain.Versions
 		/// <param name="device">Device.</param>
 		public void Register(ClientKind kind, SHDeviceFamily device)
 		{
-			var version = s_versionRepository.Find();
+			var version = m_versionRepository.Find();
 			
 			if (version == null)
 			{
-				s_versionClient.RegisterClient(Guid.NewGuid().ToString(), kind, device);
+				m_versionClient.RegisterClient(Guid.NewGuid().ToString(), kind, device);
 			}
 			else
 			{
@@ -89,7 +92,7 @@ namespace Buildron.Domain.Versions
 			
 			if (version != null)
 			{
-				s_versionClient.CheckUpdates(version.ClientId, kind, device);	
+				m_versionClient.CheckUpdates(version.ClientId, kind, device);	
 			}
 		
 		}
@@ -100,7 +103,7 @@ namespace Buildron.Domain.Versions
 		/// <returns>The version.</returns>
 		public Version GetVersion()
 		{
-			return s_versionRepository.Find();
+			return m_versionRepository.Find();
 		}
 		#endregion
 	}
