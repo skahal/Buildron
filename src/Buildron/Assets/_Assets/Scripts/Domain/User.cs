@@ -1,6 +1,7 @@
 #region Usings
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 #endregion
 
@@ -26,12 +27,13 @@ namespace Buildron.Domain
 		/// </summary>
 		RetryTrigger
 	}
-	#endregion
-	
-	/// <summary>
-	/// Defines a user that trigger a build.
-	/// </summary>
-	public class User : IEquatable<User>
+    #endregion
+
+    /// <summary>
+    /// Defines a user that trigger a build.
+    /// </summary>
+    [DebuggerDisplay("{UserName}")]
+    public class User : IEquatable<User>
 	{
 		#region Constructors
 		/// <summary>
@@ -122,6 +124,43 @@ namespace Buildron.Domain
         public override int GetHashCode()
         {
             return UserName.GetHashCode();
+        }
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="user1">The user1.</param>
+        /// <param name="user2">The user2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static bool operator == (User user1, User user2)
+        {
+            // Check for both null (need this casts to object or will run in a recursive loop).
+            if ((object)user1 == null && (object)user2 == null)
+            {
+                return true;
+            }
+
+            if ((object)user1 == null || (object)user2 == null)
+            {
+                return false;
+            }
+
+            return user1.Equals(user2);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="user1">The user1.</param>
+        /// <param name="user2">The user2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static bool operator !=(User user1, User user2)
+        {
+            return !(user1 == user2);
         }
         #endregion
     }
