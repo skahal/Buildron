@@ -40,9 +40,9 @@ namespace Buildron.Domain
 		public ServerState ()
 		{
 			BuildFilter = new BuildFilter ();
-            CameraPositionX = 2.2f;
-            CameraPositionY = 2.6f;
-            CameraPositionZ = -13f;
+            CameraPositionX = 0.0f;
+            CameraPositionY = 3.6f;
+            CameraPositionZ = -19.1f;
             Instance = this;
 		}
 		#endregion
