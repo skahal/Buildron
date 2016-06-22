@@ -95,6 +95,28 @@ namespace Buildron.Application
         }
 
         /// <summary>
+        /// Freezes all builds game objects
+        /// </summary>
+        public void FreezeAll()
+        {
+            foreach (var go in GetVisiblesOrderByPosition())
+            {
+                go.GetComponent<Rigidbody>().isKinematic = true;
+            }
+        }
+
+        /// <summary>
+        /// Unfreezes all builds game objects
+        /// </summary>
+        public void UnfreezeAll()
+        {
+            foreach (var go in GetVisiblesOrderByPosition())
+            {
+                go.GetComponent<Rigidbody>().isKinematic = false;
+            }
+        }
+
+        /// <summary>
         /// Verify if all builds physics are sleeping.
         /// </summary>
         /// <remarks>
