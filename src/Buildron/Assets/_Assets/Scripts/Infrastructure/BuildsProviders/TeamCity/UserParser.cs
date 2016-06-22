@@ -62,7 +62,8 @@ public static class UserParser
 				}
 			}		
 			
-		} else {
+		} 
+		else {
 			var nameAttribute = userNode.Attributes ["name"];
 			var userNameAttribute = userNode.Attributes ["username"];
 			
@@ -76,8 +77,6 @@ public static class UserParser
 				user.Name = nameAttribute.Value;
 				user.UserName = ParseUserName (userNode.Attributes ["username"].Value);
 				user.Builds.Add (build);	
-			} else {
-				SHLog.Debug ("TESTE");
 			}
 			
 		}
@@ -124,48 +123,6 @@ public static class UserParser
 			}
 			
 			user.Builds.Add (build);
-		}
-		
-		return user;
-	}
-	
-	/// <summary>
-	/// Parses from change.
-	/// </summary>
-	/// <returns>
-	/// The from change.
-	/// </returns>
-	/// <param name='build'>
-	/// Build.
-	/// </param>
-	/// <param name='xmlDoc'>
-	/// Xml document.
-	/// </param>
-	public static User ParseFromChange (Build build, XmlDocument xmlDoc)
-	{
-		User user = null;
-		
-		var userNode = xmlDoc.SelectSingleNode ("change/user");
-		
-		if (userNode != null) {
-			
-			var username = ParseUserName(userNode.Attributes ["username"].Value);
-			
-			if (s_buildUsers.ContainsKey (username)) {
-				user = s_buildUsers [username];
-				
-				if (!user.Builds.Contains (build)) {
-					user.Builds.Add (build);
-				}
-				
-			} else {
-				user = new User ();
-				user.Name = username;
-				user.UserName = username;
-				user.Builds.Add (build);
-			
-				s_buildUsers.Add (user.UserName, user);
-			}
 		}
 		
 		return user;
