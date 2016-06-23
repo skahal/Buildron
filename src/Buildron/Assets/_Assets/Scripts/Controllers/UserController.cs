@@ -4,9 +4,12 @@ using UnityEngine.UI;
 using Zenject;
 
 [RequireComponent(typeof(UserAnimationController))]
-public class UserController : MonoBehaviour
+public class UserController : MonoBehaviour, IInitializable
 {
     #region Fields
+    [Inject]
+    private IBuildService m_buildService;
+
     private static Object s_buildUserPrefab = Resources.Load("UserPrefab");
     private Vector3 m_targetPosition;
     private bool m_canWalk;
@@ -68,12 +71,7 @@ public class UserController : MonoBehaviour
         MarkAsVisible();
         Messenger.Register(gameObject,
             "OnCameraZoomIn",
-            "OnCameraZoomOut");
-
-        BuildService.BuildUpdated += delegate (object sender, BuildUpdatedEventArgs e)
-        {
-            UpdateFromData();
-        };
+            "OnCameraZoomOut"); 
     }
 
     private void Start()
@@ -81,6 +79,14 @@ public class UserController : MonoBehaviour
         m_spawnPosition = transform.position;
         m_alreadyAwake = true;
         UpdateFromData();
+    }
+
+    public void Initialize()
+    {
+        m_buildService.BuildUpdated += delegate (object sender, BuildUpdatedEventArgs e)
+        {
+            UpdateFromData();
+        };
     }
 
     private void UpdateUserPhoto()
@@ -192,7 +198,7 @@ public class UserController : MonoBehaviour
     }
 
 	public class Factory : Factory<UserController>
-	{
+	{        
 	}
     #endregion
 }

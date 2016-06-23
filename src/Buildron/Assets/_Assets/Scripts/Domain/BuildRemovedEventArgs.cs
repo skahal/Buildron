@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Buildron.Domain
+﻿namespace Buildron.Domain
 {
     /// <summary>
     /// Arguments for build removed events.
@@ -8,6 +6,10 @@ namespace Buildron.Domain
     public class BuildRemovedEventArgs : BuildEventArgsBase
 	{
 		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildRemovedEventArgs"/> class.
+		/// </summary>
+		/// <param name="build">Build.</param>
 		public BuildRemovedEventArgs (Build build)
 			: base(build)
 		{

@@ -33,8 +33,8 @@ namespace Buildron.Domain
     /// Defines a user that trigger a build.
     /// </summary>
     [DebuggerDisplay("{UserName}")]
-    public class User : IEquatable<User>
-	{
+    public class User : IEquatable<User>, IComparable<User>
+    {
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Buildron.Domain.User"/> class.
@@ -124,6 +124,21 @@ namespace Buildron.Domain
         public override int GetHashCode()
         {
             return UserName.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares to.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns></returns>
+        public int CompareTo(User other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+
+            return "{0}_{1}_{2}".With(UserName, Name, Email).CompareTo("{0}_{1}_{2}".With(other.UserName, other.Name, other.Email));
         }
 
         /// <summary>

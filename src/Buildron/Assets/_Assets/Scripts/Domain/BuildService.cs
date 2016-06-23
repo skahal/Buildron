@@ -14,9 +14,12 @@ namespace Buildron.Domain
 	/// <summary>
 	/// The builds service.
 	/// </summary>
-	public static class BuildService
-	{
+	public class BuildService : IBuildService
+    {
 		#region Constants
+		/// <summary>
+		/// The max server down from provider.
+		/// </summary>
 		public const int MaxServerDownFromProvider = 1;
 		#endregion
 		
@@ -24,45 +27,52 @@ namespace Buildron.Domain
 		/// <summary>
 		/// Occurs when a build is found.
 		/// </summary>
-		public static event EventHandler<BuildFoundEventArgs> BuildFound;
+		public event EventHandler<BuildFoundEventArgs> BuildFound;
 
 		/// <summary>
 		/// Occurs when a build is removed.
 		/// </summary>
-		public static event EventHandler<BuildRemovedEventArgs> BuildRemoved;
+		public event EventHandler<BuildRemovedEventArgs> BuildRemoved;
 		
 		/// <summary>
 		/// Occurs when builds are refreshed.
 		/// </summary>
-		public static event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;
+		public event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;
 		
 		/// <summary>
 		/// Occurs when a build is updated.
 		/// </summary>
-		public static event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
+		public event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
 		
-		public static event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
+		public event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
+        #endregion
 
-		public static event EventHandler UserAuthenticationSuccessful;
-		public static event EventHandler UserAuthenticationFailed;
-		#endregion
-		
-		#region Fields
-		private static IBuildsProvider s_buildsProvider;
-		private static List<string> s_buildConfigurationIdsRefreshed;
-		private static List<Build> s_builds;
-        private static List<Build> s_buildsFoundInLastRefresh;
-		private static int s_serverDownFromProviderCount;
-		#endregion
-		
-		#region Properties
-		/// <summary>
-		/// Gets the builds count.
-		/// </summary>
-		/// <value>The builds count.</value>
-		public static int BuildsCount { 
+        #region Fields        
+        private ICIServerService m_ciServerService;
+        private IBuildsProvider m_buildsProvider;
+        private ISHLogStrategy m_log;
+		private List<string> m_buildConfigurationIdsRefreshed;
+		private List<Build> m_builds;
+        private List<Build> m_buildsFoundInLastRefresh;
+		private int m_serverDownFromProviderCount;
+        #endregion
+
+        #region Constructors
+        public BuildService(ISHLogStrategy log, ICIServerService ciServerService)
+        {
+            m_log = log;
+            m_ciServerService = ciServerService;
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets the builds count.
+        /// </summary>
+        /// <value>The builds count.</value>
+        public int BuildsCount { 
 			get {
-				return s_builds.Count;
+				return m_builds.Count;
 			}
 		}
 
@@ -70,15 +80,15 @@ namespace Buildron.Domain
 		/// Gets a value indicating whether this <see cref="Buildron.Domain.BuildService"/> is initialized.
 		/// </summary>
 		/// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
-		public static bool Initialized { get; private set; }
+		public bool Initialized { get; private set; }
 
 		/// <summary>
 		/// Gets the name of the server.
 		/// </summary>
 		/// <value>The name of the server.</value>
-		public static string ServerName {
+		public string ServerName {
 			get {
-				return s_buildsProvider.Name;	
+				return m_buildsProvider.Name;	
 			}
 		}
 		#endregion
@@ -88,26 +98,26 @@ namespace Buildron.Domain
 		/// Initialize the build service.
 		/// </summary>
 		/// <param name="buildsProvider">Builds provider.</param>
-	    public static void Initialize (IBuildsProvider buildsProvider)
+	    public void Initialize (IBuildsProvider buildsProvider)
 		{
-			s_buildConfigurationIdsRefreshed = new List<string> ();
-			s_builds = new List<Build> ();
-            s_buildsFoundInLastRefresh = new List<Build>();
-            s_buildsProvider = buildsProvider;
+			m_buildConfigurationIdsRefreshed = new List<string> ();
+			m_builds = new List<Build> ();
+            m_buildsFoundInLastRefresh = new List<Build>();
+            m_buildsProvider = buildsProvider;
 			
-			s_buildsProvider.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e) {                
+			m_buildsProvider.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e) {                
                 var newBuild = e.Build;
 
-                s_buildConfigurationIdsRefreshed.Add(newBuild.Configuration.Id);
-				var oldBuild = s_builds.FirstOrDefault (bld => bld.Configuration.Id.Equals (newBuild.Configuration.Id));
+                m_buildConfigurationIdsRefreshed.Add(newBuild.Configuration.Id);
+				var oldBuild = m_builds.FirstOrDefault (bld => bld.Configuration.Id.Equals (newBuild.Configuration.Id));
 			
 				if (oldBuild == null) {
-                    SHLog.Debug("BuildService.BuildUpdated: new build {0}", newBuild.Id);
-                    s_builds.Add (newBuild);
-                    s_buildsFoundInLastRefresh.Add(newBuild);
-                    BuildFound.Raise (typeof(BuildService), new BuildFoundEventArgs (newBuild));
+                    m_log.Debug("BuildService.BuildUpdated: new build {0}", newBuild.Id);
+                    m_builds.Add (newBuild);
+                    m_buildsFoundInLastRefresh.Add(newBuild);
+                    BuildFound.Raise (this, new BuildFoundEventArgs (newBuild));
 				} else {
-                    SHLog.Debug("BuildService.BuildUpdated: old build {0}", newBuild.Id);
+                    m_log.Debug("BuildService.BuildUpdated: old build {0}", newBuild.Id);
                     oldBuild.PercentageComplete = newBuild.PercentageComplete;
 					
 					if (oldBuild.TriggeredBy != null && !oldBuild.Configuration.Id.Equals (newBuild.Configuration.Id)) {
@@ -122,58 +132,58 @@ namespace Buildron.Domain
 					oldBuild.Configuration = newBuild.Configuration;
 				}
 				
-				BuildUpdated.Raise (typeof(BuildService), e);
+				BuildUpdated.Raise (this, e);
 			};
 			
-			s_buildsProvider.BuildsRefreshed += delegate {
+			m_buildsProvider.BuildsRefreshed += delegate {
 
-                var removedBuilds = s_builds.Where(b => !s_buildConfigurationIdsRefreshed.Any(configId => b.Configuration.Id.Equals(configId))).ToList();
+                var removedBuilds = m_builds.Where(b => !m_buildConfigurationIdsRefreshed.Any(configId => b.Configuration.Id.Equals(configId))).ToList();
 
-                SHLog.Warning("BuildService.BuildsRefreshed: there is {0} builds and {1} were refreshed. {2} will be removed", s_builds.Count, s_buildConfigurationIdsRefreshed.Count, removedBuilds.Count);
+                m_log.Warning("BuildService.BuildsRefreshed: there is {0} builds and {1} were refreshed. {2} will be removed", m_builds.Count, m_buildConfigurationIdsRefreshed.Count, removedBuilds.Count);
 
                 foreach (var build in removedBuilds)
 				{
-                    s_builds.Remove(build);
-					BuildRemoved.Raise(typeof(BuildService), new BuildRemovedEventArgs(build));
+                    m_builds.Remove(build);
+					BuildRemoved.Raise(this, new BuildRemovedEventArgs(build));
 				}
 
-                var buildsStatusChanged = s_builds.Where(b => b.PreviousStatus != BuildStatus.Unknown && b.PreviousStatus != b.Status).ToList();
+                var buildsStatusChanged = m_builds.Where(b => b.PreviousStatus != BuildStatus.Unknown && b.PreviousStatus != b.Status).ToList();
 
-                s_buildConfigurationIdsRefreshed.Clear();
-                BuildsRefreshed.Raise (typeof(BuildService), new BuildsRefreshedEventArgs(buildsStatusChanged, s_buildsFoundInLastRefresh.ToList(), removedBuilds));
-                s_buildsFoundInLastRefresh.Clear();
+                m_buildConfigurationIdsRefreshed.Clear();
+                BuildsRefreshed.Raise (this, new BuildsRefreshedEventArgs(buildsStatusChanged, m_buildsFoundInLastRefresh.ToList(), removedBuilds));
+                m_buildsFoundInLastRefresh.Clear();
             };
 
-			var ciServer = CIServerService.GetCIServer ();
+			var ciServer = m_ciServerService.GetCIServer ();
 
-			s_buildsProvider.ServerDown += delegate {
-				s_serverDownFromProviderCount++;
+			m_buildsProvider.ServerDown += delegate {
+				m_serverDownFromProviderCount++;
 				ciServer.Status = CIServerStatus.Down;
 
-				if (s_serverDownFromProviderCount >= MaxServerDownFromProvider) {
-					CIServerStatusChanged.Raise (typeof(BuildService), new CIServerStatusChangedEventArgs(ciServer));
+				if (m_serverDownFromProviderCount >= MaxServerDownFromProvider) {
+					CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs(ciServer));
 				}	
 			};
 			
-			s_buildsProvider.ServerUp += delegate {
-				s_serverDownFromProviderCount = 0;
+			m_buildsProvider.ServerUp += delegate {
+				m_serverDownFromProviderCount = 0;
 				ciServer.Status = CIServerStatus.Up;
-				CIServerStatusChanged.Raise (typeof(BuildService), new CIServerStatusChangedEventArgs(ciServer));
+				CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs(ciServer));
 			};
 			
-			s_buildsProvider.UserAuthenticationSuccessful += delegate {
+			m_buildsProvider.UserAuthenticationSuccessful += delegate {
 				Initialized = true;
 				ciServer.Status = CIServerStatus.Up;
-				CIServerStatusChanged.Raise (typeof(BuildService), new CIServerStatusChangedEventArgs(ciServer));
+				CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs(ciServer));
 			};		
 		}
 
 		/// <summary>
 		/// Refreshs all builds.
 		/// </summary>
-		public static void RefreshAllBuilds ()
+		public void RefreshAllBuilds ()
 		{
-			s_buildsProvider.RefreshAllBuilds ();
+			m_buildsProvider.RefreshAllBuilds ();
 		}
 
 		/// <summary>
@@ -181,9 +191,9 @@ namespace Buildron.Domain
 		/// </summary>
 		/// <param name="remoteControl">Remote control.</param>
 		/// <param name="buildId">Build identifier.</param>
-		public static void RunBuild (RemoteControl remoteControl, string buildId)
+		public void RunBuild (RemoteControl remoteControl, string buildId)
 		{
-			ExecuteBuildCommand(remoteControl, buildId, s_buildsProvider.RunBuild);
+			ExecuteBuildCommand(remoteControl, buildId, m_buildsProvider.RunBuild);
 		}
 
 		/// <summary>
@@ -191,18 +201,18 @@ namespace Buildron.Domain
 		/// </summary>
 		/// <param name="remoteControl">Remote control.</param>
 		/// <param name="buildId">Build identifier.</param>
-		public static void StopBuild (RemoteControl remoteControl, string buildId)
+		public void StopBuild (RemoteControl remoteControl, string buildId)
 		{
-			ExecuteBuildCommand (remoteControl, buildId, s_buildsProvider.StopBuild);
+			ExecuteBuildCommand (remoteControl, buildId, m_buildsProvider.StopBuild);
 		}
 
 		/// <summary>
 		/// Authenticates the user.
 		/// </summary>
 		/// <param name="user">User.</param>
-		public static void AuthenticateUser (UserBase user)
+		public void AuthenticateUser (UserBase user)
 		{
-			s_buildsProvider.AuthenticateUser(user);
+			m_buildsProvider.AuthenticateUser(user);
 		}
 
 		/// <summary>
@@ -210,9 +220,9 @@ namespace Buildron.Domain
 		/// </summary>
 		/// <returns>The most relevant build for user.</returns>
 		/// <param name="user">User.</param>
-		public static Build GetMostRelevantBuildForUser (User user)
+		public Build GetMostRelevantBuildForUser (User user)
 		{
-			var userBuilds = s_builds.Where (b => b.TriggeredBy != null && b.TriggeredBy.UserName.Equals (user.UserName));
+			var userBuilds = m_builds.Where (b => b.TriggeredBy != null && b.TriggeredBy.UserName.Equals (user.UserName));
 			var build = userBuilds.FirstOrDefault (b => b.IsRunning);
 			
 			if (build == null) {
@@ -229,9 +239,9 @@ namespace Buildron.Domain
 		/// <summary>
 		/// Reset this instance.
 		/// </summary>
-		public static void Reset ()
+		public void Reset ()
 		{
-			s_builds.Clear ();
+			m_builds.Clear ();
 		}
 
 		/// <summary>
@@ -239,7 +249,7 @@ namespace Buildron.Domain
 		/// </summary>
 		/// <returns>The comparer.</returns>
 		/// <param name="sortBy">Sort by.</param>
-		public static IComparer<Build> GetComparer(SortBy sortBy)
+		public IComparer<Build> GetComparer(SortBy sortBy)
 		{
 			switch (sortBy) {
 			case SortBy.Date:
@@ -250,9 +260,9 @@ namespace Buildron.Domain
 			}
 		}
 
-		private static void ExecuteBuildCommand (RemoteControl remoteControl, string buildId, Action<RemoteControl, Build> command)
+		private void ExecuteBuildCommand (RemoteControl remoteControl, string buildId, Action<RemoteControl, Build> command)
 		{
-			var build = s_builds.FirstOrDefault (b => b.Id.Equals (buildId, StringComparison.OrdinalIgnoreCase));
+			var build = m_builds.FirstOrDefault (b => b.Id.Equals (buildId, StringComparison.OrdinalIgnoreCase));
 
 			if (build != null) {
 				build.Status = BuildStatus.Queued;

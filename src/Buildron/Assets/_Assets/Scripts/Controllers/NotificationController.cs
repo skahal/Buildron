@@ -23,10 +23,13 @@ public class NotificationController : MonoBehaviour, IInitializable
 
 	[Inject]
 	private ISHLogStrategy m_log;
-	#endregion
 
-	#region Editor properties
-	public float MinutesCheckNotificationsInterval = 10;
+    [Inject]
+    private IRemoteControlService m_remoteControlService;
+    #endregion
+
+    #region Editor properties
+    public float MinutesCheckNotificationsInterval = 10;
 	public float MinutesUntilHideNotification = 2;
 	public Text NotificationLabel;
 	#endregion
@@ -37,11 +40,11 @@ public class NotificationController : MonoBehaviour, IInitializable
 		m_notificationService.NotificationReceived += (sender, e) => 
 		{		
 			m_log.Debug ("NotificationController: notification received '{0}'.", e.Notification.Text);
-			if (!RemoteControlService.HasRemoteControlConnected) {
+			if (!m_remoteControlService.HasRemoteControlConnected) {
 
 
 				// Someday a RC has connect to this Buildron instance, so stop to boring about RC ;)
-				if (e.Notification.Name.Equals ("DOWNLOAD_RC") && RemoteControlService.HasRemoteControlConnectedSomeDay) {
+				if (e.Notification.Name.Equals ("DOWNLOAD_RC") && m_remoteControlService.HasRemoteControlConnectedSomeDay) {
 					return;
 				}
 

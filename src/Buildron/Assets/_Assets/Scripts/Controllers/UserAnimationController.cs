@@ -4,15 +4,19 @@ using System.Collections;
 using Buildron.Domain;
 using Skahal.Logging;
 using System.Collections.Generic;
+using Zenject;
 #endregion
 
 /// <summary>
 /// User animation controller.
 /// </summary>
 public class UserAnimationController : MonoBehaviour {
-	
-	#region Fields
-	private BuildStatus? m_currentStatus;
+
+    #region Fields
+    [Inject]
+    private IBuildService m_buildService;
+
+    private BuildStatus? m_currentStatus;
 	private Queue<string> m_animationsQueue = new Queue<string> ();
 	#endregion
 	
@@ -42,7 +46,7 @@ public class UserAnimationController : MonoBehaviour {
 	
 	public void Play ()
 	{
-		var build = BuildService.GetMostRelevantBuildForUser (Data);
+		var build = m_buildService.GetMostRelevantBuildForUser (Data);
 				
 		if (build == null) {
 			AnimateAsSuccess ();

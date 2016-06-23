@@ -25,7 +25,10 @@ public class BuildController : SHController<Build>
     private static UnityEngine.Object s_buildSuccessFireworksPrefab;
     private static UnityEngine.Object s_buildHidingEffectPrefab;
 
-	private BuildProgressBarController m_progressBar;
+    [Inject]
+    private IRemoteControlService m_remoteControlService;
+
+    private BuildProgressBarController m_progressBar;
 	private bool m_groundReachdAlreadRaised;
 	private Text m_projectLabel;
 	private Text m_configurationLabel;
@@ -142,7 +145,7 @@ public class BuildController : SHController<Build>
 
     private void OnRemoteControlConnected ()
 	{
-		var rc = RemoteControlService.GetConnectedRemoteControl ();
+		var rc = m_remoteControlService.GetConnectedRemoteControl ();
 		var rcUserName = rc == null ? null : rc.UserName.ToLowerInvariant ();
 		var userName = Model.TriggeredBy == null ? null : Model.TriggeredBy.UserName.ToLowerInvariant ();
 		

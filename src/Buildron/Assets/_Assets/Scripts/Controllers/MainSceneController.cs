@@ -13,17 +13,26 @@ using Buildron.Application;
 #endregion
 
 [AddComponentMenu("Buildron/Scenes/MainSceneController")]
-public class MainSceneController : MonoBehaviour 
+public class MainSceneController : MonoBehaviour, IInitializable
 {
 	#region Fields
 	private Queue<GameObject> m_buildsToDeploy = new Queue<GameObject>();
 	private int m_deployedBuildsCount;
 	private bool m_isRefreshingBuilds;
 	private bool m_serverIsDown;
-	#endregion
-	
-	#region Properties
-	public float DeployBuildSeconds = 0.5f;
+
+    [Inject]
+    private IBuildService m_buildService;
+
+    [Inject]
+    private IRemoteControlService m_remoteControlService;
+
+    [Inject]
+    private ICIServerService m_ciServerService;
+    #endregion
+
+    #region Properties
+    public float DeployBuildSeconds = 0.5f;
 	public int MaxDeployedBuilds = 32;
 	public Vector3 FirstColumnDeployPosition = new Vector3(-2.5f, 10, 0);
 	public Vector3 SecondColumnDeployPosition = new Vector3(2.5f, 10, 0);
@@ -54,16 +63,19 @@ public class MainSceneController : MonoBehaviour
 			"OnCIServerReady",
 			"OnBuildRunRequested",
 			"OnBuildStopRequested");
-		
-		var server = CIServerService.GetCIServer ();
-		Title.text = server.Title;
 	}
+
+    public void Initialize()
+    {
+        var server = m_ciServerService.GetCIServer();
+        Title.text = server.Title;
+    }
 
 	public void StoreTitle()
 	{
-		var server = CIServerService.GetCIServer ();
+		var server = m_ciServerService.GetCIServer ();
 		server.Title = Title.text;
-		CIServerService.SaveCIServer (server);
+        m_ciServerService.SaveCIServer (server);
 	}
 
 	private void OnCIServerReady ()
@@ -77,12 +89,12 @@ public class MainSceneController : MonoBehaviour
 	
 	private void OnBuildRunRequested ()
 	{
-		ExecuteFocusedBuildCommand (BuildService.RunBuild);
+		ExecuteFocusedBuildCommand (m_buildService.RunBuild);
 	}
 	
 	private void OnBuildStopRequested ()
 	{
-		ExecuteFocusedBuildCommand (BuildService.StopBuild);
+		ExecuteFocusedBuildCommand (m_buildService.StopBuild);
 	}
 
 	private void ExecuteFocusedBuildCommand (Action<RemoteControl, string> command)
@@ -90,25 +102,25 @@ public class MainSceneController : MonoBehaviour
 		var visibles = BuildGOService.GetVisibles ();
 		
 		if (visibles.Count == 1) {
-			command (RemoteControlService.GetConnectedRemoteControl (), visibles [0].GetComponent<BuildController> ().Model.Id);
+			command (m_remoteControlService.GetConnectedRemoteControl (), visibles [0].GetComponent<BuildController> ().Model.Id);
 		}
 	}
 	
 	private void InitializeBuildService ()
 	{
-		SetLogMessage ("Contacting {0} server. Please, wait...", BuildService.ServerName);
-		
-		BuildService.BuildFound += delegate(object sender, BuildFoundEventArgs e) {
-			if (BuildService.BuildsCount == 1) {
+		SetLogMessage ("Contacting {0} server. Please, wait...", m_buildService.ServerName);
+
+        m_buildService.BuildFound += delegate(object sender, BuildFoundEventArgs e) {
+			if (m_buildService.BuildsCount == 1) {
 				SetLogMessage ("");	
 			}
 		};
-		
-		BuildService.BuildsRefreshed += delegate {
+
+        m_buildService.BuildsRefreshed += delegate {
 			m_isRefreshingBuilds = false;
 		};
-		
-		BuildService.CIServerStatusChanged += (e, args) => {
+
+        m_buildService.CIServerStatusChanged += (e, args) => {
 			if (args.Server.Status == CIServerStatus.Down) {
 				StartCoroutine (DelayServerIsDown ());
 				m_serverIsDown = true;
@@ -117,7 +129,7 @@ public class MainSceneController : MonoBehaviour
 			else {
 				m_serverIsDown = false;
 
-				if (BuildService.BuildsCount != 0) {
+				if (m_buildService.BuildsCount != 0) {
 					SetLogMessage ("");	
 				}
 			}
@@ -133,7 +145,7 @@ public class MainSceneController : MonoBehaviour
 			// After the wait, the server still down?
 			if (m_serverIsDown) {
 				m_isRefreshingBuilds = false;
-				SetLogMessage ("{0} server is unavailable!", BuildService.ServerName);
+				SetLogMessage ("{0} server is unavailable!", m_buildService.ServerName);
 				Messenger.Send("OnServerDown");
 			}
 		}
@@ -155,14 +167,14 @@ public class MainSceneController : MonoBehaviour
 	
 	private IEnumerator UpdateBuildsStatus ()
 	{
-		var refreshSeconds = CIServerService.GetCIServer ().RefreshSeconds;
+		var refreshSeconds = m_ciServerService.GetCIServer ().RefreshSeconds;
 		
 		while (true) {				
 			try {
 				if (!m_isRefreshingBuilds) {
 					SetLastUpdateMessage ("Updating...");
 					m_isRefreshingBuilds = true;
-					BuildService.RefreshAllBuilds ();	
+                    m_buildService.RefreshAllBuilds ();	
 					SetLastUpdateMessage ("Last update\n{0:HH:mm:ss}", System.DateTime.Now);
 					UpdateServerIP();
 				}

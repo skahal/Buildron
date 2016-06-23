@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using Buildron.Domain;
 using Skahal.Common;
+using Zenject;
 #endregion
 
 /// <summary>
@@ -10,9 +11,14 @@ using Skahal.Common;
 /// </summary>
 [AddComponentMenu("Buildron/EasterEggs/KickEasterEggController")]
 public class KickEasterEggController : EasterEggControllerBase 
-{	
-	#region Life cycle
-	void Start ()
+{
+    #region Fields
+    [Inject]
+    private IRemoteControlService m_remoteControlService;
+    #endregion
+
+    #region Life cycle
+    void Start ()
 	{
 		EasterEggsNames.Add ("Kick");
 		EasterEggsNames.Add ("KickAll");
@@ -20,7 +26,7 @@ public class KickEasterEggController : EasterEggControllerBase
 	 	
 	private void OnKick ()
 	{		
-		var avatar = UserController.GetGameObject (RemoteControlService.GetConnectedRemoteControl ().UserName);
+		var avatar = UserController.GetGameObject (m_remoteControlService.GetConnectedRemoteControl ().UserName);
 		Kick (avatar);
 	}
 

@@ -4,14 +4,27 @@ using Skahal.Infrastructure.Framework.Domain;
 namespace Buildron.Domain
 {
 	#region Enums
+	/// <summary>
+	/// Ke word filter type.
+	/// </summary>
 	public enum KeyWordFilterType
 	{
+		/// <summary>
+		/// Should contains the keyword.
+		/// </summary>
 		Contains,
+
+		/// <summary>
+		/// Should not contains the keyword.
+		/// </summary>
 		DoesNotContains
 	}
 	#endregion
-	
-	[Serializable]
+
+	/// <summary>
+	/// Represents the build filter sent from a RC.
+	/// </summary>
+    [Serializable]
 	public class BuildFilter : EntityBase, IAggregateRoot
 	{
 		#region Fields
@@ -19,6 +32,9 @@ namespace Buildron.Domain
 		#endregion
 		
 		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildFilter"/> class.
+		/// </summary>
 		public BuildFilter ()
 		{
 			FailedEnabled = true;
@@ -31,11 +47,30 @@ namespace Buildron.Domain
 		#endregion
 		
 		#region Properties
+		/// <summary>
+		/// Gets or sets a value indicating whether the failed builds should be selected by the filter.
+		/// </summary>
 		public bool FailedEnabled { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the running builds should be selected by the filter.
+		/// </summary>
 		public bool RunningEnabled { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the success builds should be selected by the filter.
+		/// </summary>
 		public bool SuccessEnabled { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the queued builds should be selected by the filter.
+		/// </summary>
 		public bool QueuedEnabled { get; set; }
 
+		/// <summary>
+		/// Gets or sets the keyword.
+		/// </summary>
+		/// <value>The keyword.</value>
 		public string KeyWord 
 		{ 
 			get
@@ -56,7 +91,11 @@ namespace Buildron.Domain
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the type of the keyword.
+		/// </summary>
+		/// <value>The type of the key word.</value>
 		public KeyWordFilterType KeyWordType { get; private set ;}
 		
 		/// <summary>

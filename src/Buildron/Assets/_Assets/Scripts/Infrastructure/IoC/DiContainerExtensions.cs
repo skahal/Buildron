@@ -51,6 +51,22 @@ namespace Buildron.Infrastructure.IoC
 
 			return binder;
 		}
-	}
+
+        public static ConditionBinder BindInitializableService<TServiceInterface, TServiceImplementation>(this DiContainer container)            
+            where TServiceImplementation : TServiceInterface, IInitializable
+        {
+            var name = typeof(TServiceInterface).Name;
+
+            SHLog.Debug("Binding service '{0}'", name);
+            var binder = container.Bind<TServiceInterface>().To<TServiceImplementation>().AsSingle();
+
+            SHLog.Debug("Service '{0}' binding IInitializable", name);
+            container.Bind<IInitializable>().To<TServiceImplementation>().AsSingle();
+            
+            SHLog.Debug("Service '{0}' bind done.", name);
+
+            return binder;
+        }
+    }
 }
 

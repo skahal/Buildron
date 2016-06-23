@@ -18,12 +18,15 @@ public class SortingController : MonoBehaviour
 	#region Fields
 	[Inject]
 	private BuildGOService m_buildGOService;
-	#endregion
 
-	#region Methods
-	private void Start ()
-	{      
-		BuildService.BuildsRefreshed += (sender, e) => {
+    [Inject]
+    private IBuildService m_buildService;
+    #endregion
+
+    #region Methods
+    private void Start ()
+	{
+        m_buildService.BuildsRefreshed += (sender, e) => {
 			// New builds were found or if an existing one changed the status, sort it.
 			if (e.BuildsFound.Count > 0 || e.BuildsStatusChanged.Count > 0) {
 				PerformOnBuildSortUpdated ();
@@ -64,7 +67,7 @@ public class SortingController : MonoBehaviour
 	private void OnBuildSortUpdated (BuildSortUpdatedEventArgs args)
 	{		
 		var sorting = args.SortingAlgorithm;
-		var comparer = BuildService.GetComparer (args.SortBy);
+		var comparer = m_buildService.GetComparer (args.SortBy);
         var builds = m_buildGOService
             .GetVisiblesOrderByPosition()
             .Select(go => go.GetComponent<BuildController>().Model)

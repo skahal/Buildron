@@ -30,8 +30,11 @@ public enum CameraState
 [RequireComponent(typeof(BlurEffect))]
 public class CameraController : MonoBehaviour
 {
-	#region Fields
-	private Vector3 m_firstPosition;
+    #region Fields
+    [Inject]
+    private IBuildService m_buildService;
+
+    private Vector3 m_firstPosition;
 	private int m_lastVisiblesCount;
 	private Vector3 m_originalPosition;
 	private Vector3 m_targetPosition;
@@ -198,8 +201,8 @@ public class CameraController : MonoBehaviour
 		
 		m_serverDownToneMappingEffect = GetComponent<Tonemapping> ();
 		m_serverDownToneMappingEffect.enabled = true;
-		
-		BuildService.CIServerStatusChanged += (e, args) => {
+
+        m_buildService.CIServerStatusChanged += (e, args) => {
 			var isDown = args.Server.Status == CIServerStatus.Down;
 			m_serverDownBlurEffect.enabled = isDown;
 			m_serverDownToneMappingEffect.enabled = isDown;

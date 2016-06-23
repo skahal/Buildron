@@ -11,6 +11,8 @@ using Buildron.Infrastructure.Clients;
 using Buildron.Domain.Notifications;
 using Buildron.Application;
 using Buildron.Domain.EasterEggs;
+using Skahal.Infrastructure.Framework.Repositories;
+using Skahal.Infrastructure.Repositories;
 
 namespace Buildron.Infrastructure.IoC
 {
@@ -41,9 +43,7 @@ namespace Buildron.Infrastructure.IoC
 			InstallBuild ();  
 
 			log.Debug ("IOC :: Installing misc bindings...");
-			InstallMisc ();
-
-			DependencyService.Register<IServerStateRepository> (new PlayerPrefsServerStateRepository ());
+			InstallMisc ();			
 		
 			log.Debug ("IOC :: Bindings installed.");
 		}
@@ -60,12 +60,18 @@ namespace Buildron.Infrastructure.IoC
 		void InstallDomain ()
 		{
 			Container.Bind<IVersionService> ().To<VersionService> ().AsSingle ();
-		}
+            Container.BindInitializableService<IRemoteControlService, RemoteControlService>();
+            Container.Bind<ICIServerService>().To<CIServerService>().AsSingle();
+            Container.Bind<IBuildService>().To<BuildService>().AsSingle();
+        }
 
 		void InstallRepositories ()
 		{
-			Container.Bind<IVersionRepository> ().To<PlayerPrefsVersionRepository> ().AsSingle ();
-		}
+            DependencyService.Register<IServerStateRepository>(new PlayerPrefsServerStateRepository());
+
+            Container.Bind<IVersionRepository> ().To<PlayerPrefsVersionRepository> ().AsSingle ();
+            Container.Bind<IRepository<CIServer>>().To<GenericPlayerPrefsRepository<CIServer>>().AsSingle();
+        }
 
 		void InstallUser ()
 		{
@@ -85,9 +91,9 @@ namespace Buildron.Infrastructure.IoC
 			}, Container.Resolve<ISHLogStrategy> ());
 			Container.Bind<IUserService> ().FromInstance (userService);
 
-			Container.BindFactory<UserController, UserController.Factory> ()
-			.FromPrefabResource ("UserPrefab")
-			.UnderGameObjectGroup ("Users");
+            Container.BindFactory<UserController, UserController.Factory>()
+            .FromPrefabResource("UserPrefab")
+            .UnderGameObjectGroup("Users");
 		}
 
 		void InstallBuild ()

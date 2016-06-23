@@ -16,8 +16,14 @@ using Buildron.Application;
 /// </summary>
 public class BuildsDeployController : MonoBehaviour
 {
-	#region Fields    
-	private GameObject m_container;
+    #region Fields    
+    [Inject]
+    private IBuildService m_buildService;
+
+    [Inject]
+    private ICIServerService m_ciServerService;
+
+    private GameObject m_container;
 	private Vector3 m_initialDeployPosition;
 	private Vector3 m_currentDeployPosition;
 	private int m_deployedBuildsCount;
@@ -69,15 +75,15 @@ public class BuildsDeployController : MonoBehaviour
 	
 	private void OnCIServerReady ()
 	{
-		m_totemsNumber = CIServerService.GetCIServer ().BuildsTotemsNumber;
+		m_totemsNumber = m_ciServerService.GetCIServer ().BuildsTotemsNumber;
 		m_initialDeployPosition = CalculateInitialPosition ();
 		m_currentDeployPosition = m_initialDeployPosition;
 	
-		BuildService.BuildFound += delegate(object sender, BuildFoundEventArgs e) {		
+		m_buildService.BuildFound += delegate(object sender, BuildFoundEventArgs e) {		
 			UpdateBuild (e.Build);
 		};
 
-		BuildService.BuildRemoved += delegate(object sender, BuildRemovedEventArgs e) {		
+        m_buildService.BuildRemoved += delegate(object sender, BuildRemovedEventArgs e) {		
 			RemoveBuild (e.Build);
 		};
 		

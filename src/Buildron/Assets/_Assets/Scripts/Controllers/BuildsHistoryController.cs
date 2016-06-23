@@ -12,9 +12,12 @@ using Buildron.Application;
 /// Builds history controller.
 /// </summary>
 public class BuildsHistoryController : MonoBehaviour {
-	
-	#region Fields
-	private GameObject m_container;
+
+    #region Fields
+    [Inject]
+    private ICIServerService m_ciServerService;
+
+    private GameObject m_container;
 	private int m_historyCount;
 	#endregion
 	
@@ -51,7 +54,7 @@ public class BuildsHistoryController : MonoBehaviour {
 	
 	private void OnCIServerReady ()
 	{
-		if (!CIServerService.GetCIServer ().HistoryTotemEnabled) {
+		if (!m_ciServerService.GetCIServer ().HistoryTotemEnabled) {
 			enabled = false;
 			Destroy(this);	
 		}

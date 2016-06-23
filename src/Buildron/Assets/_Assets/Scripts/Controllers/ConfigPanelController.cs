@@ -22,7 +22,7 @@ using Zenject;
 public class ConfigPanelController : MonoBehaviour, IInitializable
 {
 	#region Fields
-	private CIServer m_CIServer;
+	private CIServer m_ciServer;
 	private IBuildsProvider m_buildsProvider;
 	private Animator m_animator;
 
@@ -30,7 +30,13 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	private IUserService m_userService;
 
 	[Inject]
-	private IVersionService m_versionService; 
+	private IVersionService m_versionService;
+
+    [Inject]
+    private IBuildService m_buildService;
+
+    [Inject]
+    private ICIServerService m_ciServerService;
     #endregion
 
     #region Editor properties
@@ -75,23 +81,23 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	#region Life cycle
 	public void Initialize ()
 	{		
-		m_CIServer = CIServerService.GetCIServer ();
-		Debug.LogFormat ("Server type: {0}", m_CIServer.ServerType);
-		Debug.LogFormat ("IP: {0}", m_CIServer.IP);
+		m_ciServer = m_ciServerService.GetCIServer ();
+		Debug.LogFormat ("Server type: {0}", m_ciServer.ServerType);
+		Debug.LogFormat ("IP: {0}", m_ciServer.IP);
 		
 		PrepareCIServerTypesRadioButtons ();
-		CIServerIPInputField.text = m_CIServer.IP;
-		CIServerUserNameInputField.text = m_CIServer.DomainAndUserName;
-		CIServerPasswordInputField.text = m_CIServer.Password;
+		CIServerIPInputField.text = m_ciServer.IP;
+		CIServerUserNameInputField.text = m_ciServer.DomainAndUserName;
+		CIServerPasswordInputField.text = m_ciServer.Password;
 
-		RefreshSecondsSlider.value = m_CIServer.RefreshSeconds;
+		RefreshSecondsSlider.value = m_ciServer.RefreshSeconds;
 		UpdateRefreshSecondsLabel ();
 
-		BuildsTotemsSlider.value = m_CIServer.BuildsTotemsNumber;
+		BuildsTotemsSlider.value = m_ciServer.BuildsTotemsNumber;
 		UpdateBuildTotemsLabel ();
 
-		FxSounsToggle.isOn = m_CIServer.FxSoundsEnabled;
-		HistoryTotemToggle.isOn = m_CIServer.HistoryTotemEnabled;
+		FxSounsToggle.isOn = m_ciServer.FxSoundsEnabled;
+		HistoryTotemToggle.isOn = m_ciServer.HistoryTotemEnabled;
 
 		UpdateBuildsProvider ();
 
@@ -112,7 +118,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	
 	void PrepareCIServerTypesRadioButtons ()
 	{
-		switch (m_CIServer.ServerType) {
+		switch (m_ciServer.ServerType) {
 		case CIServerType.Hudson:
 			Debug.Log ("CIServerTypeHudsonToggle.isOn");
 			CIServerTypeHudsonToggle.isOn = true;
@@ -195,18 +201,18 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	{
 		if (CIServerTypeHudsonToggle.isOn) 
 		{
-			m_buildsProvider = new HudsonBuildsProvider (m_CIServer);
-			m_CIServer.ServerType = CIServerType.Hudson;
+			m_buildsProvider = new HudsonBuildsProvider (m_ciServer);
+			m_ciServer.ServerType = CIServerType.Hudson;
 		} 
 		else if (CIServerTypeJenkinsToggle.isOn)
 		{
-			m_buildsProvider = new JenkinsBuildsProvider (m_CIServer);
-			m_CIServer.ServerType = CIServerType.Jenkins;
+			m_buildsProvider = new JenkinsBuildsProvider (m_ciServer);
+			m_ciServer.ServerType = CIServerType.Jenkins;
 		} 
 		else 
 		{
-			m_buildsProvider = new TeamCityBuildsProvider (m_CIServer);
-			m_CIServer.ServerType = CIServerType.TeamCity;
+			m_buildsProvider = new TeamCityBuildsProvider (m_ciServer);
+			m_ciServer.ServerType = CIServerType.TeamCity;
 		}
 		
 		CIServerIPLabel.text = string.Format ("{0} IP", m_buildsProvider.Name);
@@ -233,22 +239,22 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	public void StartBuildron ()
 	{	
 		Debug.Log ("Starting...");
-		m_CIServer.IP = CIServerIPInputField.text;
-		m_CIServer.UserName = CIServerUserNameInputField.text;
-		m_CIServer.Password = CIServerPasswordInputField.text;
-		m_CIServer.RefreshSeconds = Convert.ToInt32 (RefreshSecondsSlider.value);
+		m_ciServer.IP = CIServerIPInputField.text;
+		m_ciServer.UserName = CIServerUserNameInputField.text;
+		m_ciServer.Password = CIServerPasswordInputField.text;
+		m_ciServer.RefreshSeconds = Convert.ToInt32 (RefreshSecondsSlider.value);
 
-		m_CIServer.FxSoundsEnabled = FxSounsToggle.isOn;
-		m_CIServer.HistoryTotemEnabled = HistoryTotemToggle.isOn;
-		m_CIServer.BuildsTotemsNumber = Convert.ToInt32(BuildsTotemsSlider.value);
+		m_ciServer.FxSoundsEnabled = FxSounsToggle.isOn;
+		m_ciServer.HistoryTotemEnabled = HistoryTotemToggle.isOn;
+		m_ciServer.BuildsTotemsNumber = Convert.ToInt32(BuildsTotemsSlider.value);
 		
-		CIServerService.SaveCIServer (m_CIServer);
+		m_ciServerService.SaveCIServer (m_ciServer);
 		
 		UpdateBuildsProvider ();
 			
-		if (!BuildService.Initialized) {
+		if (!m_buildService.Initialized) {
 		
-			if (m_CIServer.IP.Equals ("#TEST_MODE#")) {
+			if (m_ciServer.IP.Equals ("#TEST_MODE#")) {
 				m_buildsProvider = new TestBuildsProvider ();
 			}
 
@@ -259,8 +265,8 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			m_userService.ListenBuildsProvider (m_buildsProvider);
 
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
-			BuildService.Initialize (m_buildsProvider);
-			BuildService.AuthenticateUser (m_CIServer);
+            m_buildService.Initialize (m_buildsProvider);
+            m_buildService.AuthenticateUser (m_ciServer);
 		}
 	}
 	#endregion

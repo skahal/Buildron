@@ -1,3 +1,6 @@
+using System;
+using Skahal.Infrastructure.Framework.Domain;
+
 namespace Buildron.Domain
 {
 	/// <summary>
@@ -23,20 +26,26 @@ namespace Buildron.Domain
 		/// </summary>
 		Down
 	}
-	
-	/// <summary>
-	/// The Continuous Integration Server entity.
-	/// </summary>
-	public sealed class CIServer : UserBase
+
+    /// <summary>
+    /// The Continuous Integration Server entity.
+    /// </summary>
+    [Serializable]
+    public sealed class CIServer : UserBase, IAggregateRoot
 	{
-		#region Properties
-		/// <summary>
-		/// Gets or sets the type of the server.
-		/// </summary>
-		/// <value>
-		/// The type of the server.
-		/// </value>
-		public CIServerType ServerType { get; set; }
+        #region Properties        
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        public long Id { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the type of the server.
+        /// </summary>
+        /// <value>
+        /// The type of the server.
+        /// </value>
+        public CIServerType ServerType { get; set; }
 		
 		/// <summary>
 		/// Gets or sets the title.
@@ -72,7 +81,7 @@ namespace Buildron.Domain
 		/// Gets or sets the status.
 		/// </summary>
 		/// <value>The status.</value>
-		public CIServerStatus Status { get; set; }
-		#endregion
-	}
+		public CIServerStatus Status { get; set; }        
+        #endregion
+    }
 }

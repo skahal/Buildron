@@ -4,10 +4,11 @@ using System;
 
 namespace Buildron.Domain
 {
-	/// <summary>
-	/// Defines a abstract user entity.
-	/// </summary>
-	public abstract class UserBase
+    /// <summary>
+    /// Defines a abstract user entity.
+    /// </summary>
+    [Serializable]
+    public abstract class UserBase
 	{
 		#region Fields
 		private string m_userName;

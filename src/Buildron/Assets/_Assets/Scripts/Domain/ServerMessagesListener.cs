@@ -30,10 +30,13 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 
 	[Inject]
 	private EasterEggService m_easterEggService;
-	#endregion
 
-	#region Life cycle
-	private void Awake ()
+    [Inject]
+    private IRemoteControlService m_remoteControlService;
+    #endregion
+
+    #region Life cycle
+    private void Awake ()
 	{
 		var error = Network.InitializeServer (1, 8181, false);
 	
@@ -74,7 +77,7 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 	private void OnPlayerDisconnected ()
 	{
 		SHLog.Debug ("Remote control disconnected.");
-		RemoteControlService.DisconnectRemoteControl ();
+        m_remoteControlService.DisconnectRemoteControl ();
 		Messenger.Send ("OnRemoteControlDisconnected");	
 	}
 	
@@ -112,8 +115,8 @@ public class ServerMessagesListener : MonoBehaviour, IInitializable
 			UserName = userName,
 			Password = password
 		};
-		
-		RemoteControlService.ConnectRemoteControl (rc);
+
+        m_remoteControlService.ConnectRemoteControl (rc);
 		Messenger.Send ("OnRemoteControlConnected", rc);
 	}
 	

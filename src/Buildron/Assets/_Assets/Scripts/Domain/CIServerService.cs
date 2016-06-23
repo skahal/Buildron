@@ -1,54 +1,69 @@
+using System.Linq;
 using UnityEngine;
 using Buildron.Infrastructure.BuildsProvider.TeamCity;
+using Skahal.Infrastructure.Framework.Repositories;
 
 namespace Buildron.Domain
 {
-	public static class CIServerService
-	{
-		#region Constants
-		private const string ServerTypeKey = "CIServer.ServerType";
-		private const string TitleKey = "CIServer.Title";
-		private const string IPKey = "CIServer.IP";
-		private const string DomainKey = "CIServer.Domain";
-		private const string UserNameKey = "CIServer.UserName";
-		private const string PasswordKey = "CIServer.Password";
-		private const string RefreshSecondsKey = "CIServer.RefreshSeconds";
-		private const string FxSoundsEnabledKey = "CIServer.FxSoundsEnabled";
-		private const string HistoryTotemEnabledKey = "CIServer.HistoryTotemEnabled";
-		private const string BuildsTotemsNumberKey = "CIServer.BuildsTotemsNumber";
-		#endregion
-		
-		#region Methods
-		public static void SaveCIServer (CIServer server)
+	public class CIServerService : ICIServerService
+    {
+        #region Fields
+        private IRepository<CIServer> m_repository;
+        private CIServer m_currentServer;
+        #endregion
+
+        #region Constructors
+        public CIServerService(IRepository<CIServer> repository)
+        {
+            m_repository = repository;
+        }
+        #endregion
+
+        #region Methods
+        public void SaveCIServer (CIServer server)
 		{
-			PlayerPrefs.SetInt (ServerTypeKey, (int)server.ServerType);
-			PlayerPrefs.SetString (TitleKey, server.Title);
-			PlayerPrefs.SetString (IPKey, server.IP);
-			PlayerPrefs.SetString (DomainKey, server.Domain);
-			PlayerPrefs.SetString (UserNameKey, server.UserName);
-			PlayerPrefs.SetString (PasswordKey, server.Password);
-			PlayerPrefs.SetFloat (RefreshSecondsKey, server.RefreshSeconds);
-			PlayerPrefs.SetInt (FxSoundsEnabledKey, server.FxSoundsEnabled ? 1 : 0);
-			PlayerPrefs.SetInt (HistoryTotemEnabledKey, server.HistoryTotemEnabled ? 1 : 0);
-			PlayerPrefs.SetInt (BuildsTotemsNumberKey, (int)server.BuildsTotemsNumber);
-		}
+            var oldServer = GetCIServer();
+
+            if (oldServer == null)
+            {
+                m_repository.Create(server);
+            }
+            else
+            {
+                server.Id = oldServer.Id;
+                m_repository.Modify(server);
+            }
+
+            m_currentServer = server;
+        }
 		
-		public static CIServer GetCIServer ()
+		public CIServer GetCIServer ()
 		{
-			var server = new CIServer ();
-			server.ServerType = (CIServerType)PlayerPrefs.GetInt (ServerTypeKey, (int)CIServerType.TeamCity);
-			server.Title = PlayerPrefs.GetString (TitleKey, "Buildron");
-			server.IP = PlayerPrefs.GetString (IPKey, string.Empty);
-			server.UserName = PlayerPrefs.GetString (UserNameKey, string.Empty);
-			server.Domain = PlayerPrefs.GetString (DomainKey, string.Empty);
-			server.Password = PlayerPrefs.GetString (PasswordKey, string.Empty);
-			server.RefreshSeconds = PlayerPrefs.GetFloat (RefreshSecondsKey, 10);
-			server.FxSoundsEnabled = PlayerPrefs.GetInt (FxSoundsEnabledKey, 1) == 1;
-			server.HistoryTotemEnabled = PlayerPrefs.GetInt (HistoryTotemEnabledKey, 1) == 1;
-			server.BuildsTotemsNumber = PlayerPrefs.GetInt (BuildsTotemsNumberKey, 2);
-			
-			return server;
-		}
+            if (m_currentServer == null)
+            {
+                m_currentServer = m_repository.All().FirstOrDefault();
+
+                // Creates the default.
+                if (m_currentServer == null)
+                {
+                    m_currentServer = new CIServer
+                    {
+                        ServerType = CIServerType.TeamCity,
+                        Title = "Buildron",
+                        IP = string.Empty,
+                        UserName = string.Empty,
+                        Domain = string.Empty,
+                        Password = string.Empty,
+                        RefreshSeconds = 10,
+                        FxSoundsEnabled = true,
+                        HistoryTotemEnabled = true,
+                        BuildsTotemsNumber = 2
+                    };
+                }
+            }
+
+            return m_currentServer;
+        }
 		#endregion
 	}
 }

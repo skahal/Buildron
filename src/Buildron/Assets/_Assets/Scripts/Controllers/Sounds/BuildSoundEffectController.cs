@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using Skahal.Logging;
 using System.Linq;
+using Zenject;
 
 
 #endregion
@@ -13,8 +14,11 @@ using System.Linq;
 [RequireComponent(typeof(AudioSource))]
 public class BuildSoundEffectController : MonoBehaviour
 {
-	#region Fields
-	private static List<AudioClip> s_sounds = new List<AudioClip>();
+    #region Fields
+    [Inject]
+    private ICIServerService m_ciServerService;
+
+    private static List<AudioClip> s_sounds = new List<AudioClip>();
 	#endregion
 
 	#region Editor properties
@@ -28,7 +32,7 @@ public class BuildSoundEffectController : MonoBehaviour
 	#region Methods
 	private void Start ()
 	{
-		if (CIServerService.GetCIServer ().FxSoundsEnabled) {
+		if (m_ciServerService.GetCIServer ().FxSoundsEnabled) {
 			LoadSounds();
 
 			Messenger.Register (gameObject, 
