@@ -1,19 +1,27 @@
-﻿using UnityEngine;
-using System.Collections;
-using Buildron.Application;
+﻿using Buildron.Application;
+using UnityEngine;
 using Zenject;
 
-public class BuildsController : MonoBehaviour {
+/// <summary>
+/// Builds controller.
+/// </summary>
+public class BuildsController : MonoBehaviour
+{
+	#region Fields
+    [Inject]
+    private BuildGOService m_buildGOService { get; set; }
+	#endregion
 
-	[Inject]
-	public BuildGOService Service { get; set; }
+	#region Methods
+    void Start()
+    {
+        Messenger.Register(gameObject,
+            "OnBuildHidden");
+    }
 
-	void Start () {
-		Messenger.Register (gameObject, 
-			"OnBuildHidden");
-	}
-	
-	void OnBuildHidden () {
-		Service.WakeUpSleepingBuilds ();
-	}
+    void OnBuildHidden()
+    {
+        m_buildGOService.WakeUpSleepingBuilds();
+    }
+	#endregion
 }
