@@ -13,7 +13,12 @@ namespace Buildron.Domain
         /// <summary>
         /// Build is in an unknown status.
         /// </summary>
-        Unknown,
+        Unknown = 0,
+
+        /// <summary>
+        /// Build has finish with success.
+        /// </summary>
+        Success,
 
         /// <summary>
         /// Build is in error status.
@@ -29,11 +34,6 @@ namespace Buildron.Domain
         /// Build has been canceled.
         /// </summary>
         Canceled,
-
-        /// <summary>
-        /// Build has finish with success.
-        /// </summary>
-        Success,
 
         /// <summary>
         /// Build has been queued.
@@ -221,7 +221,7 @@ namespace Buildron.Domain
         {
             get
             {
-                return m_status <= BuildStatus.Canceled && m_status != BuildStatus.Unknown;
+                return m_status >= BuildStatus.Error && m_status <= BuildStatus.Canceled;
             }
         }
 

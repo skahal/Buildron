@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Buidron.Domain;
+using Buildron.Domain;
 using Buildron.Domain;
 using Buildron.Domain.Sorting;
 using Skahal.Logging;
@@ -67,7 +67,7 @@ public class SortingController : MonoBehaviour
 	private void OnBuildSortUpdated (BuildSortUpdatedEventArgs args)
 	{		
 		var sorting = args.SortingAlgorithm;
-		var comparer = m_buildService.GetComparer (args.SortBy);
+		var comparer = BuildComparerFactory.Create(args.SortBy);
         var builds = m_buildGOService
             .GetVisiblesOrderByPosition()
             .Select(go => go.GetComponent<BuildController>().Model)
@@ -99,6 +99,11 @@ public class SortingController : MonoBehaviour
 
 		var b1GO = m_buildGOService.GetGameObject (b1);
 		var b2GO = m_buildGOService.GetGameObject (b2);
+
+        if (b1GO == null || b2GO == null)
+        {
+            SHLog.Warning("Aborting swap because could not found one of the builds game object: b1: {0}, b2: {1}", b1GO, b2GO);
+        }
 
 		SHLog.Debug ("Swapping position between {0} and {1}...", b1GO.name, b2GO.name);
 

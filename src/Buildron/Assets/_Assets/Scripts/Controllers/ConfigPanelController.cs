@@ -192,7 +192,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
             if (HasAutoStartArgument())
             {
-                SHThread.Start(1f, StartBuildron);
+                SHThread.Start(10f, StartBuildron);
             }
         }
 	}
@@ -252,21 +252,20 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 		
 		UpdateBuildsProvider ();
 			
-		if (!m_buildService.Initialized) {
+		if (!m_ciServerService.Initialized) {
 		
 			if (m_ciServer.IP.Equals ("#TEST_MODE#")) {
 				m_buildsProvider = new TestBuildsProvider ();
 			}
 
             // Inject the FilterBuildsProvider.
-            m_buildsProvider = new FilterBuildsProvider(m_buildsProvider);
-
-			BuildsProvider.Initialize (m_buildsProvider);
+            m_buildsProvider = new FilterBuildsProvider(m_buildsProvider);			
 			m_userService.ListenBuildsProvider (m_buildsProvider);
 
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
             m_buildService.Initialize (m_buildsProvider);
-            m_buildService.AuthenticateUser (m_ciServer);
+            m_ciServerService.Initialize(m_buildsProvider);
+            m_ciServerService.AuthenticateUser (m_ciServer);
 		}
 	}
 	#endregion

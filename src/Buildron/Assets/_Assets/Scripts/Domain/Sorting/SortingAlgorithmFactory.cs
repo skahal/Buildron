@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Skahal.Common;
 
 namespace Buildron.Domain.Sorting
@@ -85,7 +86,7 @@ namespace Buildron.Domain.Sorting
 			}
 
 			return SortingAlgorithmType.None;
-		}
+		}        
         #endregion
     }
 }

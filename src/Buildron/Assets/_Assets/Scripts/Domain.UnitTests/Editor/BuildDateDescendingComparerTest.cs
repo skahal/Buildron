@@ -1,5 +1,5 @@
 ﻿using System;
-using Buidron.Domain;
+using Buildron.Domain;
 using Buildron.Domain;
 using NUnit.Framework;
 using Rhino.Mocks;

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Buildron.Domain;
 #endregion
 
-namespace Buidron.Domain
+namespace Buildron.Domain
 {
 	/// <summary>
 	/// Build date descending comparer.
@@ -25,9 +25,9 @@ namespace Buidron.Domain
 		}
 
 		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current <see cref="Buidron.Domain.BuildDateDescendingComparer"/>.
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.BuildDateDescendingComparer"/>.
 		/// </summary>
-		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Buidron.Domain.BuildDateDescendingComparer"/>.</returns>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.BuildDateDescendingComparer"/>.</returns>
 		public override string ToString()
 		{
 			return "date";

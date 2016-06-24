@@ -31,14 +31,25 @@ namespace Buildron.Domain
     /// The Continuous Integration Server entity.
     /// </summary>
     [Serializable]
-    public sealed class CIServer : UserBase, IAggregateRoot
+    public sealed class CIServer : UserBase
 	{
-        #region Properties        
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public long Id { get; set; }
-        
+        #region Constructors
+        public CIServer()
+        {
+            ServerType = CIServerType.TeamCity;
+            Title = "Buildron";
+            IP = string.Empty;
+            UserName = string.Empty;
+            Domain = string.Empty;
+            Password = string.Empty;
+            RefreshSeconds = 10;
+            FxSoundsEnabled = true;
+            HistoryTotemEnabled = true;
+            BuildsTotemsNumber = 2;
+        }
+        #endregion
+
+        #region Properties                     
         /// <summary>
         /// Gets or sets the type of the server.
         /// </summary>

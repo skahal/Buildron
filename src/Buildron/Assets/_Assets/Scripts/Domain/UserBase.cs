@@ -1,5 +1,6 @@
 #region Usings
 using System;
+using Skahal.Infrastructure.Framework.Domain;
 #endregion
 
 namespace Buildron.Domain
@@ -8,8 +9,8 @@ namespace Buildron.Domain
     /// Defines a abstract user entity.
     /// </summary>
     [Serializable]
-    public abstract class UserBase
-	{
+    public abstract class UserBase : AggregateRootBase
+    {
 		#region Fields
 		private string m_userName;
 		#endregion

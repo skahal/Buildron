@@ -5,7 +5,7 @@ namespace Buildron.Domain
     public interface IRemoteControlService
     {
         bool HasRemoteControlConnected { get; }
-        bool HasRemoteControlConnectedSomeDay { get; set; }
+        bool HasRemoteControlConnectedSomeDay { get; }
 
         event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
 

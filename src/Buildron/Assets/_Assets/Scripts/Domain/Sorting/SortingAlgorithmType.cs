@@ -44,6 +44,11 @@ namespace Buildron.Domain.Sorting
         /// <summary>
         /// Sort by date.
         /// </summary>
-        Date
+        Date,
+
+        /// <summary>
+        /// Sort by relevant status.
+        /// </summary>
+        RelevantStatus
     }
 }

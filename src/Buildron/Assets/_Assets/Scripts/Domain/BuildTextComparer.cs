@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Buildron.Domain;
 #endregion
 
-namespace Buidron.Domain
+namespace Buildron.Domain
 {
 	public class BuildTextComparer : IComparer<Build>
 	{
@@ -20,7 +20,6 @@ namespace Buidron.Domain
 		{
 			return "text";
 		}
-		#endregion
-		
+		#endregion		
 	}
 }

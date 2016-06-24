@@ -120,7 +120,7 @@ public class MainSceneController : MonoBehaviour, IInitializable
 			m_isRefreshingBuilds = false;
 		};
 
-        m_buildService.CIServerStatusChanged += (e, args) => {
+        m_ciServerService.CIServerStatusChanged += (e, args) => {
 			if (args.Server.Status == CIServerStatus.Down) {
 				StartCoroutine (DelayServerIsDown ());
 				m_serverIsDown = true;

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Status bar controller.
 /// </summary>
-[AddComponentMenu("Buildron/HUD/BuidronStatusBarController")]
+[AddComponentMenu("Buildron/HUD/BuildronStatusBarController")]
 public class BuildronStatusBarController : StatusBarController {
 
 	#region Editor properties

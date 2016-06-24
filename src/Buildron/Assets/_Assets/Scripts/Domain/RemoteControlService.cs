@@ -1,82 +1,102 @@
 using System;
-using Buildron.Domain;
-using UnityEngine;
 using Skahal.Common;
+using Skahal.Infrastructure.Framework.Repositories;
+using UnityEngine;
 using Zenject;
-#region Usings
-#endregion
+using System.Linq;
 
 namespace Buildron.Domain
 {
-	/// <summary>
-	/// Remote control service.
-	/// </summary>
-	public class RemoteControlService : IRemoteControlService, IInitializable
+    /// <summary>
+    /// Remote control service.
+    /// </summary>
+    public class RemoteControlService : IRemoteControlService, IInitializable
     {
         #region Events
         public event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
         #endregion
 
         #region Fields
-        [Inject]
-        private IBuildService m_buildService;
+        private readonly ICIServerService m_ciServerService;
+        private readonly IUserService m_userService;
+        private readonly IRepository<RemoteControl> m_repository;
+        private RemoteControl m_connectedRC;
+        private bool? m_hasRemoteControlConnectedSomeDay;
+        #endregion
 
-        [Inject]
-        private IUserService m_userService;
+        #region Constructors
+        public RemoteControlService(ICIServerService ciServerService, IUserService userService, IRepository<RemoteControl> repository)
+        {
+            m_ciServerService = ciServerService;
+            m_userService = userService;
+            m_repository = repository;
+        }
+        #endregion
 
-        private RemoteControl m_remoteControl;
-		#endregion	
-		
-		#region Properties
-		public bool HasRemoteControlConnectedSomeDay {
-			get {
-				return PlayerPrefs.GetInt ("_HasRemoteControlConnectedSomeDay_", 0) == 1;
-			}
-			
-			set {
-				PlayerPrefs.SetInt ("_HasRemoteControlConnectedSomeDay_", value ? 1 : 0);
-			}
+        #region Properties
+        public bool HasRemoteControlConnectedSomeDay
+        {
+		    get
+            {
+                if (!m_hasRemoteControlConnectedSomeDay.HasValue)
+                {
+                    m_hasRemoteControlConnectedSomeDay = m_repository.All().Any();
+                }
+
+                return m_hasRemoteControlConnectedSomeDay.Value;
+            }	
 		}
 		
 		public bool HasRemoteControlConnected
 		{
 			get {
-				return m_remoteControl != null;
+				return m_connectedRC != null;
 			}
 		}
         #endregion
 
         #region Methods
-        public void  Initialize()
+        public void Initialize()
         {
             m_userService.UserAuthenticationCompleted += (sender, args) => {
-                if (!args.Success)
+                if (m_connectedRC != null)
                 {
-                    m_remoteControl = null;
+                    if (args.Success)
+                    {
+                        if (!m_repository.All().Any(r => r == m_connectedRC))
+                        {
+                            m_repository.Create(m_connectedRC);
+                        }
+                    }
+                    else
+                    {
+                        m_connectedRC.Connected = false;
+                        m_connectedRC = null;
+                    }
                 }
             };
         }
 
         public void ConnectRemoteControl (RemoteControl rcToConnect)
 		{
-			m_remoteControl = rcToConnect;
-            m_remoteControl.Connected = true;
-            m_buildService.AuthenticateUser (rcToConnect);
-			HasRemoteControlConnectedSomeDay = true;
+			m_connectedRC = rcToConnect;
+            m_connectedRC.Connected = true;
+            m_ciServerService.AuthenticateUser (rcToConnect);
+            m_hasRemoteControlConnectedSomeDay = true;
 
-            RemoteControlChanged.Raise(typeof(RemoteControlService), new RemoteControlChangedEventArgs(m_remoteControl));
+            RemoteControlChanged.Raise(typeof(RemoteControlService), new RemoteControlChangedEventArgs(m_connectedRC));
         }
 		
 		public void DisconnectRemoteControl ()
 		{
-            m_remoteControl.Connected = false;
-            RemoteControlChanged.Raise(typeof(RemoteControlService), new RemoteControlChangedEventArgs(m_remoteControl));
-            m_remoteControl = null;
+            m_connectedRC.Connected = false;
+            RemoteControlChanged.Raise(typeof(RemoteControlService), new RemoteControlChangedEventArgs(m_connectedRC));
+            m_connectedRC = null;
         }
 		
 		public RemoteControl GetConnectedRemoteControl ()
 		{
-			return m_remoteControl;
+			return m_connectedRC;
 		}
 		#endregion
 	}

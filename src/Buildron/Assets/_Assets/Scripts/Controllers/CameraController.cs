@@ -34,6 +34,9 @@ public class CameraController : MonoBehaviour
     [Inject]
     private IBuildService m_buildService;
 
+    [Inject]
+    private ICIServerService m_ciServerService;
+
     private Vector3 m_firstPosition;
 	private int m_lastVisiblesCount;
 	private Vector3 m_originalPosition;
@@ -202,10 +205,29 @@ public class CameraController : MonoBehaviour
 		m_serverDownToneMappingEffect = GetComponent<Tonemapping> ();
 		m_serverDownToneMappingEffect.enabled = true;
 
-        m_buildService.CIServerStatusChanged += (e, args) => {
-			var isDown = args.Server.Status == CIServerStatus.Down;
-			m_serverDownBlurEffect.enabled = isDown;
-			m_serverDownToneMappingEffect.enabled = isDown;
+        m_ciServerService.CIServerStatusChanged += (e, args) => {
+            var server = args.Server;
+
+            if (server.Status == CIServerStatus.Down)
+            {
+                // Wait a new refresh to show server is down effects.
+                SHThread.Start(
+                    server.RefreshSeconds * 1.5f,
+                    () =>
+                    {
+                        // Still down? Show down effects.
+                        if (server.Status == CIServerStatus.Down)
+                        {
+                            m_serverDownBlurEffect.enabled = true;
+                            m_serverDownToneMappingEffect.enabled = true;
+                        }
+                    });
+            }
+            else
+            {
+                m_serverDownBlurEffect.enabled = false;
+                m_serverDownToneMappingEffect.enabled = false;
+            }
 		};
 	}
 

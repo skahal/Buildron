@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Buildron.Domain
+﻿namespace Buildron.Domain
 {
-	/// <summary>
-	/// Represents an build event used by IBuildInterceptors.
-	/// </summary>
+    /// <summary>
+    /// Represents an build event used by IBuildInterceptors.
+    /// </summary>
     public sealed class BuildEvent
     {
 		#region Constructors
@@ -19,9 +14,7 @@ namespace Buildron.Domain
         {
             Build = build;
         }
-		#endregion
-
-		#region 
+		#endregion		
 
 		#region Properties
 		/// <summary>

@@ -71,6 +71,7 @@ namespace Buildron.Infrastructure.IoC
 
             Container.Bind<IVersionRepository> ().To<PlayerPrefsVersionRepository> ().AsSingle ();
             Container.Bind<IRepository<CIServer>>().To<GenericPlayerPrefsRepository<CIServer>>().AsSingle();
+            Container.Bind<IRepository<RemoteControl>>().To<GenericPlayerPrefsRepository<RemoteControl>>().AsSingle();
         }
 
 		void InstallUser ()
