@@ -238,7 +238,15 @@ public class Requester : MonoBehaviour
 
 				if (responseReceived != null)
 				{
-					responseReceived(request);
+                    try
+                    {
+                        responseReceived(request);
+                    }
+                    catch(Exception ex)
+                    {
+                        SHLog.Warning("Error calling responseReceived: {0}. {1}", ex.Message, ex.StackTrace);
+                        GetFailed.Raise(this, new RequestFailedEventArgs(url));
+                    }
 				}
 
 			}

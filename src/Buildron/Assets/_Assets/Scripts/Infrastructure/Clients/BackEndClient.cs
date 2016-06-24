@@ -53,16 +53,21 @@ namespace Buildron.Infrastructure.Clients
 			Requester.Instance.GetText (url, (obj) => 
 			{
 				Hashtable r = obj.hashtableFromJson ();
-				var values = (Hashtable)r ["Values"];
-				var updateInfo = new VersionUpdateInfo ();
-				updateInfo.Description = values ["UPDATE_TEXT"].ToString();
-				
-				if (values.Count > 1) {
-					updateInfo.Url = values ["UPDATE_LINK"].ToString();
-				}
-	
-				var args = new UpdateInfoReceivedEventArgs (updateInfo);
-				m_updateInfoReceived.Raise(this, args);
+
+                if (r != null)
+                {
+                    var values = (Hashtable)r["Values"];
+                    var updateInfo = new VersionUpdateInfo();
+                    updateInfo.Description = values["UPDATE_TEXT"].ToString();
+
+                    if (values.Count > 1)
+                    {
+                        updateInfo.Url = values["UPDATE_LINK"].ToString();
+                    }
+
+                    var args = new UpdateInfoReceivedEventArgs(updateInfo);
+                    m_updateInfoReceived.Raise(this, args);
+                }
 			});
 		}
 		
