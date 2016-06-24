@@ -2,6 +2,9 @@
 
 namespace Buildron.Domain
 {
+	/// <summary>
+	/// Defines an interface to continuous integration server service.
+	/// </summary>
     public interface ICIServerService
     {
         /// <summary>
@@ -23,8 +26,16 @@ namespace Buildron.Domain
         /// <param name="user">User.</param>
         void AuthenticateUser(UserBase user);
 
+		/// <summary>
+		/// Gets the CI server.
+		/// </summary>
+		/// <returns>The CI server.</returns>
         CIServer GetCIServer();
 
+		/// <summary>
+		/// Saves the CI server.
+		/// </summary>
+		/// <param name="server">Server.</param>
         void SaveCIServer(CIServer server);
     }
 }

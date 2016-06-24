@@ -24,6 +24,10 @@ namespace Buildron.Domain
         #endregion
 
         #region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServerService"/> class.
+		/// </summary>
+		/// <param name="repository">Repository.</param>
         public CIServerService(IRepository<CIServer> repository)
         {
             m_repository = repository;           
@@ -41,6 +45,10 @@ namespace Buildron.Domain
         }
 
         #region Methods
+		/// <summary>
+		/// Initialize the service.
+		/// </summary>
+		/// <param name="buildsProvider">Builds provider.</param>
         public void Initialize(IBuildsProvider buildsProvider)
         {
             m_buildsProvider = buildsProvider;
@@ -78,6 +86,10 @@ namespace Buildron.Domain
             }
         }
 
+		/// <summary>
+		/// Saves the CI server.
+		/// </summary>
+		/// <param name="server">Server.</param>
         public void SaveCIServer (CIServer server)
 		{
             var oldServer = GetCIServer();
@@ -94,7 +106,11 @@ namespace Buildron.Domain
 
             m_currentServer = server;
         }
-		
+
+		/// <summary>
+		/// Gets the CI server.
+		/// </summary>
+		/// <returns>The CI server.</returns>
 		public CIServer GetCIServer ()
 		{
             if (m_currentServer == null)
