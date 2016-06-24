@@ -82,12 +82,16 @@ public class TestBuildsProvider : IBuildsProvider
 			
 			b.PercentageComplete = Random.Range (0f, 1f);
 			
-			b.TriggeredBy = new User ();
-			b.TriggeredBy.Name = "User " + Random.Range (0, 10);
-			b.TriggeredBy.UserName = b.TriggeredBy.Name;
-			b.TriggeredBy.Email = SHRandomHelper.NextBool () ? "giacomelli@gmail.com" : "giusepe@gmail.com";
-			b.TriggeredBy.Builds.Add (b);
-			
+			var user = new User () 
+			{
+				Name = "User " + Random.Range (0, 10),
+				Email = SHRandomHelper.NextBool () ? "giacomelli@gmail.com" : "giusepe@gmail.com",
+			};
+
+			user.UserName = user.Name;
+			user.Builds.Add (b);
+
+			b.TriggeredBy = user;
 			b.LastChangeDescription = System.DateTime.Now.ToLongTimeString ();
 			b.Date = System.DateTime.Now;
 			BuildUpdated.Raise (this, new BuildUpdatedEventArgs (b));
