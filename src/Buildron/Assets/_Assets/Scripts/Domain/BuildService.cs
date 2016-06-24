@@ -192,7 +192,7 @@ namespace Buildron.Domain
 		{
             var comparer = new BuildMostRelevantStatusComparer();
             var userBuilds = m_builds
-                .Where(b => b.TriggeredBy != null && b.TriggeredBy.UserName.Equals(user.UserName))
+                .Where(b => b.TriggeredBy != null && b.TriggeredBy == user)
                 .OrderBy(b => b, comparer);
 
             return userBuilds.FirstOrDefault();
