@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Buildron.Infrastructure.Repositories;
 using Buildron.Domain;
 using System.Linq;
+using Skahal.Infrastructure.Repositories;
 
 namespace Buildron.Infrastructure.FunctionalTests.Repositories
 {
@@ -14,7 +15,7 @@ namespace Buildron.Infrastructure.FunctionalTests.Repositories
         [Test]
         public void Create_NewInstance_Created()
         {
-            var target = new PlayerPrefsServerStateRepository();
+			var target = new GenericPlayerPrefsRepository<ServerState>();
             target.Clear();
             
 			var entity = new ServerState {

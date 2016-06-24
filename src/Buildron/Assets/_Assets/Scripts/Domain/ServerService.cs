@@ -7,6 +7,7 @@ using System.Linq;
 using Buildron.Infrastructure.Repositories;
 using Skahal.Logging;
 using Buildron.Domain.Sorting;
+using Skahal.Infrastructure.Framework.Repositories;
 
 
 #endregion
@@ -21,7 +22,7 @@ public static class ServerService
 	#endregion
 
 	#region Fields
-	private static IServerStateRepository s_repository;
+	private static IRepository<ServerState> s_repository;
 	#endregion
 
 	#region Properties
@@ -36,7 +37,7 @@ public static class ServerService
     {
 		Listener = listener;
 	
-		s_repository = DependencyService.Create<IServerStateRepository>();
+		s_repository = DependencyService.Create<IRepository<ServerState>>();
 		var all = s_repository.All().ToList();
         var lastServerState = all.FirstOrDefault();
 

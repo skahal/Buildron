@@ -67,7 +67,7 @@ namespace Buildron.Infrastructure.IoC
 
 		void InstallRepositories ()
 		{
-            DependencyService.Register<IServerStateRepository>(new PlayerPrefsServerStateRepository());
+			DependencyService.Register<IRepository<ServerState>>(new GenericPlayerPrefsRepository<ServerState>());
 
             Container.Bind<IVersionRepository> ().To<PlayerPrefsVersionRepository> ().AsSingle ();
             Container.Bind<IRepository<CIServer>>().To<GenericPlayerPrefsRepository<CIServer>>().AsSingle();
