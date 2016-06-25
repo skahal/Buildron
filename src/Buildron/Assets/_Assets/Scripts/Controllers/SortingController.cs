@@ -21,6 +21,12 @@ public class SortingController : MonoBehaviour
 
     [Inject]
     private IBuildService m_buildService;
+
+	[Inject]
+	private IServerService m_serverService;
+
+	[Inject]
+	private ISHLogStrategy m_log;
     #endregion
 
     #region Methods
@@ -46,15 +52,15 @@ public class SortingController : MonoBehaviour
 				SHThread.WaitFor (
 					() => {
 						var areAllSleeping = m_buildGOService.AreAllSleeping ();
-						SHLog.Warning (
+						m_log.Warning (
 							"Waiting all builds physics sleep. Are all sleeping: {0}",
 							areAllSleeping);
 
 						return areAllSleeping;
 					},
 					() => {
-						var state = ServerState.Instance;
-						SHLog.Debug ("Sorting - IsSorting: {0}, AlgorithmType: {1}, SortBy: {2}", state.IsSorting, state.BuildSortingAlgorithmType, state.BuildSortBy);
+						var state = m_serverService.GetState();
+						m_log.Debug ("Sorting - IsSorting: {0}, AlgorithmType: {1}, SortBy: {2}", state.IsSorting, state.BuildSortingAlgorithmType, state.BuildSortBy);
 
 						if (!state.IsSorting) {
 							var sorting = SortingAlgorithmFactory.CreateSortingAlgorithm<Build> (state.BuildSortingAlgorithmType);
@@ -84,7 +90,7 @@ public class SortingController : MonoBehaviour
     {
         if (!args.WasAlreadySorted)
         {
-            ServerState.Instance.IsSorting = true;
+			m_serverService.GetState().IsSorting = true;
             m_buildGOService.FreezeAll();
 
             var sorting = sender as ISortingAlgorithm<Build>;
@@ -102,10 +108,10 @@ public class SortingController : MonoBehaviour
 
         if (b1GO == null || b2GO == null)
         {
-            SHLog.Warning("Aborting swap because could not found one of the builds game object: b1: {0}, b2: {1}", b1GO, b2GO);
+			m_log.Warning("Aborting swap because could not found one of the builds game object: b1: {0}, b2: {1}", b1GO, b2GO);
         }
 
-		SHLog.Debug ("Swapping position between {0} and {1}...", b1GO.name, b2GO.name);
+		m_log.Debug ("Swapping position between {0} and {1}...", b1GO.name, b2GO.name);
 
 		var b1Position = b1GO.transform.position;
 
@@ -128,14 +134,14 @@ public class SortingController : MonoBehaviour
         {
             m_buildGOService.UnfreezeAll();
 
-            ServerState.Instance.IsSorting = false;
+			m_serverService.GetState().IsSorting = false;
             UpdateStatusBar("Sorting finished.", 2f);
         }
 	}
 
 	private void UpdateStatusBar (string text, float secondsTimeout = 0)
 	{
-		SHLog.Warning (text);
+		m_log.Warning (text);
 		StatusBarController.SetStatusText (text, secondsTimeout);		
 	}
 

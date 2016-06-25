@@ -5,6 +5,7 @@ using Buildron.Domain.Sorting;
 using Skahal.Infrastructure.Framework.Commons;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Logging;
+using Skahal.Common;
 
 namespace Buildron.Domain
 {
@@ -13,44 +14,33 @@ namespace Buildron.Domain
 	/// </summary>
 	public class ServerService : IServerService
 	{
+		#region Events
+		/// <summary>
+		/// Occurs when server state is updated.
+		/// </summary>
+		public event EventHandler<ServerStateUpdatedEventArgs> StateUpdated;
+		#endregion
+
 		#region Fields
 		private IRepository<ServerState> m_repository;
-		private IRemoteControlMessagesListener m_rcListener;
 		private ISHLogStrategy m_log;
+		private ServerState m_state;
 	    #endregion
 
 	    #region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ServerService"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.ServerService"/> class.
 		/// </summary>
-		/// <param name="remoteControlMessagesListener">Remote control messages listener.</param>
+		/// <param name="repository">Repository.</param>
 		/// <param name="log">Log.</param>
-		public ServerService(IRepository<ServerState> repository, IRemoteControlMessagesListener remoteControlMessagesListener, ISHLogStrategy log)
+		public ServerService(IRepository<ServerState> repository, ISHLogStrategy log)
 	    {
-			m_rcListener = remoteControlMessagesListener;
 			m_log = log;
 		
 			m_repository = repository;
-			var all = m_repository.All().ToList();
-	        var lastServerState = all.FirstOrDefault();
-
-	        if (lastServerState != null)
-	        {
-				lastServerState.IsSorting = false;
-	            ServerState.Instance = lastServerState;
-	        }
-
-			m_rcListener.BuildFilterUpdated += (sender, e) => {
-	       		SaveState();
-	        };
-
-			m_rcListener.BuildSortUpdated += (sender, e) => {
-
-	            m_log.Warning("BuildSortUpdated: {0} {1}", e.SortingAlgorithm, e.SortBy);			
-				ServerState.Instance.BuildSortingAlgorithmType = SortingAlgorithmFactory.GetAlgorithmType(e.SortingAlgorithm);
-	            ServerState.Instance.BuildSortBy = e.SortBy;
-	            SaveState();
-			};        
+			m_state = m_repository.All ().FirstOrDefault () ?? new ServerState ();
+			m_state.IsShowingHistory = false;
+			m_state.IsSorting = false;
 	    }
 		#endregion
 
@@ -58,20 +48,33 @@ namespace Buildron.Domain
 		/// <summary>
 		/// Saves the state.
 		/// </summary>
-		public void SaveState()
+		/// <param name="state">The state to save.></param>
+		public void SaveState(ServerState state)
 		{
-			var serverState = ServerState.Instance;
-
-			if (serverState.Id == 0)
+			if (m_state.Id == 0)
 			{
 				m_log.Debug("Creating a new ServerState:");
-				m_repository.Create(serverState);
+				m_repository.Create(state);
 			}
 			else 
 			{
 				m_log.Debug("Updating an current ServerState:");
-				m_repository.Modify(serverState);
+				state.Id = m_state.Id;
+				m_repository.Modify(state);
 			}
+
+			m_state = state;
+
+			StateUpdated.Raise(this, new ServerStateUpdatedEventArgs(state));
+		}
+
+		/// <summary>
+		/// Gets the state.
+		/// </summary>
+		/// <returns>The state.</returns>
+		public ServerState GetState()
+		{
+			return m_state;
 		}
 	    #endregion
 	}

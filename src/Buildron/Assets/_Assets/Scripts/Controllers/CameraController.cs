@@ -28,7 +28,7 @@ public enum CameraState
 /// </summary>
 [AddComponentMenu("Buildron/Camera/CameraController")]
 [RequireComponent(typeof(BlurEffect))]
-public class CameraController : MonoBehaviour
+public class CameraController : MonoBehaviour, IInitializable
 {
     #region Fields
     [Inject]
@@ -39,6 +39,9 @@ public class CameraController : MonoBehaviour
 
 	[Inject]
 	private IServerService m_serverService;
+
+	[Inject]
+	private ISHLogStrategy m_log;
 
     private Vector3 m_firstPosition;
 	private int m_lastVisiblesCount;
@@ -78,13 +81,6 @@ public class CameraController : MonoBehaviour
 		m_targetPosition = transform.position;
 		m_historyPosition = m_originalPosition + new Vector3 (0, 30, 25);	
 	
-		ServerState.Updated += (sender, e) => {
-            var cameraPosition = ServerState.Instance.GetCameraPosition();            
-            SHLog.Warning("Setting camera position to latest position: {0}", cameraPosition);
-            m_autoPosition = false;
-			m_originalPosition = cameraPosition;			
-		};
-
 		Messenger.Register (gameObject, 
 			"OnCIServerReady",
 			"OnBuildReachGround",
@@ -105,7 +101,17 @@ public class CameraController : MonoBehaviour
 		PrepareEffects ();
 		StartCoroutine (AdjustCameraPosition ());
 	}
-	
+
+	public void Initialize()
+	{
+		m_serverService.StateUpdated += (sender, e) => {
+			var cameraPosition = e.State.GetCameraPosition();            
+			m_log.Warning("Setting camera position to latest position: {0}", cameraPosition);
+			m_autoPosition = false;
+			m_originalPosition = cameraPosition;			
+		};
+	}
+
 	private void OnCIServerReady ()
 	{
 		transform.position = m_originalPosition;
@@ -247,7 +253,7 @@ public class CameraController : MonoBehaviour
 			{
 				SHThread.Loop (1.5f, 0, histories.Length, (t) => 
 				{
-					if (ServerState.Instance.IsShowingHistory) {
+					if (m_serverService.GetState().IsShowingHistory) {
 						m_state = CameraState.ShowingHistory;
 						m_targetPosition = histories [histories.Length - 1 - Mathf.FloorToInt (t)].transform.position + DistanceFromHistory; 
 						return true;
@@ -316,8 +322,9 @@ public class CameraController : MonoBehaviour
 
     private void SaveServerState()
     {
-        ServerState.Instance.SetCameraPosition(m_originalPosition);
-        m_serverService.SaveState();
+		var state = m_serverService.GetState ();
+		state.SetCameraPosition(m_originalPosition);
+        m_serverService.SaveState(state);
     }
 	#endregion
 }

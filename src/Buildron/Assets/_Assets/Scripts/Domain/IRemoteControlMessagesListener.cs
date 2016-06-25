@@ -11,7 +11,7 @@ namespace Buildron.Domain
 		/// <summary>
 		/// Occurs when build filter is updated.
 		/// </summary>
-		event EventHandler BuildFilterUpdated;
+		event EventHandler<BuildFilterUpdatedEventArgs> BuildFilterUpdated;
 
 		/// <summary>
 		/// Occurs when build sort is updated.

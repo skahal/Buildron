@@ -2,6 +2,7 @@
 using Buildron.Domain;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 
 #endregion
@@ -10,9 +11,14 @@ using UnityEngine.UI;
 /// Status bar controller.
 /// </summary>
 [AddComponentMenu("Buildron/HUD/BuildronStatusBarController")]
-public class BuildronStatusBarController : StatusBarController {
+public class BuildronStatusBarController : StatusBarController 
+{
+	#region Fields
+	[Inject]
+	private IServerService m_serverService;
+	#endregion
 
-	#region Editor properties
+	#region Properties
 	public Image RemoteControlInfoImage;
 	public Text RemoteControlInfoLabel;
 	public Image FilteredInfo;
@@ -46,7 +52,8 @@ public class BuildronStatusBarController : StatusBarController {
 	
 	private void OnBuildFilterUpdated()
 	{
-		FilteredInfo.enabled = !ServerState.Instance.BuildFilter.IsEmpty;
+		var state = m_serverService.GetState ();
+		FilteredInfo.enabled = !state.BuildFilter.IsEmpty;
 	}
 	#endregion
 }

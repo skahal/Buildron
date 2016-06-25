@@ -14,7 +14,7 @@ namespace Buildron.Domain
 	public class RemoteControlController : MonoBehaviour, IInitializable, IRemoteControlMessagesListener
 	{
 		#region Events
-		public event System.EventHandler BuildFilterUpdated;
+		public event System.EventHandler<BuildFilterUpdatedEventArgs> BuildFilterUpdated;
 		public event System.EventHandler<BuildSortUpdatedEventArgs> BuildSortUpdated;
 		#endregion
 
@@ -30,6 +30,11 @@ namespace Buildron.Domain
 
 		[Inject]
 		private IRemoteControlService m_remoteControlService;
+
+		[Inject]
+		private IServerService m_serverService;
+
+		private ServerState m_serverState;
 		#endregion
 
 		#region Life cycle
@@ -49,6 +54,8 @@ namespace Buildron.Domain
 
 		public void Initialize ()
 		{
+			m_serverState = m_serverService.GetState ();
+
 			m_userService.UserAuthenticationCompleted += (sender, args) =>
 			{
 				if (args.Success)
@@ -98,7 +105,7 @@ namespace Buildron.Domain
 
 		private void OnBuildHistoryCreated ()
 		{
-			ServerState.Instance.HasHistory = true;
+			m_serverState.HasHistory = true;
 			SendToRCCurrentServerState ();
 		}
 
@@ -138,19 +145,25 @@ namespace Buildron.Domain
 			// TODO: args.SortingAlgorithm is ignored because RC is not passing this at this time.            
 			var sorting = SortingAlgorithmFactory.CreateRandomSortingAlgorithm<Build> ();	
 			var args = new BuildSortUpdatedEventArgs (sorting, sortByProperty);
+			sortingType = SortingAlgorithmFactory.GetAlgorithmType (sorting);
 
 			sorting.SortingBegin += (sender, e) =>
 			{
-				ServerState.Instance.IsSorting = true;
+				m_serverState.IsSorting = true;
 				SendToRCCurrentServerState ();
 			};
 
 			sorting.SortingEnded += (sender, e) =>
 			{
-				ServerState.Instance.IsSorting = false;
+				m_serverState.IsSorting = false;
 				SendToRCSortingEnded ();
 				SendToRCCurrentServerState ();
 			};
+
+			SHLog.Warning("BuildSortUpdated: {0} {1}", sortingType, sortByProperty);			
+			m_serverState.BuildSortingAlgorithmType = sortingType;
+			m_serverState.BuildSortBy = sortByProperty;
+			m_serverService.SaveState(m_serverState);
 
 			Messenger.Send ("OnBuildSortUpdated", args);
 
@@ -164,7 +177,7 @@ namespace Buildron.Domain
 		public void SendToServerShowHistory ()
 		{
 			SHLog.Debug ("SendToServerShowHistory");
-			ServerState.Instance.IsShowingHistory = true;
+			m_serverState.IsShowingHistory = true;
 			Messenger.Send ("OnShowHistoryRequested");
 		}
 
@@ -172,7 +185,7 @@ namespace Buildron.Domain
 		public void SendToServerShowBuilds ()
 		{
 			SHLog.Debug ("SendToServerShowBuilds");
-			ServerState.Instance.IsShowingHistory = false;
+			m_serverState.IsShowingHistory = false;
 			Messenger.Send ("OnShowBuildsRequested");
 		}
 
@@ -230,7 +243,7 @@ namespace Buildron.Domain
 		public void ShowSuccessBuilds (bool show)
 		{
 			SHLog.Debug ("ShowSuccessBuilds:" + show);
-			ServerState.Instance.BuildFilter.SuccessEnabled = show;
+			m_serverState.BuildFilter.SuccessEnabled = show;
 			SendFilterLocally ();
 		}
 
@@ -238,7 +251,7 @@ namespace Buildron.Domain
 		public void ShowRunningBuilds (bool show)
 		{
 			SHLog.Debug ("ShowRunningBuilds:" + show);
-			ServerState.Instance.BuildFilter.RunningEnabled = show;
+			m_serverState.BuildFilter.RunningEnabled = show;
 			SendFilterLocally ();	
 		}
 
@@ -246,7 +259,7 @@ namespace Buildron.Domain
 		public void ShowFailedBuilds (bool show)
 		{
 			SHLog.Debug ("ShowFailedBuilds:" + show);
-			ServerState.Instance.BuildFilter.FailedEnabled = show;
+			m_serverState.BuildFilter.FailedEnabled = show;
 			SendFilterLocally ();	
 		}
 
@@ -254,7 +267,7 @@ namespace Buildron.Domain
 		public void ShowQueuedBuilds (bool show)
 		{
 			SHLog.Debug ("ShowQueuedBuilds:" + show);
-			ServerState.Instance.BuildFilter.QueuedEnabled = show;
+			m_serverState.BuildFilter.QueuedEnabled = show;
 			SendFilterLocally ();	
 		}
 
@@ -267,7 +280,7 @@ namespace Buildron.Domain
 			} else
 			{
 				SHLog.Debug ("ShowBuildsWithName:" + partialName);
-				ServerState.Instance.BuildFilter.KeyWord = partialName;
+				m_serverState.BuildFilter.KeyWord = partialName;
 				SendFilterLocally ();	
 			}
 		}
@@ -316,7 +329,7 @@ namespace Buildron.Domain
 
 		private void SendToRCCurrentServerState ()
 		{
-			SendToRCServerState (SHSerializer.SerializeToBytes (ServerState.Instance));
+			SendToRCServerState (SHSerializer.SerializeToBytes (m_serverService.GetState()));
 		}
 
 		[RPC]
@@ -336,7 +349,8 @@ namespace Buildron.Domain
 		private void SendFilterLocally ()
 		{
 			Messenger.Send ("OnBuildFilterUpdated");
-			BuildFilterUpdated.Raise (this);
+			m_serverService.SaveState (m_serverState);
+			BuildFilterUpdated.Raise (this, new BuildFilterUpdatedEventArgs(m_serverState.BuildFilter));
 		}
 		#endregion
 

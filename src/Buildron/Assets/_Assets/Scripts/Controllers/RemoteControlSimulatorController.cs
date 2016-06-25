@@ -9,14 +9,24 @@ using Zenject;
 /// <summary>
 /// Remote control simulator controller.
 /// </summary>
-public class RemoteControlSimulatorController : MonoBehaviour
+public class RemoteControlSimulatorController : MonoBehaviour, IInitializable
 {
 	#region Fields
 	[Inject]
 	private IRemoteControlMessagesListener m_listener;
+
+	[Inject]
+	private IServerService m_serverService;
+
+	private ServerState m_serverState;
 	#endregion
 
 	#region Methods
+	public void Initialize()
+	{
+		m_serverState = m_serverService.GetState ();
+	}
+
 	public void ShowHistory ()
 	{
 		m_listener.SendToServerShowHistory ();
@@ -29,22 +39,22 @@ public class RemoteControlSimulatorController : MonoBehaviour
 	
 	public void ShowFailedBuilds ()
 	{
-		m_listener.ShowFailedBuilds (!ServerState.Instance.BuildFilter.FailedEnabled);
+		m_listener.ShowFailedBuilds (!m_serverState.BuildFilter.FailedEnabled);
 	}
 	
 	public void ShowSuccessBuilds ()
 	{
-		m_listener.ShowSuccessBuilds (!ServerState.Instance.BuildFilter.SuccessEnabled);
+		m_listener.ShowSuccessBuilds (!m_serverState.BuildFilter.SuccessEnabled);
 	}
 	
 	public void ShowRunningBuilds ()
 	{
-		m_listener.ShowRunningBuilds (!ServerState.Instance.BuildFilter.RunningEnabled);
+		m_listener.ShowRunningBuilds (!m_serverState.BuildFilter.RunningEnabled);
 	}
 	
 	public void ShowQueuedBuilds ()
 	{
-		m_listener.ShowQueuedBuilds (!ServerState.Instance.BuildFilter.QueuedEnabled);
+		m_listener.ShowQueuedBuilds (!m_serverState.BuildFilter.QueuedEnabled);
 	}
 	
 	public void SendMatrixEasterEgg ()

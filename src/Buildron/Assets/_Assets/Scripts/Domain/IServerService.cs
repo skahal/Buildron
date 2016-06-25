@@ -1,3 +1,5 @@
+using System;
+
 namespace Buildron.Domain
 {
 	/// <summary>
@@ -5,11 +7,25 @@ namespace Buildron.Domain
 	/// </summary>
 	public interface IServerService
 	{
+		#region Events
+		/// <summary>
+		/// Occurs when server state is updated.
+		/// </summary>
+		event EventHandler<ServerStateUpdatedEventArgs> StateUpdated;
+		#endregion
+
 		#region Methods
 		/// <summary>
-		/// Saves the server state.
+		/// Saves the state.
 		/// </summary>
-		void SaveState();
+		/// <param name="state">The state to save.></param>
+		void SaveState(ServerState state);
+
+		/// <summary>
+		/// Gets the state.
+		/// </summary>
+		/// <returns>The state.</returns>
+		ServerState GetState();
 	    #endregion
 	}
 }

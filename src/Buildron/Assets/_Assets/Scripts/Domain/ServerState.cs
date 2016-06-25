@@ -1,13 +1,7 @@
-#region Usings
-using UnityEngine;
-using System.Collections;
 using System;
-using Skahal.Infrastructure.Framework.Domain;
 using Buildron.Domain.Sorting;
-using Skahal.Logging;
-
-
-#endregion
+using Skahal.Infrastructure.Framework.Domain;
+using UnityEngine;
 
 namespace Buildron.Domain
 {
@@ -17,23 +11,7 @@ namespace Buildron.Domain
 	[Serializable]
 	public sealed class ServerState : EntityBase, IAggregateRoot
     {
-		#region Events
-		public static event EventHandler Updated;
-		#endregion
-
-		#region Fields
-		private static ServerState s_instance;
-		#endregion
-
 		#region Constructors
-		/// <summary>
-		/// Initializes the <see cref="Buildron.Domain.ServerState"/> class.
-		/// </summary>
-		static ServerState ()
-		{
-			Instance = new ServerState ();
-		}
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Buildron.Domain.ServerState"/> class.
 		/// </summary>
@@ -43,28 +21,10 @@ namespace Buildron.Domain
             CameraPositionX = 0.0f;
             CameraPositionY = 3.6f;
             CameraPositionZ = -19.1f;
-            Instance = this;
 		}
 		#endregion
 		
 		#region Properties
-		/// <summary>
-		/// Gets or sets the instance.
-		/// </summary>
-		/// <value>The instance.</value>
-		public static ServerState Instance { 
-			get { 
-				return s_instance;
-			}
-			internal set {
-				s_instance = value;
-
-				if (Updated != null) {
-					Updated (typeof(ServerState), EventArgs.Empty);
-				}
-			}
-		}
-
 		/// <summary>
 		/// Gets or sets the build filter.
 		/// </summary>

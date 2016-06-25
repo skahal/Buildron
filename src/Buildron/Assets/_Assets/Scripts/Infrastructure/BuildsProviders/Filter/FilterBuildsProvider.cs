@@ -15,6 +15,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
         #region Fields
         private IBuildsProvider m_underlyingBuildsProvider;
 		private IRemoteControlMessagesListener m_rcListener;
+		private IServerService m_serverService;
 		private Dictionary<string, Build> m_buildsCache = new Dictionary<string, Build> ();
         #endregion
 
@@ -28,15 +29,21 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
         #endregion
 
         #region Constructors
-        public FilterBuildsProvider(IBuildsProvider underlyingBuildsProvider, IRemoteControlMessagesListener rcListener)
+        public FilterBuildsProvider(
+			IBuildsProvider underlyingBuildsProvider, 
+			IRemoteControlMessagesListener rcListener,
+			IServerService serverService)
         {
             if(underlyingBuildsProvider == null)
             {
                 throw new ArgumentNullException("underlyingBuildsProvider");
             }
 
-            m_underlyingBuildsProvider = underlyingBuildsProvider;
-			m_underlyingBuildsProvider.BuildsRefreshed += (sender, e) => {
+			m_underlyingBuildsProvider = underlyingBuildsProvider;
+			m_rcListener = rcListener;
+			m_serverService = serverService;
+
+    		m_underlyingBuildsProvider.BuildsRefreshed += (sender, e) => {
 				OnBuildsRefreshed (e);
 			};
 
@@ -82,7 +89,6 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
                 }
             };
 
-			m_rcListener = rcListener;
 			m_rcListener.BuildFilterUpdated += (sender2, e2) =>
             {
 				var filteredBuilds = m_buildsCache.Values.Where(b => FilterBuild(b));
@@ -99,7 +105,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
 				OnBuildsRefreshed(EventArgs.Empty);
             };
 		
-            Build.EventInterceptors.Add(new FilterBuildEventInterceptor());
+            Build.EventInterceptors.Add(new FilterBuildEventInterceptor(this));
         }
 
         #endregion
@@ -167,9 +173,9 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
 			}
 		}
 
-        public static bool FilterBuild(Build build)
+        public bool FilterBuild(Build build)
         {
-            var f = ServerState.Instance.BuildFilter;
+			var f =  m_serverService.GetState().BuildFilter;
             var success = f.SuccessEnabled;
             var running = f.RunningEnabled;
             var failed = f.FailedEnabled;
