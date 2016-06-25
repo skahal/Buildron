@@ -11,17 +11,14 @@ using Buildron.Application;
 namespace Buildron.Domain
 {
 	[RequireComponent (typeof(NetworkView))]
-	public class ServerMessagesListener : MonoBehaviour, IInitializable, IRemoteControlMessagesListener
+	public class RemoteControlController : MonoBehaviour, IInitializable, IRemoteControlMessagesListener
 	{
 		#region Events
-
 		public event System.EventHandler BuildFilterUpdated;
 		public event System.EventHandler<BuildSortUpdatedEventArgs> BuildSortUpdated;
-
 		#endregion
 
 		#region Fields
-
 		[Inject]
 		private BuildGOService m_buildGOService;
 
@@ -33,11 +30,9 @@ namespace Buildron.Domain
 
 		[Inject]
 		private IRemoteControlService m_remoteControlService;
-
 		#endregion
 
 		#region Life cycle
-
 		private void Awake ()
 		{
 			var error = Network.InitializeServer (1, 8181, false);
@@ -335,9 +330,7 @@ namespace Buildron.Domain
 		{
 			GetComponent<NetworkView> ().RPC ("OnVisibleBuildsCount", RPCMode.Others, visibleBuildsCount);
 		}
-
 		#endregion
-
 		#region Messages send locally
 
 		private void SendFilterLocally ()
@@ -345,13 +338,12 @@ namespace Buildron.Domain
 			Messenger.Send ("OnBuildFilterUpdated");
 			BuildFilterUpdated.Raise (this);
 		}
-
 		#endregion
 
 		/// <summary>
 		/// The ServerMessagesListener factory.
 		/// </summary>
-		public class Factory : Factory<ServerMessagesListener>
+		public class Factory : Factory<RemoteControlController>
 		{
 		}
 	}

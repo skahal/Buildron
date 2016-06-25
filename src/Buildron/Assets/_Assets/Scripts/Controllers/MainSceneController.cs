@@ -1,4 +1,3 @@
-#region Usings
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,14 +8,10 @@ using UnityEngine.UI;
 using Zenject;
 using Buildron.Application;
 
-
-#endregion
-
 [AddComponentMenu ("Buildron/Scenes/MainSceneController")]
 public class MainSceneController : MonoBehaviour, IInitializable
 {
 	#region Fields
-
 	private Queue<GameObject> m_buildsToDeploy = new Queue<GameObject> ();
 	private int m_deployedBuildsCount;
 	private bool m_isRefreshingBuilds;
@@ -31,10 +26,14 @@ public class MainSceneController : MonoBehaviour, IInitializable
 	[Inject]
 	private ICIServerService m_ciServerService;
 
+	[Inject]
+	private BuildGOService m_buildGOService { get; set; }
+
+	[Inject]
+	private IRemoteControlMessagesListener m_rcListener { get; set; }
 	#endregion
 
 	#region Properties
-
 	public float DeployBuildSeconds = 0.5f;
 	public int MaxDeployedBuilds = 32;
 	public Vector3 FirstColumnDeployPosition = new Vector3 (-2.5f, 10, 0);
@@ -45,13 +44,6 @@ public class MainSceneController : MonoBehaviour, IInitializable
 	public Text ServerIPLabel;
 	public InputField Title;
 	public float DelaySecondsUntilMarkAsServerIsDown = 10;
-
-	[Inject]
-	public BuildGOService BuildGOService { get; set; }
-
-	[Inject]
-	public ServerMessagesListener ServerMessagesListener { get; set; }
-
 	#endregion
 
 	#region Methods
@@ -86,7 +78,7 @@ public class MainSceneController : MonoBehaviour, IInitializable
 	private void OnCIServerReady ()
 	{
 		InitializeBuildService (); 	
-		InitializeServer ();
+		ServerService.Initialize (m_rcListener);
 		
 		StartCoroutine (UpdateBuildsStatus ());	
 		StartCoroutine (DeployBuilds ());
@@ -104,7 +96,7 @@ public class MainSceneController : MonoBehaviour, IInitializable
 
 	private void ExecuteFocusedBuildCommand (Action<RemoteControl, string> command)
 	{
-		var visibles = BuildGOService.GetVisibles ();
+		var visibles = m_buildGOService.GetVisibles ();
 		
 		if (visibles.Count == 1)
 		{
@@ -164,12 +156,6 @@ public class MainSceneController : MonoBehaviour, IInitializable
 			}
 		}
 	}
-
-	private void InitializeServer ()
-	{
-		ServerService.Initialize (ServerMessagesListener);
-	}
-
 	#endregion
 
 	#region Updates
