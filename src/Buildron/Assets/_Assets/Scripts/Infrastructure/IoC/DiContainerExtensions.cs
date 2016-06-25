@@ -17,7 +17,7 @@ namespace Buildron.Infrastructure.IoC
 		/// <param name="container">Container.</param>
 		/// <param name="createGameObject">If set to <c>true</c> create game object.</param>
 		/// <typeparam name="TController">The 1st type parameter.</typeparam>
-		public static ConditionBinder BindController<TController>(this DiContainer container, bool createGameObject = false)
+		public static TController BindController<TController>(this DiContainer container, bool createGameObject = false)
 			where TController : MonoBehaviour
 		{
 			var name = typeof(TController).Name;
@@ -49,7 +49,7 @@ namespace Buildron.Infrastructure.IoC
 
 			SHLog.Debug ("Controller '{0}' bind done.", name);
 
-			return binder;
+			return controller;
 		}
 
         public static ConditionBinder BindInitializableService<TServiceInterface, TServiceImplementation>(this DiContainer container)            

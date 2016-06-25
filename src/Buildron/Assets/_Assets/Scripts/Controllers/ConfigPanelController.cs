@@ -37,6 +37,9 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
     [Inject]
     private ICIServerService m_ciServerService;
+
+	[Inject]
+	private IRemoteControlMessagesListener m_rcListener;
     #endregion
 
     #region Editor properties
@@ -259,7 +262,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			}
 
             // Inject the FilterBuildsProvider.
-            m_buildsProvider = new FilterBuildsProvider(m_buildsProvider);			
+			m_buildsProvider = new FilterBuildsProvider(m_buildsProvider, m_rcListener);			
 			m_userService.ListenBuildsProvider (m_buildsProvider);
 
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);

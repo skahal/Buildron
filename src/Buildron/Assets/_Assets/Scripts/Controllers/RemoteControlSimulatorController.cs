@@ -1,6 +1,9 @@
 #region Usings
 using Buildron.Domain;
 using UnityEngine;
+using Zenject;
+
+
 #endregion
 
 /// <summary>
@@ -8,50 +11,55 @@ using UnityEngine;
 /// </summary>
 public class RemoteControlSimulatorController : MonoBehaviour
 {
+	#region Fields
+	[Inject]
+	private IRemoteControlMessagesListener m_listener;
+	#endregion
+
 	#region Methods
 	public void ShowHistory ()
 	{
-		ServerService.Listener.SendToServerShowHistory ();
+		m_listener.SendToServerShowHistory ();
 	}
 	
 	public void ShowBuilds ()
 	{
-		ServerService.Listener.SendToServerShowBuilds ();
+		m_listener.SendToServerShowBuilds ();
 	}
 	
 	public void ShowFailedBuilds ()
 	{
-		ServerService.Listener.ShowFailedBuilds (!ServerState.Instance.BuildFilter.FailedEnabled);
+		m_listener.ShowFailedBuilds (!ServerState.Instance.BuildFilter.FailedEnabled);
 	}
 	
 	public void ShowSuccessBuilds ()
 	{
-		ServerService.Listener.ShowSuccessBuilds (!ServerState.Instance.BuildFilter.SuccessEnabled);
+		m_listener.ShowSuccessBuilds (!ServerState.Instance.BuildFilter.SuccessEnabled);
 	}
 	
 	public void ShowRunningBuilds ()
 	{
-		ServerService.Listener.ShowRunningBuilds (!ServerState.Instance.BuildFilter.RunningEnabled);
+		m_listener.ShowRunningBuilds (!ServerState.Instance.BuildFilter.RunningEnabled);
 	}
 	
 	public void ShowQueuedBuilds ()
 	{
-		ServerService.Listener.ShowQueuedBuilds (!ServerState.Instance.BuildFilter.QueuedEnabled);
+		m_listener.ShowQueuedBuilds (!ServerState.Instance.BuildFilter.QueuedEnabled);
 	}
 	
 	public void SendMatrixEasterEgg ()
 	{
-		ServerService.Listener.ShowBuildsWithName ("/matrix");
+		m_listener.ShowBuildsWithName ("/matrix");
 	}
 	
 	public void SendZoomIn ()
 	{
-		ServerService.Listener.SendToServerZoomIn();
+		m_listener.SendToServerZoomIn();
 	}
 	
 	public void SendZoomOut ()
 	{
-		ServerService.Listener.SendToServerZoomOut ();
+		m_listener.SendToServerZoomOut ();
 	}
 	#endregion
 }

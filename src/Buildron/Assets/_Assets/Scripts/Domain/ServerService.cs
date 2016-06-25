@@ -23,19 +23,16 @@ public static class ServerService
 
 	#region Fields
 	private static IRepository<ServerState> s_repository;
-	#endregion
-
-	#region Properties
-	public static ServerMessagesListener Listener { get; private set; }
+	private static IRemoteControlMessagesListener s_rcListener;
     #endregion
 
     #region Methods
     /// <summary>
     /// Initializes this instance.
     /// </summary>
-	public static void Initialize(ServerMessagesListener listener)
+	public static void Initialize(IRemoteControlMessagesListener remoteControlMessagesListener)
     {
-		Listener = listener;
+		s_rcListener = remoteControlMessagesListener;
 	
 		s_repository = DependencyService.Create<IRepository<ServerState>>();
 		var all = s_repository.All().ToList();
@@ -47,11 +44,11 @@ public static class ServerService
             ServerState.Instance = lastServerState;
         }
 
-		Listener.BuildFilterUpdated += (sender, e) => {
+		s_rcListener.BuildFilterUpdated += (sender, e) => {
        		SaveState();
         };
 
-		Listener.BuildSortUpdated += (sender, e) => {
+		s_rcListener.BuildSortUpdated += (sender, e) => {
 
             SHLog.Warning("BuildSortUpdated: {0} {1}", e.SortingAlgorithm, e.SortBy);			
 			ServerState.Instance.BuildSortingAlgorithmType = SortingAlgorithmFactory.GetAlgorithmType(e.SortingAlgorithm);

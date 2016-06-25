@@ -14,6 +14,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
     {
         #region Fields
         private IBuildsProvider m_underlyingBuildsProvider;
+		private IRemoteControlMessagesListener m_rcListener;
 		private Dictionary<string, Build> m_buildsCache = new Dictionary<string, Build> ();
         #endregion
 
@@ -27,7 +28,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
         #endregion
 
         #region Constructors
-        public FilterBuildsProvider(IBuildsProvider underlyingBuildsProvider)
+        public FilterBuildsProvider(IBuildsProvider underlyingBuildsProvider, IRemoteControlMessagesListener rcListener)
         {
             if(underlyingBuildsProvider == null)
             {
@@ -81,8 +82,10 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
                 }
             };
 
-			ServerService.Initialized += (sender, e) => {
-	            ServerService.Listener.BuildFilterUpdated += (sender2, e2) =>
+			m_rcListener = rcListener;
+
+			//ServerService.Initialized += (sender, e) => {
+				m_rcListener.BuildFilterUpdated += (sender2, e2) =>
 	            {
 					var filteredBuilds = m_buildsCache.Values.Where(b => FilterBuild(b));
 					SHLog.Debug(
@@ -97,7 +100,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
 
 					OnBuildsRefreshed(EventArgs.Empty);
 	            };
-			};
+			//};
 
             Build.EventInterceptors.Add(new FilterBuildEventInterceptor());
         }

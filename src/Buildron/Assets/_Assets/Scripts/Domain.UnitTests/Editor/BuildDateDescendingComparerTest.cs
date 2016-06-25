@@ -1,9 +1,6 @@
 ﻿using System;
 using Buildron.Domain;
-using Buildron.Domain;
 using NUnit.Framework;
-using Rhino.Mocks;
-using Skahal.Logging;
 
 namespace Buildron.Domain.UnitTests
 {

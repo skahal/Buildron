@@ -63,7 +63,7 @@ namespace Buildron.Infrastructure.IoC
             Container.BindInitializableService<IRemoteControlService, RemoteControlService>();
             Container.Bind<ICIServerService>().To<CIServerService>().AsSingle();
             Container.Bind<IBuildService>().To<BuildService>().AsSingle();
-        }
+		}
 
 		void InstallRepositories ()
 		{
@@ -123,7 +123,8 @@ namespace Buildron.Infrastructure.IoC
 			Container.Bind<IVersionClient> ().FromInstance (backEndClient);
 			Container.Bind<NotificationService> ().To<NotificationService> ().AsSingle ();
 
-			Container.BindController<ServerMessagesListener> (true);	
+			var listener = Container.BindController<ServerMessagesListener> (true);	
+			Container.Bind<IRemoteControlMessagesListener> ().FromInstance (listener);
 			Container.BindController<NotificationController>();
 			Container.BindController<ConfigPanelController> ();
 		}
