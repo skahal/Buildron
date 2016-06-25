@@ -63,12 +63,12 @@ namespace Buildron.Infrastructure.IoC
             Container.BindInitializableService<IRemoteControlService, RemoteControlService>();
             Container.Bind<ICIServerService>().To<CIServerService>().AsSingle();
             Container.Bind<IBuildService>().To<BuildService>().AsSingle();
+			Container.Bind<IServerService>().To<ServerService>().AsSingle();
 		}
 
 		void InstallRepositories ()
 		{
-			DependencyService.Register<IRepository<ServerState>>(new GenericPlayerPrefsRepository<ServerState>());
-
+			Container.Bind<IRepository<ServerState>>().To<GenericPlayerPrefsRepository<ServerState>>().AsSingle ();
             Container.Bind<IVersionRepository> ().To<PlayerPrefsVersionRepository> ().AsSingle ();
             Container.Bind<IRepository<CIServer>>().To<GenericPlayerPrefsRepository<CIServer>>().AsSingle();
             Container.Bind<IRepository<RemoteControl>>().To<GenericPlayerPrefsRepository<RemoteControl>>().AsSingle();

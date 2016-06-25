@@ -83,25 +83,22 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
             };
 
 			m_rcListener = rcListener;
+			m_rcListener.BuildFilterUpdated += (sender2, e2) =>
+            {
+				var filteredBuilds = m_buildsCache.Values.Where(b => FilterBuild(b));
+				SHLog.Debug(
+					"Filter updated. There is {0} cached builds and {1} was filtered", 
+					m_buildsCache.Count, 
+					filteredBuilds.Count());
 
-			//ServerService.Initialized += (sender, e) => {
-				m_rcListener.BuildFilterUpdated += (sender2, e2) =>
-	            {
-					var filteredBuilds = m_buildsCache.Values.Where(b => FilterBuild(b));
-					SHLog.Debug(
-						"Filter updated. There is {0} cached builds and {1} was filtered", 
-						m_buildsCache.Count, 
-						filteredBuilds.Count());
+				foreach (var build in filteredBuilds)
+				{
+					OnBuildUpdated(new BuildUpdatedEventArgs(build));
+				}
 
-					foreach (var build in filteredBuilds)
-					{
-						OnBuildUpdated(new BuildUpdatedEventArgs(build));
-					}
-
-					OnBuildsRefreshed(EventArgs.Empty);
-	            };
-			//};
-
+				OnBuildsRefreshed(EventArgs.Empty);
+            };
+		
             Build.EventInterceptors.Add(new FilterBuildEventInterceptor());
         }
 

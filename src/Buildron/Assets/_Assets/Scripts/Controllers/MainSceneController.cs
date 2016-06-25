@@ -78,8 +78,6 @@ public class MainSceneController : MonoBehaviour, IInitializable
 	private void OnCIServerReady ()
 	{
 		InitializeBuildService (); 	
-		ServerService.Initialize (m_rcListener);
-		
 		StartCoroutine (UpdateBuildsStatus ());	
 		StartCoroutine (DeployBuilds ());
 	}

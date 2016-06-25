@@ -18,10 +18,11 @@ using Zenject;
 /// <summary>
 /// Controller for configuration panel.
 /// </summary>
-[AddComponentMenu("Buildron/Controllers/ConfigPanelController")]
+[AddComponentMenu ("Buildron/Controllers/ConfigPanelController")]
 public class ConfigPanelController : MonoBehaviour, IInitializable
 {
 	#region Fields
+
 	private CIServer m_ciServer;
 	private IBuildsProvider m_buildsProvider;
 	private Animator m_animator;
@@ -32,18 +33,20 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	[Inject]
 	private IVersionService m_versionService;
 
-    [Inject]
-    private IBuildService m_buildService;
+	[Inject]
+	private IBuildService m_buildService;
 
-    [Inject]
-    private ICIServerService m_ciServerService;
+	[Inject]
+	private ICIServerService m_ciServerService;
 
 	[Inject]
 	private IRemoteControlMessagesListener m_rcListener;
-    #endregion
 
-    #region Editor properties
-    public Toggle CIServerTypeHudsonToggle;
+	#endregion
+
+	#region Editor properties
+
+	public Toggle CIServerTypeHudsonToggle;
 	public Toggle CIServerTypeJenkinsToggle;
 	public Toggle CIServerTypeTeamCityToggle;
 
@@ -79,9 +82,11 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
 	public Button StartButton;
 	public bool AutoStart;
+
 	#endregion
-	
+
 	#region Life cycle
+
 	public void Initialize ()
 	{		
 		m_ciServer = m_ciServerService.GetCIServer ();
@@ -104,24 +109,25 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
 		UpdateBuildsProvider ();
 
-		if (AutoStart || HasAutoStartArgument ()) {
+		if (AutoStart || HasAutoStartArgument ())
+		{
 			StartBuildron ();
 		}
 
-        m_userService.UserAuthenticationCompleted += HandleUserAuthenticationCompleted;
+		m_userService.UserAuthenticationCompleted += HandleUserAuthenticationCompleted;
 		
 		InitializeVersion ();
-		//m_animator = GetComponent<Animator> ();
 	}
-	
+
 	private bool HasAutoStartArgument ()
 	{
-		return System.Environment.GetCommandLineArgs().Contains("autostart");
+		return System.Environment.GetCommandLineArgs ().Contains ("autostart");
 	}
-	
+
 	void PrepareCIServerTypesRadioButtons ()
 	{
-		switch (m_ciServer.ServerType) {
+		switch (m_ciServer.ServerType)
+		{
 		case CIServerType.Hudson:
 			Debug.Log ("CIServerTypeHudsonToggle.isOn");
 			CIServerTypeHudsonToggle.isOn = true;
@@ -143,20 +149,24 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	{
 		InstallationNumberLabel.text = string.Empty;
 
-		m_versionService.ClientRegistered += (object sender, ClientRegisteredEventArgs e) => { 
+		m_versionService.ClientRegistered += (object sender, ClientRegisteredEventArgs e) =>
+		{ 
 			InstallationNumberLabel.text = string.Format ("Installation number: {0}", e.ClientInstance);
 		};
 		
 		m_versionService.Register (ClientKind.Buildron, SHDevice.Family);		
 
-		if (!SHGameInfo.IsBetaVersion) {
-			m_versionService.UpdateInfoReceived += delegate(object sender, UpdateInfoReceivedEventArgs e) {		
+		if (!SHGameInfo.IsBetaVersion)
+		{
+			m_versionService.UpdateInfoReceived += delegate(object sender, UpdateInfoReceivedEventArgs e)
+			{		
 				UpdateButtonLabel.text = e.UpdateInfo.Description;
 		
-				if (!string.IsNullOrEmpty (e.UpdateInfo.Url)) {
-					UpdateButton.onClick.AddListener(() => 
+				if (!string.IsNullOrEmpty (e.UpdateInfo.Url))
+				{
+					UpdateButton.onClick.AddListener (() =>
 					{
-						Application.OpenURL(e.UpdateInfo.Url);
+						Application.OpenURL (e.UpdateInfo.Url);
 					});
 				}
 			};
@@ -166,43 +176,44 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 		
 		VersionNumberButtonLabel.text = string.Format ("Version: {0}", SHGameInfo.Version);
 	}
-	
-	private bool CanStart 
+
+	private bool CanStart
 	{
-		get {
-			return !string.IsNullOrEmpty (CIServerIPInputField.text) 
-				&& (m_buildsProvider != null && m_buildsProvider.AuthenticationRequirement != AuthenticationRequirement.Always
-				|| (!string.IsNullOrEmpty (CIServerUserNameInputField.text)
-				&& !string.IsNullOrEmpty (CIServerPasswordInputField.text)));
+		get
+		{
+			return !string.IsNullOrEmpty (CIServerIPInputField.text)
+			&& (m_buildsProvider != null && m_buildsProvider.AuthenticationRequirement != AuthenticationRequirement.Always
+			|| (!string.IsNullOrEmpty (CIServerUserNameInputField.text)
+			&& !string.IsNullOrEmpty (CIServerPasswordInputField.text)));
 		}
 	}
 
-	private void HandleUserAuthenticationCompleted(object sender, UserAuthenticationCompletedEventArgs e)
+	private void HandleUserAuthenticationCompleted (object sender, UserAuthenticationCompletedEventArgs e)
 	{
-        if (e.Success)
-        {
-            CIServerStatusLabel.text = "Authenticated. Loading...";
+		if (e.Success)
+		{
+			CIServerStatusLabel.text = "Authenticated. Loading...";
 
-            m_userService.UserAuthenticationCompleted -= HandleUserAuthenticationCompleted;
+			m_userService.UserAuthenticationCompleted -= HandleUserAuthenticationCompleted;
 
-            //m_animator.enabled = true;
-            PanelTransitionController.Instance.ShowMainPanel();
-            Messenger.Send("OnCIServerReady");
-        }
-        else
-        {
-            CIServerStatusLabel.text = "IP, Username or Password invalid!";
+			//m_animator.enabled = true;
+			PanelTransitionController.Instance.ShowMainPanel ();
+			Messenger.Send ("OnCIServerReady");
+		} 
+		else
+		{
+			CIServerStatusLabel.text = "IP, Username or Password invalid!";
 
-            if (HasAutoStartArgument())
-            {
-                SHThread.Start(10f, StartBuildron);
-            }
-        }
+			if (HasAutoStartArgument ())
+			{
+				SHThread.Start (10f, StartBuildron);
+			}
+		}
 	}
 
 	public void UpdateBuildsProvider ()
 	{
-		if (CIServerTypeHudsonToggle.isOn) 
+		if (CIServerTypeHudsonToggle.isOn)
 		{
 			m_buildsProvider = new HudsonBuildsProvider (m_ciServer);
 			m_ciServer.ServerType = CIServerType.Hudson;
@@ -212,7 +223,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			m_buildsProvider = new JenkinsBuildsProvider (m_ciServer);
 			m_ciServer.ServerType = CIServerType.Jenkins;
 		} 
-		else 
+		else
 		{
 			m_buildsProvider = new TeamCityBuildsProvider (m_ciServer);
 			m_ciServer.ServerType = CIServerType.TeamCity;
@@ -222,23 +233,25 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 		CIServerAuthenticationTipLabel.text = m_buildsProvider.AuthenticationTip;
 	}
 
-	public void DestroyPanel()
+	public void DestroyPanel ()
 	{
 		Destroy (gameObject);
 	}
 
-	public void UpdateRefreshSecondsLabel()
+	public void UpdateRefreshSecondsLabel ()
 	{
 		RefreshSecondsLabel.text = String.Format ("Refresh seconds: {0}", RefreshSecondsSlider.value);
 	}
 
-	public void UpdateBuildTotemsLabel()
+	public void UpdateBuildTotemsLabel ()
 	{
 		BuildsTotemsLabel.text = String.Format ("Build totems: {0}", BuildsTotemsSlider.value);
 	}
+
 	#endregion
-	
+
 	#region Panel commands
+
 	public void StartBuildron ()
 	{	
 		Debug.Log ("Starting...");
@@ -249,27 +262,30 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
 		m_ciServer.FxSoundsEnabled = FxSounsToggle.isOn;
 		m_ciServer.HistoryTotemEnabled = HistoryTotemToggle.isOn;
-		m_ciServer.BuildsTotemsNumber = Convert.ToInt32(BuildsTotemsSlider.value);
+		m_ciServer.BuildsTotemsNumber = Convert.ToInt32 (BuildsTotemsSlider.value);
 		
 		m_ciServerService.SaveCIServer (m_ciServer);
 		
 		UpdateBuildsProvider ();
 			
-		if (!m_ciServerService.Initialized) {
+		if (!m_ciServerService.Initialized)
+		{
 		
-			if (m_ciServer.IP.Equals ("#TEST_MODE#")) {
+			if (m_ciServer.IP.Equals ("#TEST_MODE#"))
+			{
 				m_buildsProvider = new TestBuildsProvider ();
 			}
 
-            // Inject the FilterBuildsProvider.
-			m_buildsProvider = new FilterBuildsProvider(m_buildsProvider, m_rcListener);			
+			// Inject the FilterBuildsProvider.
+			m_buildsProvider = new FilterBuildsProvider (m_buildsProvider, m_rcListener);			
 			m_userService.ListenBuildsProvider (m_buildsProvider);
 
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
-            m_buildService.Initialize (m_buildsProvider);
-            m_ciServerService.Initialize(m_buildsProvider);
-            m_ciServerService.AuthenticateUser (m_ciServer);
+			m_buildService.Initialize (m_buildsProvider);
+			m_ciServerService.Initialize (m_buildsProvider);
+			m_ciServerService.AuthenticateUser (m_ciServer);
 		}
 	}
+
 	#endregion
 }

@@ -37,6 +37,9 @@ public class CameraController : MonoBehaviour
     [Inject]
     private ICIServerService m_ciServerService;
 
+	[Inject]
+	private IServerService m_serverService;
+
     private Vector3 m_firstPosition;
 	private int m_lastVisiblesCount;
 	private Vector3 m_originalPosition;
@@ -314,7 +317,7 @@ public class CameraController : MonoBehaviour
     private void SaveServerState()
     {
         ServerState.Instance.SetCameraPosition(m_originalPosition);
-        ServerService.SaveState();
+        m_serverService.SaveState();
     }
 	#endregion
 }

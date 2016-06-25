@@ -13,26 +13,21 @@ namespace Buildron.Domain
 	public class RemoteControlService : IRemoteControlService, IInitializable
 	{
 		#region Events
-
 		/// <summary>
 		/// Occurs when remote control changed.
 		/// </summary>
 		public event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
-
 		#endregion
 
 		#region Fields
-
 		private readonly ICIServerService m_ciServerService;
 		private readonly IUserService m_userService;
 		private readonly IRepository<RemoteControl> m_repository;
 		private RemoteControl m_connectedRC;
 		private bool? m_hasRemoteControlConnectedSomeDay;
-
 		#endregion
 
 		#region Constructors
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Buildron.Domain.RemoteControlService"/> class.
 		/// </summary>
@@ -45,11 +40,9 @@ namespace Buildron.Domain
 			m_userService = userService;
 			m_repository = repository;
 		}
-
 		#endregion
 
 		#region Properties
-
 		/// <summary>
 		/// Gets a value indicating whether this any remote control has connected some day.
 		/// </summary>
