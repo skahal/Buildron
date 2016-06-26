@@ -1,5 +1,6 @@
 ﻿using System;
 using Buildron.Domain;
+using Buildron.Domain.Builds;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Skahal.Infrastructure.Framework.Repositories;

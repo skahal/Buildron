@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Buildron.Domain.Sorting;
 using Buildron.Domain.Builds;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Defines an interface to a build service.

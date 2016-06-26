@@ -1,13 +1,9 @@
-#region Usings
 using System;
 using System.Collections.Generic;
 using Buildron.Domain;
 using Buildron.Domain.Builds;
 
-
-#endregion
-
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Authentication requirement.

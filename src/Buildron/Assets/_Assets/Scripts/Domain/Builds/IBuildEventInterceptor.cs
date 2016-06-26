@@ -1,6 +1,6 @@
 ﻿using Buildron.Domain.Builds;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
     /// <summary>
     /// Define a interface for a build event intercpetor.
