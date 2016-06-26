@@ -1,16 +1,12 @@
-#region Usings
 using UnityEngine;
 using System.Collections;
-using Buildron.Domain;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Skahal.Logging;
 using Zenject;
 using Buildron.Application;
 using Buildron.Domain.Builds;
-
-
-#endregion
+using Buildron.Domain.CIServers;
 
 /// <summary>
 /// Builds deploy controller.

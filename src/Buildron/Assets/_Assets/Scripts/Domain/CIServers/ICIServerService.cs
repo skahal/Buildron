@@ -2,7 +2,7 @@
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.CIServers
 {
 	/// <summary>
 	/// Defines an interface to continuous integration server service.
@@ -15,11 +15,15 @@ namespace Buildron.Domain
         event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
 
        	/// <summary>
-       	/// Gets a value indicating whether this <see cref="Buildron.Domain.ICIServerService"/> is initialized.
+		/// Gets a value indicating whether this <see cref="Buildron.Domain.CIServers.ICIServerService"/> is initialized.
        	/// </summary>
        	/// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
         bool Initialized { get; }
 
+		/// <summary>
+		/// Initialize the service.
+		/// </summary>
+		/// <param name="buildsProvider">Builds provider.</param>
         void Initialize(IBuildsProvider buildsProvider);
 
         /// <summary>

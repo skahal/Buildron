@@ -12,7 +12,6 @@ public class UserController : MonoBehaviour, IInitializable
     [Inject]
     private IBuildService m_buildService;
 
-    private static Object s_buildUserPrefab = Resources.Load("UserPrefab");
     private Vector3 m_targetPosition;
     private bool m_canWalk;
     private bool m_canAnimate;
@@ -185,11 +184,6 @@ public class UserController : MonoBehaviour, IInitializable
 
         if (go == null)
         {
-//            go = (GameObject)GameObject.Instantiate(s_buildUserPrefab);
-//            go.name = buildUser.UserName.ToLowerInvariant();
-//            var script = go.GetComponent<UserController>();
-//            script.Data = buildUser;
-
 			var controller = factory.Create ();
 			controller.Data = buildUser;
 			go = controller.gameObject;

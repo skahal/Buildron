@@ -1,21 +1,18 @@
-#region Usings
+using System;
 using System.Linq;
 using Buildron.Domain;
+using Buildron.Domain.Builds;
+using Buildron.Domain.CIServers;
+using Buildron.Domain.Users;
 using Buildron.Domain.Versions;
 using Buildron.Infrastructure.BuildsProvider.Filter;
 using Buildron.Infrastructure.BuildsProvider.Hudson;
 using Buildron.Infrastructure.BuildsProvider.Jenkins;
 using Buildron.Infrastructure.BuildsProvider.TeamCity;
+using Skahal.Threading;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using Skahal.Threading;
 using Zenject;
-using Buildron.Domain.Builds;
-using Buildron.Domain.Users;
-
-
-#endregion
 
 /// <summary>
 /// Controller for configuration panel.

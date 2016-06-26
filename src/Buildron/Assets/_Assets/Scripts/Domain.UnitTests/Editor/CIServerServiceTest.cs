@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using Buildron.Domain;
 using Buildron.Domain.Builds;
+using Buildron.Domain.CIServers;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Logging;
-using System.Linq;
 
 namespace Buildron.Domain.UnitTests
 {

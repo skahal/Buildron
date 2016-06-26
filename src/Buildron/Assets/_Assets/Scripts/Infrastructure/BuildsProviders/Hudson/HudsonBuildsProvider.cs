@@ -1,6 +1,7 @@
 using Buildron.Domain;
 using Buildron.Domain.Builds;
 using Buildron.Infrastructure.BuildsProvider.Jenkins;
+using Buildron.Domain.CIServers;
 
 namespace Buildron.Infrastructure.BuildsProvider.Hudson
 {

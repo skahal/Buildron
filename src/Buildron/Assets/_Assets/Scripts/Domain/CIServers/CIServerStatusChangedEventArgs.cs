@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Buildron.Domain
+﻿namespace Buildron.Domain.CIServers
 {
     /// <summary>
     /// Arguments for continous integration server status changed events.
@@ -9,7 +7,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServerStatusChangedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServers.CIServerStatusChangedEventArgs"/> class.
 		/// </summary>
 		/// <param name="server">Server.</param>
 		public CIServerStatusChangedEventArgs (CIServer server)

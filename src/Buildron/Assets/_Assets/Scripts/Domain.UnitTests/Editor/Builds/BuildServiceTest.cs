@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Skahal.Logging;
 using Buildron.Domain.Builds;
+using Buildron.Domain.CIServers;
 using Buildron.Domain.Users;
 
 namespace Buildron.Domain.UnitTests.Builds
@@ -15,7 +16,7 @@ namespace Buildron.Domain.UnitTests.Builds
         public void Initialize_NewBuildsAndOldBuilds_EventsRaised()
         {
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
-            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>(), MockRepository.GenerateMock<ICIServerService>());
+            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>());
             target.Initialize(provider);
 
             var user1 = new User
@@ -81,7 +82,7 @@ namespace Buildron.Domain.UnitTests.Builds
         public void RefreshAllBuilds_NoArgs_BuildsProviderCalled()
         {
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
-            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>(), MockRepository.GenerateMock<ICIServerService>());
+            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>());
             target.Initialize(provider);
             provider.Expect(p => p.RefreshAllBuilds());
             target.RefreshAllBuilds();
@@ -96,7 +97,7 @@ namespace Buildron.Domain.UnitTests.Builds
             log.Expect(l => l.Warning("No build with id '{0}' could be found to execute the command.", "b1"));
 
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
-            var target = new BuildService(log, MockRepository.GenerateMock<ICIServerService>());
+            var target = new BuildService(log);
             target.Initialize(provider);
             target.RunBuild(new RemoteControl(), "b1");
 
@@ -108,7 +109,7 @@ namespace Buildron.Domain.UnitTests.Builds
         public void RunBuild_BuildWithId_BuildQueued()
         {
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
-            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>(), MockRepository.GenerateMock<ICIServerService>());
+            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>());
             target.Initialize(provider);
 
             var user = new RemoteControl { UserName = "u1" };
@@ -129,7 +130,7 @@ namespace Buildron.Domain.UnitTests.Builds
             log.Expect(l => l.Warning("No build with id '{0}' could be found to execute the command.", "b1"));
 
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
-            var target = new BuildService(log, MockRepository.GenerateMock<ICIServerService>());
+            var target = new BuildService(log);
             target.Initialize(provider);
             target.StopBuild(new RemoteControl(), "b1");
 
@@ -141,7 +142,7 @@ namespace Buildron.Domain.UnitTests.Builds
         public void StopBuild_BuildWithId_BuildQueued()
         {
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
-            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>(), MockRepository.GenerateMock<ICIServerService>());
+            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>());
             target.Initialize(provider);
 
             var user = new RemoteControl { UserName = "u1" };
@@ -159,7 +160,7 @@ namespace Buildron.Domain.UnitTests.Builds
         public void GetMostRelevantBuildForUser_DiffStatus_DiffResults()
         {
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
-            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>(), MockRepository.GenerateMock<ICIServerService>());
+            var target = new BuildService(MockRepository.GenerateMock<ISHLogStrategy>());
             target.Initialize(provider);
 
             var user = new User { UserName = "u1" };

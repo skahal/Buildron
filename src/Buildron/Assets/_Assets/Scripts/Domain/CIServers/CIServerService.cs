@@ -5,7 +5,7 @@ using Skahal.Infrastructure.Framework.Repositories;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.CIServers
 {
     /// <summary>
     /// Continuous Integration server service.
@@ -27,7 +27,7 @@ namespace Buildron.Domain
 
         #region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServerService"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServers.CIServerService"/> class.
 		/// </summary>
 		/// <param name="repository">Repository.</param>
         public CIServerService(IRepository<CIServer> repository)

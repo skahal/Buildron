@@ -1,5 +1,3 @@
-#region Usings
-using Buildron.Domain;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,9 +6,7 @@ using Skahal.Logging;
 using System.Linq;
 using Zenject;
 using Buildron.Domain.Builds;
-
-
-#endregion
+using Buildron.Domain.CIServers;
 
 [RequireComponent(typeof(AudioSource))]
 public class BuildSoundEffectController : MonoBehaviour

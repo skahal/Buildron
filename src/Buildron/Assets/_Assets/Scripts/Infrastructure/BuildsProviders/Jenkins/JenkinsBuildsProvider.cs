@@ -1,9 +1,9 @@
 using System;
 using System.Xml;
-using Buildron.Domain;
 using Skahal.Logging;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
+using Buildron.Domain.CIServers;
 
 namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 {

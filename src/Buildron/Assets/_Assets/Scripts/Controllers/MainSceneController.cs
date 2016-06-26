@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using Zenject;
 using Buildron.Application;
 using Buildron.Domain.Builds;
+using Buildron.Domain.CIServers;
 
 [AddComponentMenu ("Buildron/Scenes/MainSceneController")]
 public class MainSceneController : MonoBehaviour, IInitializable

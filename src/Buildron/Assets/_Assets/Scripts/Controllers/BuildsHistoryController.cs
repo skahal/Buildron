@@ -1,9 +1,8 @@
 using UnityEngine;
-using System.Collections;
-using Buildron.Domain;
 using Zenject;
 using Buildron.Application;
 using Buildron.Domain.Builds;
+using Buildron.Domain.CIServers;
 
 /// <summary>
 /// Builds history controller.

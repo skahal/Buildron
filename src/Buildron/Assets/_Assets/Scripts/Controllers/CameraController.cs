@@ -8,6 +8,7 @@ using Skahal.Threading;
 using Buildron.Application;
 using Zenject;
 using Buildron.Domain.Builds;
+using Buildron.Domain.CIServers;
 
 #region Enums
 /// <summary>

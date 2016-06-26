@@ -5,6 +5,7 @@ using Buildron.Domain;
 using Skahal.Common;
 using Skahal.Logging;
 using Buildron.Domain.Users;
+using Buildron.Domain.CIServers;
 
 namespace Buildron.Domain.Builds
 {
@@ -36,7 +37,6 @@ namespace Buildron.Domain.Builds
 		#endregion
 
 		#region Fields
-		private ICIServerService m_ciServerService;
 		private IBuildsProvider m_buildsProvider;
 		private ISHLogStrategy m_log;
 		private List<string> m_buildConfigurationIdsRefreshed;
@@ -49,11 +49,9 @@ namespace Buildron.Domain.Builds
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildService"/> class.
 		/// </summary>
 		/// <param name="log">Log.</param>
-		/// <param name="ciServerService">Ci server service.</param>
-		public BuildService (ISHLogStrategy log, ICIServerService ciServerService)
+		public BuildService (ISHLogStrategy log)
 		{
 			m_log = log;
-			m_ciServerService = ciServerService;
 		}
 		#endregion
 
