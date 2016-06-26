@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain.Builds
 {

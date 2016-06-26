@@ -1,4 +1,5 @@
 using System;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain
 {

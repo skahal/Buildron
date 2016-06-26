@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain
 {

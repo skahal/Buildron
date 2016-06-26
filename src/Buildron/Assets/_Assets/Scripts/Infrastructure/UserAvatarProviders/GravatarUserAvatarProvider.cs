@@ -1,11 +1,5 @@
-#region Usings
-using Buildron.Domain;
-using UnityEngine;
-using System.Xml;
 using System;
-using Skahal.Logging;
-using System.Collections.Generic;
-#endregion
+using Buildron.Domain.Users;
 
 namespace Buildron.Infrastructure.UserAvatarProviders
 {
@@ -15,6 +9,11 @@ namespace Buildron.Infrastructure.UserAvatarProviders
     public class GravatarUserAvatarProvider : WebUserAvatarProviderBase
     {
         #region Methods
+		/// <summary>
+		/// Builds the image URL.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <returns>The url to get the image.</returns>
         protected override string BuildImageUrl(User user)
         {
 			var email = user.Email;

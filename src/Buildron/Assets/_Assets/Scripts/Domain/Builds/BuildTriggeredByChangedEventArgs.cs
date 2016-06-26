@@ -1,3 +1,5 @@
+using Buildron.Domain.Users;
+
 namespace Buildron.Domain.Builds
 {
     /// <summary>

@@ -12,6 +12,7 @@ using System;
 using Skahal.Threading;
 using Zenject;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 
 #endregion

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 [RequireComponent(typeof(UserAnimationController))]
 public class UserController : MonoBehaviour, IInitializable

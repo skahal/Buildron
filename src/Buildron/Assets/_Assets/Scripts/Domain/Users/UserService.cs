@@ -6,7 +6,7 @@ using Skahal.Logging;
 using UnityEngine;
 using Buildron.Domain.Builds;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Users
 {
 	/// <summary>
 	/// Domain service to user from continuous integration server.
@@ -14,7 +14,6 @@ namespace Buildron.Domain
 	public class UserService : IUserService
 	{
 		#region Events
-
 		/// <summary>
 		/// Occurs when an user is found.
 		/// </summary>
@@ -39,26 +38,22 @@ namespace Buildron.Domain
 		/// Occurs when an user authentication is completed.
 		/// </summary>
 		public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
-
 		#endregion
 
 		#region Fields
-
 		private StaticUserAvatarProvider m_userAvatarCache;
 		private IList<IUserAvatarProvider> m_humanUserAvatarProviders;
 		private IList<IUserAvatarProvider> m_nonHumanUserAvatarProviders;
 		private ISHLogStrategy m_log;
-
 		#endregion
 
 		#region Constructors
-
 		/// <summary>
-		/// Inicia uma nova inst�ncia da classe <see cref="UserService"/>.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.UserService"/> class.
 		/// </summary>
-		/// <param name="humanUserAvatarProviders">The human user avatar providers.</param>
-		/// <param name="nonHumanAvatarProviders">The non human avatar providers.</param>
-		/// <param name="log">The log strategy.</param>
+		/// <param name="humanUserAvatarProviders">Human user avatar providers.</param>
+		/// <param name="nonHumanAvatarProviders">Non human avatar providers.</param>
+		/// <param name="log">Log.</param>
 		public UserService (
 			IUserAvatarProvider[] humanUserAvatarProviders, 
 			IUserAvatarProvider[] nonHumanAvatarProviders,
@@ -76,20 +71,16 @@ namespace Buildron.Domain
 
 			m_log = log;
 		}
-
 		#endregion
 
 		#region Properties
-
 		/// <summary>
 		/// Gets the users.
 		/// </summary>
 		public IList<User> Users { get; private set; }
-
 		#endregion
 
 		#region Methods
-
 		/// <summary>
 		/// Listens the builds provider.
 		/// </summary>
@@ -99,18 +90,23 @@ namespace Buildron.Domain
 			var serviceSender = typeof(UserService);
 			var usersInLastBuildsUpdate = new List<User> ();
 		
-			buildsProvider.BuildUpdated += (sender, e) => {
+			buildsProvider.BuildUpdated += (sender, e) =>
+			{
 				var user = e.Build.TriggeredBy;
 
-				if (user != null) {
+				if (user != null)
+				{
 					var previousUser = Users.FirstOrDefault (f => f == user);
 
-					if (previousUser == null) {
+					if (previousUser == null)
+					{
 						// New user found.
 						Users.Add (user);
 						UserFound.Raise (serviceSender, new UserFoundEventArgs (user));
 						RaiseUserTriggeredBuildEvents (serviceSender, user, user.Builds);                       
-					} else {
+					}
+					else
+					{
 						var triggeredBuilds = user.Builds.Except (previousUser.Builds);
 						RaiseUserTriggeredBuildEvents (serviceSender, user, triggeredBuilds);
 
@@ -123,12 +119,14 @@ namespace Buildron.Domain
 				}
 			};
 
-			buildsProvider.BuildsRefreshed += delegate {
+			buildsProvider.BuildsRefreshed += delegate
+			{
 				var removedUsers = Users.Except (usersInLastBuildsUpdate).ToArray ();
 
 				m_log.Warning ("UserService.BuildsRefreshed: there is {0} users and {1} were refreshed. {2} will be removed", Users.Count, usersInLastBuildsUpdate.Count (), removedUsers.Length);
 
-				foreach (var user in removedUsers) {
+				foreach (var user in removedUsers)
+				{
 					Users.Remove (user);
 					UserRemoved.Raise (typeof(BuildService), new UserRemovedEventArgs (user));
 				}
@@ -136,12 +134,14 @@ namespace Buildron.Domain
 				usersInLastBuildsUpdate.Clear ();
 			};
 
-			buildsProvider.UserAuthenticationSuccessful += delegate {
+			buildsProvider.UserAuthenticationSuccessful += delegate
+			{
 				// TODO: change buildsProvider.UserAuthenticationSuccessful to pass user.
 				UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (null, true));                
 			};
 
-			buildsProvider.UserAuthenticationFailed += delegate {
+			buildsProvider.UserAuthenticationFailed += delegate
+			{
 				UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (null, false));
 			};
 		}
@@ -153,10 +153,14 @@ namespace Buildron.Domain
 		/// <param name="photoReceived">Photo received callback.</param>
 		public void GetUserPhoto (User user, Action<Texture2D> photoReceived)
 		{
-			if (user != null) {
-				if (user.Kind == UserKind.Human) {
+			if (user != null)
+			{
+				if (user.Kind == UserKind.Human)
+				{
 					GetUserPhoto (user, photoReceived, m_humanUserAvatarProviders);
-				} else {
+				}
+				else
+				{
 					GetUserPhoto (user, photoReceived, m_nonHumanUserAvatarProviders);
 				}
 			}
@@ -164,15 +168,21 @@ namespace Buildron.Domain
 
 		private void GetUserPhoto (User user, Action<Texture2D> photoReceived, IList<IUserAvatarProvider> providersChain, int providerStartIndex = 0)
 		{
-			if (providerStartIndex < providersChain.Count) {
+			if (providerStartIndex < providersChain.Count)
+			{
 				var currentProvider = providersChain [providerStartIndex];
 
-				currentProvider.GetUserPhoto (user, (photo) => {
-					if (photo == null) {
+				currentProvider.GetUserPhoto (user, (photo) =>
+				{
+					if (photo == null)
+					{
 						GetUserPhoto (user, photoReceived, providersChain, ++providerStartIndex);
-					} else {
+					}
+					else
+					{
 						// Add found photo to cache.
-						if (!object.ReferenceEquals (currentProvider, m_userAvatarCache)) {
+						if (!object.ReferenceEquals (currentProvider, m_userAvatarCache))
+						{
 							m_userAvatarCache.AddPhoto (user.UserName, photo);
 						}
 
@@ -180,18 +190,20 @@ namespace Buildron.Domain
 						photoReceived (photo);
 					}
 				});
-			} else {
+			}
+			else
+			{
 				photoReceived (null);
 			}
 		}
 
 		private void RaiseUserTriggeredBuildEvents (Type serviceSender, User user, IEnumerable<Build> triggeredBuilds)
 		{
-			foreach (var build in triggeredBuilds) {
+			foreach (var build in triggeredBuilds)
+			{
 				UserTriggeredBuild.Raise (serviceSender, new UserTriggeredBuildEventArgs (user, build));
 			}
 		}
-
 		#endregion
 	}
 }

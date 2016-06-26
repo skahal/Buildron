@@ -14,6 +14,7 @@ using Buildron.Domain.EasterEggs;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Infrastructure.Repositories;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 namespace Buildron.Infrastructure.IoC
 {

@@ -3,6 +3,7 @@ using System.Xml;
 using Buildron.Domain;
 using Skahal.Logging;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 {

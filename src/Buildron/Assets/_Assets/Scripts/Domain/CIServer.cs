@@ -1,5 +1,6 @@
 using System;
 using Skahal.Infrastructure.Framework.Domain;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain
 {

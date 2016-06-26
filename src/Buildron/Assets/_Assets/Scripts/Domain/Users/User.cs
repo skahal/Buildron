@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Buildron.Domain.Builds;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Users
 {
 	#region Enums
 	/// <summary>
@@ -36,7 +36,7 @@ namespace Buildron.Domain
     {
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.User"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.User"/> class.
 		/// </summary>
 		public User ()
 		{

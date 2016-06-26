@@ -1,7 +1,6 @@
-#region Usings
 using UnityEngine;
 using System;
-#endregion
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain
 {

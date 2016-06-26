@@ -1,11 +1,8 @@
-#region Usings
 using Buildron.Domain;
 using UnityEngine;
-using System.Xml;
 using System;
-using Skahal.Logging;
 using System.Collections.Generic;
-#endregion
+using Buildron.Domain.Users;
 
 namespace Buildron.Infrastructure.UserAvatarProviders
 {

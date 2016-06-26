@@ -3,6 +3,7 @@ using System.Linq;
 using Skahal.Common;
 using Skahal.Infrastructure.Framework.Repositories;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain
 {

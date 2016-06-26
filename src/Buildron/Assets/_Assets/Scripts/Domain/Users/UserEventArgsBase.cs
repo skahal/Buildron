@@ -1,6 +1,6 @@
 using System;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Users
 {
     /// <summary>
     /// Base class to arguments for user events.
@@ -9,7 +9,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.UserEventArgsBase"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.UserEventArgsBase"/> class.
 		/// </summary>
 		/// <param name="user">The user.</param>
 		protected UserEventArgsBase(User user)

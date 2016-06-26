@@ -1,6 +1,4 @@
-using System;
-
-namespace Buildron.Domain
+namespace Buildron.Domain.Users
 {
     /// <summary>
     /// Arguments for user found events.
@@ -9,7 +7,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.UserFoundArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.UserFoundArgs"/> class.
 		/// </summary>
 		/// <param name="user">The user.</param>
 		public UserFoundEventArgs (User user)

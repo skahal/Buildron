@@ -5,6 +5,7 @@ using Rhino.Mocks;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Logging;
 using System.Linq;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain.UnitTests
 {

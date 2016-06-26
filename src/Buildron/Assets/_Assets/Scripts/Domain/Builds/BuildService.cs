@@ -4,6 +4,7 @@ using System.Linq;
 using Buildron.Domain;
 using Skahal.Common;
 using Skahal.Logging;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain.Builds
 {

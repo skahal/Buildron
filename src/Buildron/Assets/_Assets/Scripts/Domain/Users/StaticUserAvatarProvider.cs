@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Buildron.Domain;
 using UnityEngine;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Users
 {
 	/// <summary>
 	/// An IUserAvatarProvider that use a static list of images to avatars.

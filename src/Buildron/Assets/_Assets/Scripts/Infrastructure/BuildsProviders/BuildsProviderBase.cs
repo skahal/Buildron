@@ -4,6 +4,7 @@ using Buildron.Domain;
 using Buildron.Domain.Builds;
 using Skahal.Common;
 using UnityEngine;
+using Buildron.Domain.Users;
 
 namespace Buildron.Infrastructure.BuildsProvider
 {

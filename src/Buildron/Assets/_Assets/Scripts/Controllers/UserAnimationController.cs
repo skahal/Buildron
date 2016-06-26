@@ -6,6 +6,7 @@ using Skahal.Logging;
 using System.Collections.Generic;
 using Zenject;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 
 #endregion
