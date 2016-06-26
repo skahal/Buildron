@@ -16,6 +16,8 @@ using Skahal.Infrastructure.Repositories;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 using Buildron.Domain.CIServers;
+using Buildron.Domain.RemoteControls;
+using Buildron.Controllers;
 
 namespace Buildron.Infrastructure.IoC
 {

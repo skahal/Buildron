@@ -9,8 +9,9 @@ using Zenject;
 using Buildron.Application;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
+using Buildron.Domain.RemoteControls;
 
-namespace Buildron.Domain
+namespace Buildron.Controllers
 {
 	[RequireComponent (typeof(NetworkView))]
 	public class RemoteControlController : MonoBehaviour, IInitializable, IRemoteControlMessagesListener

@@ -1,6 +1,6 @@
 using System;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.RemoteControls
 {
     /// <summary>
     /// Arguments for remote control changed events.
@@ -9,7 +9,7 @@ namespace Buildron.Domain
 	{
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buildron.Domain.RemoteControlChangedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.RemoteControls.RemoteControlChangedEventArgs"/> class.
         /// </summary>
         /// <param name="remoteControl">The remote control.</param>
         public RemoteControlChangedEventArgs(RemoteControl remoteControl)

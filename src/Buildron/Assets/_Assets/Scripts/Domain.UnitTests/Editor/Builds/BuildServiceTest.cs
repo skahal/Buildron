@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Skahal.Logging;
 using Buildron.Domain.Builds;
-using Buildron.Domain.CIServers;
+using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Users;
 
 namespace Buildron.Domain.UnitTests.Builds

@@ -1,5 +1,6 @@
 ﻿using Buildron.Domain;
 using Buildron.Domain.CIServers;
+using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Users;
 using NUnit.Framework;
 using Rhino.Mocks;

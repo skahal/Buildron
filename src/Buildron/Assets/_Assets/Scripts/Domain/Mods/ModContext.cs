@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 using Buildron.Domain.CIServers;
+using Buildron.Domain.RemoteControls;
 
 namespace Skahal.Domain.Mods
 {

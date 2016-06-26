@@ -6,6 +6,7 @@ using Skahal.Common;
 using Skahal.Logging;
 using Buildron.Domain.Users;
 using Buildron.Domain.CIServers;
+using Buildron.Domain.RemoteControls;
 
 namespace Buildron.Domain.Builds
 {

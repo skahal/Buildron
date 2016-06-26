@@ -13,6 +13,7 @@ using Skahal.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+using Buildron.Domain.RemoteControls;
 
 /// <summary>
 /// Controller for configuration panel.

@@ -5,6 +5,7 @@ using Buildron.Domain;
 using Skahal.Logging;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
+using Buildron.Domain.RemoteControls;
 
 namespace Buildron.Infrastructure.BuildsProvider.Filter
 {

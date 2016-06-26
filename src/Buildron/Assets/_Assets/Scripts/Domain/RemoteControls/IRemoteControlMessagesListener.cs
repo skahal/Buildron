@@ -1,7 +1,7 @@
 ﻿using System;
 using Buildron.Domain.Builds;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.RemoteControls
 {
 	/// <summary>
 	/// Define an interface to a listener for messages sent from remote control.
@@ -21,6 +21,10 @@ namespace Buildron.Domain
 		#endregion
 
 		#region Methods
+		// TODO: the methods names bellow cannot be changed right now, because they
+		// are used by Unity RPC in RC, so, the names should match.
+		// We should change this in the future, maybe using a api rest to comunitcate
+		// between server (Buildron) and RC.
 		void SendToServerAuthentication (string userName, string password);
 		void SendToServerTakeScreenshot ();
 		void SendToServerSortBuilds (int sortingAlgorithmType, int sortBy);

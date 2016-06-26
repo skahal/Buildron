@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Buildron.Domain.Sorting;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
+using Buildron.Domain.RemoteControls;
 
 namespace Buildron.Domain.Builds
 {

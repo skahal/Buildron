@@ -9,6 +9,7 @@ using Zenject;
 using Buildron.Application;
 using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
+using Buildron.Domain.RemoteControls;
 
 [AddComponentMenu ("Buildron/Scenes/MainSceneController")]
 public class MainSceneController : MonoBehaviour, IInitializable
@@ -30,9 +31,6 @@ public class MainSceneController : MonoBehaviour, IInitializable
 
 	[Inject]
 	private BuildGOService m_buildGOService { get; set; }
-
-	[Inject]
-	private IRemoteControlMessagesListener m_rcListener { get; set; }
 	#endregion
 
 	#region Properties

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.RemoteControls
 {
 	/// <summary>
 	/// Define an interface to remote control service.

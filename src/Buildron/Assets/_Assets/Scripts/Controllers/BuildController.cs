@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using Buildron.Domain.Users;
+using Buildron.Domain.RemoteControls;
 
 /// <summary>
 /// Build controller.

@@ -1,12 +1,12 @@
 using System;
+using System.Linq;
+using Buildron.Domain.CIServers;
+using Buildron.Domain.Users;
 using Skahal.Common;
 using Skahal.Infrastructure.Framework.Repositories;
 using Zenject;
-using System.Linq;
-using Buildron.Domain.Users;
-using Buildron.Domain.CIServers;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.RemoteControls
 {
 	/// <summary>
 	/// Remote control service.
@@ -30,7 +30,7 @@ namespace Buildron.Domain
 
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.RemoteControlService"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.RemoteControls.RemoteControlService"/> class.
 		/// </summary>
 		/// <param name="ciServerService">CI server service.</param>
 		/// <param name="userService">User service.</param>
