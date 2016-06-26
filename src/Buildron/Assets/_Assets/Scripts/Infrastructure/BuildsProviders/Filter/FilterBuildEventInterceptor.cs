@@ -5,7 +5,7 @@ using System.Text;
 using Buildron.Domain;
 using Buildron.Domain.Builds;
 
-namespace Buildron.Infrastructure.BuildsProvider.Filter
+namespace Buildron.Infrastructure.BuildsProviders.Filter
 {
 	/// <summary>
 	/// Filter build event interceptor.
@@ -13,18 +13,18 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
     public class FilterBuildEventInterceptor : IBuildEventInterceptor
     {
 		#region Fields
-		private FilterBuildsProvider m_filterBuildsProvider;
+		private readonly IBuildFilter m_buildFilter;
 		#endregion
 
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the
-		/// <see cref="Buildron.Infrastructure.BuildsProvider.Filter.FilterBuildEventInterceptor"/> class.
+		/// <see cref="Buildron.Infrastructure.BuildsProviders.Filter.FilterBuildEventInterceptor"/> class.
 		/// </summary>
-		/// <param name="filterBuildsProvider">Filter builds provider.</param>
-		public FilterBuildEventInterceptor(FilterBuildsProvider filterBuildsProvider)
+		/// <param name="buildFilter">The build filter.</param>
+		public FilterBuildEventInterceptor(IBuildFilter buildFilter)
 		{
-			m_filterBuildsProvider = filterBuildsProvider;
+			m_buildFilter = buildFilter;
 		}
 		#endregion
 
@@ -35,7 +35,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
 		/// <param name="buildEvent">The build event.</param>
         public void OnStatusChanged(BuildEvent buildEvent)
         {
-			buildEvent.Canceled = !m_filterBuildsProvider.FilterBuild(buildEvent.Build);
+			buildEvent.Canceled = !m_buildFilter.Filter(buildEvent.Build);
         }
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Filter
 		/// <param name="buildEvent">The build event.</param>
         public void OnTriggeredByChanged(BuildEvent buildEvent)
         {
-			buildEvent.Canceled = !m_filterBuildsProvider.FilterBuild(buildEvent.Build);
+			buildEvent.Canceled = !m_buildFilter.Filter(buildEvent.Build);
         }
 		#endregion
     }

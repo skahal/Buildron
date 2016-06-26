@@ -5,7 +5,7 @@ using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
 using Buildron.Domain.Users;
 using Buildron.Domain.Versions;
-using Buildron.Infrastructure.BuildsProvider.Filter;
+using Buildron.Infrastructure.BuildsProviders.Filter;
 using Buildron.Infrastructure.BuildsProvider.Hudson;
 using Buildron.Infrastructure.BuildsProvider.Jenkins;
 using Buildron.Infrastructure.BuildsProvider.TeamCity;
