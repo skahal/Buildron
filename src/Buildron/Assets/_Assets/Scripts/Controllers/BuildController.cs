@@ -7,6 +7,7 @@ using Skahal.Logging;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+using Buildron.Domain.Users;
 
 /// <summary>
 /// Build controller.

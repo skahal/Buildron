@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using Buildron.Domain.Users;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Users
 {
 	/// <summary>
 	/// Defines a provider to user avatar.

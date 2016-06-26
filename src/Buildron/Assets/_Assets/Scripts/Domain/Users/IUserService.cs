@@ -4,7 +4,7 @@ using UnityEngine;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Users
 {
 	/// <summary>
 	/// Defines an interface to a user servce.

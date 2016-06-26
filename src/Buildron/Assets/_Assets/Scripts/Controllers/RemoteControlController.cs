@@ -8,6 +8,7 @@ using UnityEngine;
 using Zenject;
 using Buildron.Application;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain
 {

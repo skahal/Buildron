@@ -4,6 +4,7 @@ using Skahal.Infrastructure.Framework.Repositories;
 using UnityEngine;
 using Zenject;
 using System.Linq;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain
 {
