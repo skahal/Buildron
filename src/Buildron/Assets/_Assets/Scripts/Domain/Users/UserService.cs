@@ -82,10 +82,10 @@ namespace Buildron.Domain.Users
 
 		#region Methods
 		/// <summary>
-		/// Listens the builds provider.
+		/// Initialize the service.
 		/// </summary>
 		/// <param name="buildsProvider">Builds provider.</param>
-		public void ListenBuildsProvider (IBuildsProvider buildsProvider)
+		public void Initialize (IBuildsProvider buildsProvider)
 		{
 			var serviceSender = typeof(UserService);
 			var usersInLastBuildsUpdate = new List<User> ();

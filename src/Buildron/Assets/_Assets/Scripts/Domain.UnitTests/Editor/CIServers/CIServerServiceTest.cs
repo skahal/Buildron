@@ -8,7 +8,7 @@ using Rhino.Mocks;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Logging;
 
-namespace Buildron.Domain.CIServers.UnitTests
+namespace Buildron.Domain.UnitTests.CIServers
 {
     [Category("Buildron.Domain")]
     public class CIServerServiceTest

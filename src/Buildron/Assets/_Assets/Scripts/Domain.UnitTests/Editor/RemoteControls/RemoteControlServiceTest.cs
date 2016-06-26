@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Skahal.Infrastructure.Framework.Repositories;
 
-namespace Buildron.Domain.RemoteControls.UnitTests
+namespace Buildron.Domain.UnitTests.RemoteControls
 {
     [Category("Buildron.Domain")]
     public class RemoteControlServiceTest

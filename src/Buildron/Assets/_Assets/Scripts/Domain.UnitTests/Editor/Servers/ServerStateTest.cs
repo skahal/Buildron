@@ -3,7 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using Buildron.Domain.Servers;
 
-namespace Buildron.Domain.Server.UnitTests
+namespace Buildron.Domain.UnitTests.Server
 {
     [Category("Buildron.Domain")]
     public class ServerStateTest

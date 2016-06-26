@@ -44,10 +44,10 @@ namespace Buildron.Domain.Users
 
 
 		/// <summary>
-		/// Listens the builds provider.
+		/// Initialize the service.
 		/// </summary>
 		/// <param name="buildsProvider">Builds provider.</param>
-		void ListenBuildsProvider(IBuildsProvider buildsProvider);
+		void Initialize(IBuildsProvider buildsProvider);
 
 		/// <summary>
 		/// Gets the user photo.
