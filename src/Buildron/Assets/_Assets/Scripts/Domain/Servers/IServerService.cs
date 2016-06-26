@@ -1,6 +1,6 @@
 using System;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Servers
 {
 	/// <summary>
 	/// Defines a interface to a server service.

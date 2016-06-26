@@ -3,6 +3,7 @@ using Buildron.Domain;
 using System.Linq;
 using Skahal.Infrastructure.Repositories;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Servers;
 
 namespace Buildron.Infrastructure.FunctionalTests.Repositories
 {

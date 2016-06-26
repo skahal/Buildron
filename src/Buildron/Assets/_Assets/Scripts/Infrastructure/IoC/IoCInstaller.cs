@@ -18,6 +18,7 @@ using Buildron.Domain.Users;
 using Buildron.Domain.CIServers;
 using Buildron.Domain.RemoteControls;
 using Buildron.Controllers;
+using Buildron.Domain.Servers;
 
 namespace Buildron.Infrastructure.IoC
 {

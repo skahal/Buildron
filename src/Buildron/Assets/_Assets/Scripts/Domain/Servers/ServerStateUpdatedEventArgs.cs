@@ -1,6 +1,6 @@
 using System;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Servers
 {
     /// <summary>
     /// Arguments for user removed events.
@@ -9,7 +9,7 @@ namespace Buildron.Domain
 	{
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buildron.Domain.ServerStateUpdatedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Servers.ServerStateUpdatedEventArgs"/> class.
         /// </summary>
         /// <param name="state">the state updated.</param>
 		public ServerStateUpdatedEventArgs(ServerState state)

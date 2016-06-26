@@ -6,7 +6,7 @@ using Skahal.Infrastructure.Framework.Repositories;
 using System.Linq;
 using Buildron.Domain.Sorting;
 
-namespace Buildron.Domain.UnitTests
+namespace Buildron.Domain.Servers.UnitTests
 {
     [Category("Buildron.Domain")]
     public class ServerServiceTest

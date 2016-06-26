@@ -1,13 +1,11 @@
 using System;
 using System.Linq;
 using Buildron.Domain;
-using Buildron.Domain.Sorting;
-using Skahal.Infrastructure.Framework.Commons;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Logging;
 using Skahal.Common;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Servers
 {
 	/// <summary>
 	/// Server domain service.
@@ -29,7 +27,7 @@ namespace Buildron.Domain
 
 	    #region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.ServerService"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Servers.ServerService"/> class.
 		/// </summary>
 		/// <param name="repository">Repository.</param>
 		/// <param name="log">Log.</param>

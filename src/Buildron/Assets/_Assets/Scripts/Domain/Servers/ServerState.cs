@@ -4,7 +4,7 @@ using Buildron.Domain.Sorting;
 using Skahal.Infrastructure.Framework.Domain;
 using UnityEngine;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Servers
 {
 	/// <summary>
 	/// Represents the current Buildron server state.
@@ -14,7 +14,7 @@ namespace Buildron.Domain
     {
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.ServerState"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Servers.ServerState"/> class.
 		/// </summary>
 		public ServerState ()
 		{

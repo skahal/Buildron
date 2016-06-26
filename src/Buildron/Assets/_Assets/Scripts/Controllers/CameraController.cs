@@ -9,6 +9,7 @@ using Buildron.Application;
 using Zenject;
 using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
+using Buildron.Domain.Servers;
 
 #region Enums
 /// <summary>

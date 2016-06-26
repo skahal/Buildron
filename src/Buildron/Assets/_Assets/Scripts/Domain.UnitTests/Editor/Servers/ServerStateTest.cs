@@ -1,8 +1,9 @@
 ﻿using Buildron.Domain;
 using NUnit.Framework;
 using UnityEngine;
+using Buildron.Domain.Servers;
 
-namespace Buildron.Domain.UnitTests
+namespace Buildron.Domain.Server.UnitTests
 {
     [Category("Buildron.Domain")]
     public class ServerStateTest
