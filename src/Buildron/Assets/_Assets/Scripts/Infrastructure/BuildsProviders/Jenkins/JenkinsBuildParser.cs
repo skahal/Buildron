@@ -1,10 +1,7 @@
-#region Usings
-using Buildron.Domain;
 using System.Xml;
-using System.Text.RegularExpressions;
 using System;
 using System.Globalization;
-#endregion
+using Buildron.Domain.Builds;
 
 namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 {

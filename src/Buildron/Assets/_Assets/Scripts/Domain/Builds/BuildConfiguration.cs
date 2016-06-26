@@ -1,10 +1,7 @@
-#region Usings
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-#endregion
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Represents a build configuration.
@@ -14,7 +11,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildConfiguration"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildConfiguration"/> class.
 		/// </summary>
 		public BuildConfiguration ()
 		{

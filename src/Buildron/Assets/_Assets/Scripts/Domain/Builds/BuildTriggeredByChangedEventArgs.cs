@@ -1,6 +1,4 @@
-using System;
-
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
     /// <summary>
     /// Arguments for build triggered by changed events.
@@ -9,7 +7,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildTriggeredByChangedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildTriggeredByChangedEventArgs"/> class.
 		/// </summary>
 		/// <param name="build">Build.</param>
 		/// <param name="previousTriggeredBy">Previous triggered by.</param>

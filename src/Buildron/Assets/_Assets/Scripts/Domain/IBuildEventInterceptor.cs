@@ -1,4 +1,6 @@
-﻿namespace Buildron.Domain
+﻿using Buildron.Domain.Builds;
+
+namespace Buildron.Domain
 {
     /// <summary>
     /// Define a interface for a build event intercpetor.

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
     #region Enums    
     /// <summary>
@@ -105,11 +105,17 @@ namespace Buildron.Domain
         #endregion
 
         #region Constructors
+		/// <summary>
+		/// Initializes the <see cref="Buildron.Domain.Builds.Build"/> class.
+		/// </summary>
         static Build()
         {
             EventInterceptors = new List<IBuildEventInterceptor>();
         }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.Build"/> class.
+		/// </summary>
         public Build()
         {
             Status = BuildStatus.Unknown;
@@ -124,10 +130,22 @@ namespace Buildron.Domain
         /// </summary>
         public static IList<IBuildEventInterceptor> EventInterceptors { get; private set; }
 
+		/// <summary>
+		/// Gets or sets the identifier.
+		/// </summary>
+		/// <value>The identifier.</value>
         public string Id { get; set; }
 
+		/// <summary>
+		/// Gets or sets the sequence.
+		/// </summary>
+		/// <value>The sequence.</value>
         public int Sequence { get; set; }
 
+		/// <summary>
+		/// Gets or sets the configuration.
+		/// </summary>
+		/// <value>The configuration.</value>
         public BuildConfiguration Configuration { get; set; }
 
         /// <summary>
@@ -163,10 +181,22 @@ namespace Buildron.Domain
         /// </summary>
         public BuildStatus PreviousStatus { get; private set; }
 
+		/// <summary>
+		/// Gets or sets the last ran step.
+		/// </summary>
+		/// <value>The last ran step.</value>
         public BuildStep LastRanStep { get; set; }
 
+		/// <summary>
+		/// Gets or sets the last change description.
+		/// </summary>
+		/// <value>The last change description.</value>
         public string LastChangeDescription { get; set; }
 
+		/// <summary>
+		/// Gets or sets the date.
+		/// </summary>
+		/// <value>The date.</value>
         public DateTime Date { get; set; }
 
         /// <summary>

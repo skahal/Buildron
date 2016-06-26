@@ -1,6 +1,6 @@
 using System;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Build filter updated event arguments.
@@ -9,7 +9,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildFilterUpdatedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildFilterUpdatedEventArgs"/> class.
 		/// </summary>
 		/// <param name="filter">Filter.</param>
 		public BuildFilterUpdatedEventArgs (BuildFilter filter)

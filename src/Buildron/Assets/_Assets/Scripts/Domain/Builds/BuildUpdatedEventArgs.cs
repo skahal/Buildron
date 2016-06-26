@@ -1,8 +1,4 @@
-using UnityEngine;
-using System.Collections;
-using System;
-
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Build updated event arguments.
@@ -11,7 +7,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildUpdatedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildUpdatedEventArgs"/> class.
 		/// </summary>
 		/// <param name="build">Build.</param>
 		public BuildUpdatedEventArgs (Build build) 

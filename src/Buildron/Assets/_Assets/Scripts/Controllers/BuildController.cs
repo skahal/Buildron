@@ -1,19 +1,12 @@
-#region Usings
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Buildron.Domain;
+using Buildron.Domain.Builds;
+using Skahal;
 using Skahal.Camera;
 using Skahal.Logging;
-using Skahal.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using Skahal;
-using Buildron.Application;
-
-
-#endregion
 
 /// <summary>
 /// Build controller.

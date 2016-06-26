@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using Buildron.Domain;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
     /// <summary>
     /// Build most relevant status comparer.
     /// </summary>
     public class BuildMostRelevantStatusComparer : IComparer<Build>
 	{     
-        #region IComparer[Build] implementation
+        #region Methods
         /// <summary>
         /// Compare the specified x and y.
         /// </summary>
@@ -20,9 +20,9 @@ namespace Buildron.Domain
 		}
 
 		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.BuildDateDescendingComparer"/>.
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.Builds.BuildDateDescendingComparer"/>.
 		/// </summary>
-		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.BuildDateDescendingComparer"/>.</returns>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.Builds.BuildDateDescendingComparer"/>.</returns>
 		public override string ToString()
 		{
 			return "status";

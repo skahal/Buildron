@@ -1,4 +1,4 @@
-﻿namespace Buildron.Domain
+﻿namespace Buildron.Domain.Builds
 {
     /// <summary>
     /// Represents an build event used by IBuildInterceptors.
@@ -7,7 +7,7 @@
     {
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildEvent"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildEvent"/> class.
 		/// </summary>
 		/// <param name="build">Build.</param>
         public BuildEvent(Build build)

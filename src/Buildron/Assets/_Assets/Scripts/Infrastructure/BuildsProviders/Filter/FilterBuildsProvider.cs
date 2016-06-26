@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Buildron.Domain;
 using Skahal.Logging;
+using Buildron.Domain.Builds;
 
 namespace Buildron.Infrastructure.BuildsProvider.Filter
 {

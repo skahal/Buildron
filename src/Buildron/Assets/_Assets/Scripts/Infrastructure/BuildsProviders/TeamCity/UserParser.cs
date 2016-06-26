@@ -1,9 +1,7 @@
-#region Usings
 using System.Xml;
 using Buildron.Domain;
 using System.Collections.Generic;
-using Skahal.Logging;
-#endregion
+using Buildron.Domain.Builds;
 
 /// <summary>
 /// A parser for User .

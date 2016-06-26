@@ -1,12 +1,9 @@
-#region Usings
 using UnityEngine;
 using System.Collections;
 using Buildron.Domain;
 using Zenject;
 using Buildron.Application;
-
-
-#endregion
+using Buildron.Domain.Builds;
 
 /// <summary>
 /// Builds history controller.

@@ -1,10 +1,8 @@
-﻿using UnityEngine;
-using UnityEditor;
-using NUnit.Framework;
-using Buildron.Infrastructure.Repositories;
+﻿using NUnit.Framework;
 using Buildron.Domain;
 using System.Linq;
 using Skahal.Infrastructure.Repositories;
+using Buildron.Domain.Builds;
 
 namespace Buildron.Infrastructure.FunctionalTests.Repositories
 {

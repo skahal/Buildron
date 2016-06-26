@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Rhino.Mocks;
 using Skahal.Logging;
+using Buildron.Domain.Builds;
 
 namespace Buildron.Domain.UnitTests
 {

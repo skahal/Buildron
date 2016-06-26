@@ -7,6 +7,7 @@ using System.IO;
 using Skahal.Logging;
 using System.Linq;
 using Zenject;
+using Buildron.Domain.Builds;
 
 
 #endregion

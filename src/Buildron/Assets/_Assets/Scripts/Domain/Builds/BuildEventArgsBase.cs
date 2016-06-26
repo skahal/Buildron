@@ -1,6 +1,6 @@
 using System;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
     /// <summary>
     /// Base class to arguments for build  changed events.
@@ -9,7 +9,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildEventArgsBase"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildEventArgsBase"/> class.
 		/// </summary>
 		/// <param name="build">The build.</param>
 		protected BuildEventArgsBase(Build build)

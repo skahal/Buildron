@@ -2,9 +2,9 @@
 using Buildron.Domain;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Skahal.Logging;
+using Buildron.Domain.Builds;
 
-namespace Buildron.Domain.UnitTests
+namespace Buildron.Domain.UnitTests.Builds
 {
     [Category("Buildron.Domain")]
     public class BuildTest

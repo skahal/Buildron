@@ -3,6 +3,9 @@ using System;
 using System.Xml;
 using Buildron.Domain;
 using Skahal.Logging;
+using Buildron.Domain.Builds;
+
+
 #endregion
 
 namespace Buildron.Infrastructure.BuildsProvider.Jenkins

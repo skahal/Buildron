@@ -1,7 +1,7 @@
 using System;
 using Skahal.Infrastructure.Framework.Domain;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	#region Enums
 	/// <summary>
@@ -33,7 +33,7 @@ namespace Buildron.Domain
 		
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildFilter"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildFilter"/> class.
 		/// </summary>
 		public BuildFilter ()
 		{

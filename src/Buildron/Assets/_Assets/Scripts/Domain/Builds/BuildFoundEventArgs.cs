@@ -1,4 +1,4 @@
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Build found event arguments.
@@ -7,7 +7,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildFoundEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildFoundEventArgs"/> class.
 		/// </summary>
 		/// <param name="build">Build.</param>
 		public BuildFoundEventArgs (Build build) 

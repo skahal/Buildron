@@ -1,6 +1,6 @@
 using System;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
     /// <summary>
     /// Arguments for build status changed events.
@@ -8,6 +8,11 @@ namespace Buildron.Domain
     public class BuildStatusChangedEventArgs : BuildEventArgsBase
 	{
 		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildStatusChangedEventArgs"/> class.
+		/// </summary>
+		/// <param name="build">Build.</param>
+		/// <param name="previousStatus">Previous status.</param>
 		public BuildStatusChangedEventArgs(Build build, BuildStatus previousStatus)
 			: base(build)
 		{

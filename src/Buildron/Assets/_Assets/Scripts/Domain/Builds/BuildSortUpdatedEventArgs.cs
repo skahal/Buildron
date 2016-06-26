@@ -1,7 +1,7 @@
 using System;
 using Buildron.Domain.Sorting;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Build sort updated event arguments.
@@ -10,7 +10,7 @@ namespace Buildron.Domain
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildSortUpdatedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildSortUpdatedEventArgs"/> class.
 		/// </summary>
 		/// <param name="sortingAlgorithm">Sorting algorithm.</param>
 		/// <param name="sortBy">Sort by.</param>

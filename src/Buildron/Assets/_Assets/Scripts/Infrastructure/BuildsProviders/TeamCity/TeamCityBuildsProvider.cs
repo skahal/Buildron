@@ -1,10 +1,9 @@
-#region Usings
 using System;
 using System.Collections.Generic;
 using System.Xml;
 using Buildron.Domain;
 using Skahal.Logging;
-#endregion
+using Buildron.Domain.Builds;
 
 namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 {

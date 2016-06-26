@@ -1,9 +1,8 @@
-#region Usings
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-#endregion
+using Buildron.Domain.Builds;
 
 namespace Buildron.Domain
 {

@@ -1,8 +1,5 @@
-#region Usings
-using Buildron.Domain;
 using System.Xml;
-using System.Collections.Generic;
-#endregion
+using Buildron.Domain.Builds;
 
 namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 {

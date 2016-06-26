@@ -1,16 +1,11 @@
-#region Usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Buildron.Domain;
-using Buildron.Domain;
-using Buildron.Domain.Sorting;
 using Skahal.Common;
 using Skahal.Logging;
 
-#endregion
-
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// The builds service.
@@ -40,7 +35,6 @@ namespace Buildron.Domain
 		#endregion
 
 		#region Fields
-
 		private ICIServerService m_ciServerService;
 		private IBuildsProvider m_buildsProvider;
 		private ISHLogStrategy m_log;
@@ -50,17 +44,19 @@ namespace Buildron.Domain
 		#endregion
 
 		#region Constructors
-
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildService"/> class.
+		/// </summary>
+		/// <param name="log">Log.</param>
+		/// <param name="ciServerService">Ci server service.</param>
 		public BuildService (ISHLogStrategy log, ICIServerService ciServerService)
 		{
 			m_log = log;
 			m_ciServerService = ciServerService;
 		}
-
 		#endregion
 
 		#region Properties
-
 		/// <summary>
 		/// Gets the builds count.
 		/// </summary>
@@ -84,11 +80,9 @@ namespace Buildron.Domain
 				return m_buildsProvider.Name;	
 			}
 		}
-
 		#endregion
 
 		#region Methods
-
 		/// <summary>
 		/// Initialize the build service.
 		/// </summary>

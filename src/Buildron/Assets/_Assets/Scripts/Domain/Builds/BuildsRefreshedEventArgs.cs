@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
     /// <summary>
     /// Arguments for builds refreshed events.
@@ -10,7 +10,7 @@ namespace Buildron.Domain
 	{
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buildron.Domain.BuildsRefreshedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildsRefreshedEventArgs"/> class.
         /// </summary>
         /// <param name="buildsStatusChanged">Builds that status changed.</param>
         /// <param name="buildsFound">Builds found.</param>

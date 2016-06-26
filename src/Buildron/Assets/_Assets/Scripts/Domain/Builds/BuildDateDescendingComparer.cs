@@ -1,19 +1,13 @@
-#region Usings
-using System;
-using System.Diagnostics;
-using System.Collections;
 using System.Collections.Generic;
-using Buildron.Domain;
-#endregion
 
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Build date descending comparer.
 	/// </summary>
 	public class BuildDateDescendingComparer : IComparer<Build>
 	{
-		#region IComparer[Build] implementation
+		#region Methods
 		/// <summary>
 		/// Compare the specified x and y.
 		/// </summary>
@@ -25,9 +19,9 @@ namespace Buildron.Domain
 		}
 
 		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.BuildDateDescendingComparer"/>.
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.Builds.BuildDateDescendingComparer"/>.
 		/// </summary>
-		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.BuildDateDescendingComparer"/>.</returns>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.Builds.BuildDateDescendingComparer"/>.</returns>
 		public override string ToString()
 		{
 			return "date";

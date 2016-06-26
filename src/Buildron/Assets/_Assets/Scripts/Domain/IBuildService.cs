@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Buildron.Domain.Sorting;
+using Buildron.Domain.Builds;
 
 namespace Buildron.Domain
 {

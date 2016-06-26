@@ -1,4 +1,4 @@
-namespace Buildron.Domain
+namespace Buildron.Domain.Builds
 {
 	/// <summary>
 	/// Represents a build project.

@@ -1,4 +1,4 @@
-﻿namespace Buildron.Domain
+﻿namespace Buildron.Domain.Builds
 {
     /// <summary>
     /// Arguments for build removed events.
@@ -7,7 +7,7 @@
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.BuildRemovedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildRemovedEventArgs"/> class.
 		/// </summary>
 		/// <param name="build">Build.</param>
 		public BuildRemovedEventArgs (Build build)

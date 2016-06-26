@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Buildron.Domain;
-using Buildron.Domain;
 using Buildron.Domain.Sorting;
 using Skahal.Logging;
 using Skahal.Threading;
@@ -9,6 +8,7 @@ using UnityEngine;
 using Zenject;
 using Buildron.Application;
 using System.Linq;
+using Buildron.Domain.Builds;
 
 /// <summary>
 /// Sorting controller.

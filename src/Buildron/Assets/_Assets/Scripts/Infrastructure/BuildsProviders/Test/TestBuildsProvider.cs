@@ -1,10 +1,12 @@
-#region Usings
 using System.Collections.Generic;
 using Buildron.Domain;
 using Skahal.Common;
 using UnityEngine;
-#endregion
+using Buildron.Domain.Builds;
 
+/// <summary>
+/// Test builds provider.
+/// </summary>
 public class TestBuildsProvider : IBuildsProvider
 {
 	#region Fields
@@ -12,6 +14,9 @@ public class TestBuildsProvider : IBuildsProvider
 	#endregion
 	
 	#region Constructors
+	/// <summary>
+	/// Initializes a new instance of the <see cref="TestBuildsProvider"/> class.
+	/// </summary>
 	public TestBuildsProvider ()
 	{
 		m_builds = new List<Build> ();
