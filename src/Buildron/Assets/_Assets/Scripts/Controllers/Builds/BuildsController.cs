@@ -9,7 +9,7 @@ public class BuildsController : MonoBehaviour
 {
 	#region Fields
     [Inject]
-    private BuildGOService m_buildGOService { get; set; }
+	private BuildGOService m_buildGOService;
 	#endregion
 
 	#region Methods
