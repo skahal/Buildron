@@ -117,9 +117,12 @@ namespace Buildron.Domain.RemoteControls
 		/// </summary>
 		public void DisconnectRemoteControl ()
 		{
-			m_connectedRC.Connected = false;
-			RemoteControlChanged.Raise (typeof(RemoteControlService), new RemoteControlChangedEventArgs (m_connectedRC));
-			m_connectedRC = null;
+            if (m_connectedRC != null)
+            {
+                m_connectedRC.Connected = false;
+                RemoteControlChanged.Raise(typeof(RemoteControlService), new RemoteControlChangedEventArgs(m_connectedRC));
+                m_connectedRC = null;
+            }
 		}
 
 		/// <summary>
