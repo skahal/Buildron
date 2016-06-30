@@ -244,7 +244,7 @@ public class Requester : MonoBehaviour
                     }
                     catch(Exception ex)
                     {
-                        SHLog.Warning("Error calling responseReceived: {0}. {1}", ex.Message, ex.StackTrace);
+                        SHLog.Warning("Error calling responseReceived for url '{0}': {1}. {2}", url, ex.Message, ex.StackTrace);
                         GetFailed.Raise(this, new RequestFailedEventArgs(url));
                     }
 				}
