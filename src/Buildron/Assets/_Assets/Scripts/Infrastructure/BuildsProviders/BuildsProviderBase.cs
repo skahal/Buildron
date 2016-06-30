@@ -6,6 +6,7 @@ using Skahal.Common;
 using UnityEngine;
 using Buildron.Domain.Users;
 using Buildron.Domain.CIServers;
+using System.Collections.Generic;
 
 namespace Buildron.Infrastructure.BuildsProvider
 {
@@ -18,10 +19,11 @@ namespace Buildron.Infrastructure.BuildsProvider
 		private string m_protocol;
 		private string m_serverIP;
 		private Regex m_findProtocolRegex = new Regex ("(http://|https://)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-		#endregion
+        private List<string> m_currentUpdatedBuildIds = new List<string>();
+        #endregion
 
-		#region Constructors
-		protected BuildsProviderBase (CIServer server)
+        #region Constructors
+        protected BuildsProviderBase (CIServer server)
 		{
 			Server = server;	
 			PrepareProtocol ();
@@ -46,19 +48,28 @@ namespace Buildron.Infrastructure.BuildsProvider
 		protected Requester Requester { get; private set; }
 
 		protected CIServer Server { get; private set; }
-		#endregion
 
-		#region IBuildsProvider implementation
-		public event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
+        protected int CurrentBuildsFoundCount { get; set; }
+        #endregion
+
+        #region IBuildsProvider implementation
+        public event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
 		public event EventHandler BuildsRefreshed;
 		public event EventHandler ServerUp;
 		public event EventHandler ServerDown;
 		public event EventHandler UserAuthenticationSuccessful;
 		public event EventHandler UserAuthenticationFailed;
 
-		public abstract void RefreshAllBuilds ();
+		public void RefreshAllBuilds ()
+        {
+            CurrentBuildsFoundCount = 0;
+            m_currentUpdatedBuildIds.Clear();
+            PerformRefreshAllBuilds();
+        }
 
-		public abstract void RunBuild (UserBase user, Build build);
+        protected abstract void PerformRefreshAllBuilds();
+
+        public abstract void RunBuild (UserBase user, Build build);
 
 		public abstract void StopBuild (UserBase user, Build build);
 
@@ -118,14 +129,26 @@ namespace Buildron.Infrastructure.BuildsProvider
 		{
 			OnServerUp ();
 			BuildUpdated.Raise (this, e);
-		}
 
-		protected void OnBuildsRefreshed ()
+            var build = e.Build;
+
+            if (!m_currentUpdatedBuildIds.Contains(build.Id))
+            {
+                m_currentUpdatedBuildIds.Add(build.Id);
+            }
+
+            if (CurrentBuildsFoundCount == m_currentUpdatedBuildIds.Count)
+            {
+                OnBuildsRefreshed();
+            }
+        }
+
+		private void OnBuildsRefreshed ()
 		{
 			BuildsRefreshed.Raise (this);
 		}
 
-		protected void OnServerUp ()
+        protected void OnServerUp ()
 		{
 			ServerUp.Raise (this);
 		}

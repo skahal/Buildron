@@ -12,12 +12,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 	/// TeamCity builds provider.
 	/// </summary>
 	public class TeamCityBuildsProvider : BuildsProviderBase
-	{
-        #region Fields
-        private int m_currentBuildsFoundCount;
-        private List<string> m_currentUpdatedBuildIds = new List<string>();
-        #endregion
-
+	{   
         #region Constructors
         public TeamCityBuildsProvider (CIServer server) : base(server)
 		{
@@ -28,10 +23,9 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 		#endregion
 			
 		#region IBuildsProvider implementation
-		public override void RefreshAllBuilds ()
+		protected override void PerformRefreshAllBuilds ()
 		{	
-			UserParser.Reset ();
-            m_currentUpdatedBuildIds.Clear();
+			UserParser.Reset ();            
 
             Requester.GetText (GetNoRestUrl ("queue.html"), (html) => 
 			{		
@@ -51,17 +45,6 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 						
 						Action raiseBuildUpdated = delegate {
 							OnBuildUpdated(new BuildUpdatedEventArgs (build));
-
-                            if(!m_currentUpdatedBuildIds.Contains(build.Id))
-                            {
-                                m_currentUpdatedBuildIds.Add(build.Id);
-                            }
-                            
-
-                            if (m_currentBuildsFoundCount == m_currentUpdatedBuildIds.Count)
-                            {
-                                OnBuildsRefreshed();
-                            }
                         };
 						
 						build.LastChangeDescription = string.Empty;
@@ -155,7 +138,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			Get ((r) => 
 			{
 				var configs = r.SelectNodes ("buildTypes/buildType");
-                m_currentBuildsFoundCount = configs.Count;
+                CurrentBuildsFoundCount = configs.Count;
 
                 foreach (XmlNode c in configs) {
 					Get ((bc) => 

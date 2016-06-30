@@ -4,143 +4,176 @@ using Skahal.Logging;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 using Buildron.Domain.CIServers;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 {
-	/// <summary>
-	/// Jenkins builds provider.
-	/// </summary>
-	public class JenkinsBuildsProvider : BuildsProviderBase
-	{
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the
-		/// <see cref="Buildron.Infrastructure.BuildsProvider.Jenkins.JenkinsBuildsProvider"/> class.
-		/// </summary>
-		/// <param name='server'>
-		/// Server.
-		/// </param>
-		public JenkinsBuildsProvider (CIServer server) : base (server)
-		{
-			Name = "Jenkins";
-			AuthenticationRequirement = AuthenticationRequirement.Optional;
-			AuthenticationTip = "If your Jenkins server does not require authentication, leave username and password empty, otherwise, type a Jenkins's username and password.\n*BASIC HTTP authentication will be used.";
-		}
+    /// <summary>
+    /// Jenkins builds provider.
+    /// </summary>
+    public class JenkinsBuildsProvider : BuildsProviderBase
+    {
+		#region Fields
+		private static readonly Regex s_getJobPartialUrlRegex = new Regex ("job/.*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 		#endregion
 
-		#region Methods
-		public override void RefreshAllBuilds ()
-		{
-			// Get build configuration list.
-			Get ("api", (doc) =>
-			{
-				var configs = doc.SelectNodes ("//job");
-				
-				foreach (XmlNode c in configs)
-				{
-					var bc = JenkinsBuildConfigurationParser.Parse (c);
-					
-					// Get each build configuration details.
-					Get ("job/" + bc.Id + "/api", (bcDoc) =>
-					{
-						if (bcDoc.SelectSingleNode ("//buildable").InnerText.Equals ("true", StringComparison.OrdinalIgnoreCase))
-						{
-							JenkinsBuildConfigurationParser.ParsePartial (bc, bcDoc);
-							
-							// Get each build details.
-							Get ("job/" + bc.Id + "/lastBuild/api", (bDoc) =>
-							{
-								var number = bcDoc.SelectSingleNode ("//number").InnerText;
-					
-								GetText ("job/" + bc.Id + "/" + number + "/buildTimestamp?format=yyyy/MM/dd%20HH:mm:ss", buildTimestamp =>
-								{
-									
-									var build = JenkinsBuildParser.Parse (bc, bDoc, buildTimestamp);
-									
-									// Get user details.
-									if (build.TriggeredBy == null || build.TriggeredBy.Kind == UserKind.ScheduledTrigger)
-									{
-										OnBuildUpdated (new BuildUpdatedEventArgs (build));
-									}
-									else
-									{
-										Get ("/user/" + build.TriggeredBy.UserName + "/api", (userDoc) =>
-										{
-											build.TriggeredBy = JenkinsUserParser.ParseUserFromUserResponse (userDoc);	
-											OnBuildUpdated (new BuildUpdatedEventArgs (build));
-										});
-									}
-								});
-							});
-						}
-					});
-				}
-				
-				OnServerUp ();
-				OnBuildsRefreshed ();
-			});
-		}
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="Buildron.Infrastructure.BuildsProvider.Jenkins.JenkinsBuildsProvider"/> class.
+        /// </summary>
+        /// <param name='server'>
+        /// Server.
+        /// </param>
+        public JenkinsBuildsProvider(CIServer server) : base(server)
+        {
+            Name = "Jenkins";
+            AuthenticationRequirement = AuthenticationRequirement.Optional;
+            AuthenticationTip = "If your Jenkins server does not require authentication, leave username and password empty, otherwise, type a Jenkins's username and password.\n*BASIC HTTP authentication will be used.";
+            TreeDepth = 5;
+        }
+        #endregion
 
-		public override void RunBuild (UserBase user, Build build)
-		{
-			var id = build.Configuration.Id;
-			var url = GetHttpBasicAuthUrl (user, "job/{0}/build", id);
-			
-			Requester.GetTextImmediately (url, (r) =>
-			{
-				SHLog.Debug ("JenkinsBuildsProvider: build {0} trigged. Reponse: {1}", id, r);
-			});
-		}
+        #region Properties        
+        /// <summary>
+        /// Gets or sets the tree depth to look for builds (?tree=).
+        /// </summary>
+        public int TreeDepth { get; set; }
+        #endregion
 
-		public override void StopBuild (UserBase user, Build build)
-		{
-			var id = build.Configuration.Id;
-			var url = GetHttpBasicAuthUrl (user, "job/{0}/lastBuild/stop", id);
-			
-			Requester.GetTextImmediately (url, (r) =>
-			{
-				SHLog.Debug ("JenkinsBuildsProvider: build {0} stopped. Reponse: {1}", id, r);
-			});
-		}
+        #region Methods       
+        public static string BuildTreeFilter(string filter, int depth)
+        {
+            var treeFilter = string.Join(",", Enumerable.Repeat(filter, depth).ToArray());
+            return "{0}{1}".With(treeFilter, "".PadRight(depth, ']'));
+        }
 
-		public override void AuthenticateUser (UserBase user)
-		{
-			var url = GetHttpBasicAuthUrl (user, "");
-			
-			Requester.GetTextImmediately (
-				url, 
-				(r) =>
-				{
-					OnUserAuthenticationSuccessful ();
-				},
-				() =>
-				{
-					OnUserAuthenticationFailed ();
-				});
-		}
-		#endregion
+        protected override void PerformRefreshAllBuilds()
+        {
+            // Get build configuration list.
+            Get("api", BuildTreeFilter("jobs[name,displayName,buildable,lastBuild[number],url", TreeDepth), (doc) =>
+            {
+                var configs = JenkinsBuildConfigurationParser.Parse(doc);
+                CurrentBuildsFoundCount = configs.Count;
 
-		#region Helpers
-		private void Get (string finalPart, Action<XmlDocument> responseReceived)
-		{	
-			var url = GetHttpBasicAuthUrl (Server, "{0}/xml", finalPart);
-			
-			if (url.Contains ("/view/") && finalPart.StartsWith ("/"))
-			{
-				url = url.Substring (0, url.IndexOf ("/view/"));
-				url += String.Format ("{0}/xml", EscapeUrl (finalPart));
-			}
-			
-			Requester.Get (url, responseReceived);	
-		}
+                foreach(var c in configs)
+                {
+                    GetBuild(c.Key, c.Value);
+                }
+            });
+        }
 
-	
-		private void GetText (string finalPart, Action<string> responseReceived)
-		{
-			var url = GetHttpBasicAuthUrl (Server, finalPart);
-			Requester.GetText (url, responseReceived);	
-		}
-		
-		#endregion
-	}
+        private string GetJobPartialUrl(XmlNode jobElement)
+        {
+			return s_getJobPartialUrlRegex.Match (jobElement ["url"].InnerText).Value;
+        }
+
+        private void GetBuild(BuildConfiguration bc, XmlNode bcNode)
+        {
+            CurrentBuildsFoundCount++;
+
+            var jobPartialUrl = GetJobPartialUrl(bcNode);
+            var lastBuild = bcNode["lastBuild"];            
+
+            if(lastBuild == null)
+            {
+                return;
+            }
+
+            var number = lastBuild["number"].InnerText;
+
+            Get(jobPartialUrl + "/lastBuild/api", "", (bDoc) =>
+            {                
+                GetText(GetJobPartialUrl(bcNode) + number + "/buildTimestamp?format=yyyy/MM/dd%20HH:mm:ss", buildTimestamp =>
+                {
+                    var build = JenkinsBuildParser.Parse(bc, bDoc, buildTimestamp);
+
+                    // Get user details.
+                    if (build.TriggeredBy == null || build.TriggeredBy.Kind == UserKind.ScheduledTrigger)
+                    {
+                        OnBuildUpdated(new BuildUpdatedEventArgs(build));
+                    }
+                    else
+                    {
+                        Get("/user/" + build.TriggeredBy.UserName + "/api", "", (userDoc) =>
+                        {
+                            build.TriggeredBy = JenkinsUserParser.ParseUserFromUserResponse(userDoc);
+                            OnBuildUpdated(new BuildUpdatedEventArgs(build));
+                        });
+                    }
+                });
+            });
+        }
+
+        public override void RunBuild(UserBase user, Build build)
+        {
+            var id = build.Configuration.Id;
+            var url = GetHttpBasicAuthUrl(user, "job/{0}/build", id);
+
+            Requester.GetTextImmediately(url, (r) =>
+           {
+               SHLog.Debug("JenkinsBuildsProvider: build {0} trigged. Reponse: {1}", id, r);
+           });
+        }
+
+        public override void StopBuild(UserBase user, Build build)
+        {
+            var id = build.Configuration.Id;
+            var url = GetHttpBasicAuthUrl(user, "job/{0}/lastBuild/stop", id);
+
+            Requester.GetTextImmediately(url, (r) =>
+           {
+               SHLog.Debug("JenkinsBuildsProvider: build {0} stopped. Reponse: {1}", id, r);
+           });
+        }
+
+        public override void AuthenticateUser(UserBase user)
+        {
+            var url = GetHttpBasicAuthUrl(user, "");
+
+            Requester.GetTextImmediately(
+                url,
+                (r) =>
+                {
+                    OnUserAuthenticationSuccessful();
+                },
+                () =>
+                {
+                    OnUserAuthenticationFailed();
+                });
+        }
+        #endregion
+
+        #region Helpers
+        private void Get(string finalPart, string treeFilter, Action<XmlDocument> responseReceived)
+        {
+            string treeParameter = string.Empty;
+
+            if(!string.IsNullOrEmpty(treeFilter))
+            {
+                treeParameter = "?tree={0}".With(treeFilter);
+            }
+
+            var url = GetHttpBasicAuthUrl(Server, "{0}/xml{1}", finalPart, treeParameter);
+
+            if (url.Contains("/view/") && finalPart.StartsWith("/"))
+            {
+                url = url.Substring(0, url.IndexOf("/view/"));
+                url += String.Format("{0}/xml{1}", EscapeUrl(finalPart), treeParameter);
+            }
+
+            Requester.Get(url, responseReceived);
+        }
+
+
+        private void GetText(string finalPart, Action<string> responseReceived)
+        {
+            var url = GetHttpBasicAuthUrl(Server, finalPart);
+            Requester.GetText(url, responseReceived);
+        }
+
+        #endregion
+    }
 }
