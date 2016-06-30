@@ -31,8 +31,9 @@ public class BuildronStatusBarController : StatusBarController
 	{
 		RemoteControlInfoLabel.enabled = false;
 		RemoteControlInfoImage.enabled = false;
+        OnBuildFilterUpdated();
 
-		Messenger.Register (
+        Messenger.Register (
 			gameObject, 
 			"OnRemoteControlConnected", 
 			"OnRemoteControlDisconnected",
