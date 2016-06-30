@@ -191,10 +191,6 @@ namespace Buildron.Domain.Users
 					}
 				});
 			}
-			else
-			{
-				photoReceived (null);
-			}
 		}
 
 		private void RaiseUserTriggeredBuildEvents (Type serviceSender, User user, IEnumerable<Build> triggeredBuilds)
