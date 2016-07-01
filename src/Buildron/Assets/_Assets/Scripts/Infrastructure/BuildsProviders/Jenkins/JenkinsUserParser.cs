@@ -13,7 +13,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 		private static Regex s_findTimerRegex = new Regex ("(Started by timer|Iniciado pelo temporizador)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 		#endregion
 
-		
+		#region Methods
 		public static User ParseUserFromBuildResponse (XmlDocument xmlDoc)
 		{
 			User user = null;
@@ -56,5 +56,6 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			
 			return user;
 		}
+		#endregion
 	}
 }
