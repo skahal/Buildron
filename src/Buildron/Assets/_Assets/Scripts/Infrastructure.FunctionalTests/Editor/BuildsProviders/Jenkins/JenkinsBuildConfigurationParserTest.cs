@@ -10,15 +10,16 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Buildron.Infrastructure.FunctionalTests.BuildsProviders.Filter
+namespace Buildron.Infrastructure.FunctionalTests.BuildsProviders.Jenkins
 {
 	[Category ("Buildron.Infrastructure")]	
+	[Category ("Unity")]	
 	public class JenkinsBuildConfigurationParserTest
 	{
 		[Test]
 		public void Parse_XmlDocument_BuildConfigurations ()
 		{       
-			var filename = Path.Combine (UnityEngine.Application.dataPath, @"_Assets/Scripts/Infrastructure.FunctionalTests/Editor/BuildsProviders/Jenkins/jenkins_depth2_response.xml");
+			var filename = Path.Combine (UnityEngine.Application.dataPath, @"_Assets/Scripts/Infrastructure.FunctionalTests/Editor/BuildsProviders/Jenkins/JenkinsBuildConfigurationParser.test.file.1.xml");
 			var doc = new XmlDocument ();
 			doc.Load (filename);
 
