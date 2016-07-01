@@ -236,7 +236,7 @@ public class BuildController : SHController<Build>
 			m_runningStatusIcon.sprite = BuildRunningIcons[(int)Model.LastRanStep.StepType];
 		}			
 		
-		m_runningStatusIcon.enabled = IsVisible || !hide;
+		m_runningStatusIcon.enabled = IsVisible && !hide;
 	}
 	
 	private void UpdateUserAvatar ()
