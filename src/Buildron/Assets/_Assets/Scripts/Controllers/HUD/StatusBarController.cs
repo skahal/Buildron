@@ -35,7 +35,7 @@ public class StatusBarController : MonoBehaviour {
 			label.text = text;
 		
 			if (secondsTimeout > 0) {
-				SHThread.Start (secondsTimeout, () => {
+				SHCoroutine.Start (secondsTimeout, () => {
 					if (label.text.Equals (text, System.StringComparison.OrdinalIgnoreCase)) {
 						label.text = string.Empty;
 					}

@@ -223,7 +223,7 @@ public class CameraController : MonoBehaviour, IInitializable
             if (server.Status == CIServerStatus.Down)
             {
                 // Wait a new refresh to show server is down effects.
-                SHThread.Start(
+                SHCoroutine.Start(
                     server.RefreshSeconds * 1.5f,
                     () =>
                     {
@@ -252,9 +252,9 @@ public class CameraController : MonoBehaviour, IInitializable
 			
 			StatusBarController.SetStatusText ("Today's builds history");
 			
-			SHThread.Start (2f, () => 
+			SHCoroutine.Start (2f, () => 
 			{
-				SHThread.Loop (1.5f, 0, histories.Length, (t) => 
+				SHCoroutine.Loop (1.5f, 0, histories.Length, (t) => 
 				{
 					if (m_serverService.GetState().IsShowingHistory) {
 						m_state = CameraState.ShowingHistory;
@@ -273,7 +273,7 @@ public class CameraController : MonoBehaviour, IInitializable
 		m_state = CameraState.GoingToBuilds;
 		StatusBarController.ClearStatusText ();
 		
-		SHThread.Start (3f, () => 
+		SHCoroutine.Start (3f, () => 
 		{
 			ChangeByBuilds ();
 		});

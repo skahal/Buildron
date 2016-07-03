@@ -209,7 +209,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
 			if (HasAutoStartArgument ())
 			{
-				SHThread.Start (10f, StartBuildron);
+				SHCoroutine.Start (10f, StartBuildron);
 			}
 		}
 	}

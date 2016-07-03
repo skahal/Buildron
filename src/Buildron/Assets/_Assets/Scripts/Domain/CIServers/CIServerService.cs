@@ -20,7 +20,7 @@ namespace Buildron.Domain.CIServers
         #endregion
 
         #region Fields
-        private IRepository<CIServer> m_repository;
+        private readonly IRepository<CIServer> m_repository;
         private CIServer m_currentServer;
         private IBuildsProvider m_buildsProvider;
         #endregion

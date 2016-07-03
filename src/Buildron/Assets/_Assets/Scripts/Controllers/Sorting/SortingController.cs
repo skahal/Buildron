@@ -47,10 +47,10 @@ public class SortingController : MonoBehaviour
 
 	private void PerformOnBuildSortUpdated ()
 	{
-		SHThread.Start (
+		SHCoroutine.Start (
 			1f, // This 1 second give the time to build physics activate when became visible because a filter sent from RC.
 			() => {
-				SHThread.WaitFor (
+				SHCoroutine.WaitFor (
 					() => {
 						var areAllSleeping = m_buildGOService.AreAllSleeping ();
 						m_log.Warning (

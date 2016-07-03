@@ -193,7 +193,7 @@ public class Requester : MonoBehaviour
 
 		// Timeout
 		bool hasTimeout = false;
-		SHThread.Start(
+		SHCoroutine.Start(
 			60, 
 			() =>
 			{
