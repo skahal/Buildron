@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Logging;
+using Skahal.Threading;
 
 namespace Buildron.Domain.UnitTests.CIServers
 {
@@ -20,21 +21,35 @@ namespace Buildron.Domain.UnitTests.CIServers
             ciServer.Status = CIServerStatus.Down;
             var repository = MockRepository.GenerateMock<IRepository<CIServer>>();
             repository.Expect(r => r.All()).Return((new CIServer[] { ciServer }).AsQueryable());
-            var target = new CIServerService(repository);
+
+			var startCount = 0;
+			var asyncActionProvider = MockRepository.GenerateMock<IAsyncActionProvider> ();
+			asyncActionProvider.Expect (a => a.Start (0, null)).IgnoreArguments ().WhenCalled (m => {
+				var delay = (float) m.Arguments[0];
+				var action = (Action) m.Arguments[1];
+				startCount++;
+
+				if (startCount > 1)
+				{
+					action();
+				}
+			});
+
+            var target = new CIServerService(repository, asyncActionProvider);
 
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
             target.Initialize(provider);
 
-            var statusChangedRaised = target.CreateAssert<CIServerStatusChangedEventArgs>("CIServerStatusChanged", 4);
+            var statusChangedRaised = target.CreateAssert<CIServerStatusChangedEventArgs>("CIServerStatusChanged", 3);
 
             provider.Raise(p => p.ServerUp += null, null, null);
             Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
 
             provider.Raise(p => p.ServerDown += null, null, null);
-            Assert.AreEqual(CIServerStatus.Down, target.GetCIServer().Status);
+			Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
 
             provider.Raise(p => p.ServerUp += null, null, null);
-            Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
+			Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
 
             provider.Raise(p => p.ServerDown += null, null, null);
             Assert.AreEqual(CIServerStatus.Down, target.GetCIServer().Status);
@@ -49,7 +64,7 @@ namespace Buildron.Domain.UnitTests.CIServers
             ciServer.Status = CIServerStatus.Down;
             var repository = MockRepository.GenerateMock<IRepository<CIServer>>();
             repository.Expect(r => r.All()).Return((new CIServer[] { ciServer }).AsQueryable());
-            var target = new CIServerService(repository);
+			var target = new CIServerService(repository, MockRepository.GenerateMock<IAsyncActionProvider>());
 
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
             provider.Expect(p => p.AuthenticateUser(null)).IgnoreArguments().WhenCalled(m =>
@@ -76,7 +91,7 @@ namespace Buildron.Domain.UnitTests.CIServers
             repository.Expect(r => r.All()).Return((new CIServer[0]).AsQueryable());
             repository.Expect(r => r.Create(ciServer)).Return(ciServer);
 
-            var target = new CIServerService(repository);
+			var target = new CIServerService(repository, MockRepository.GenerateMock<IAsyncActionProvider>());
             target.SaveCIServer(ciServer);
 
             Assert.AreEqual("new", ciServer.Title);
@@ -91,7 +106,7 @@ namespace Buildron.Domain.UnitTests.CIServers
             repository.Expect(r => r.All()).Return((new CIServer[] { ciServer } ).AsQueryable());
             repository.Expect(r => r.Modify(ciServer));
 
-            var target = new CIServerService(repository);
+			var target = new CIServerService(repository, MockRepository.GenerateMock<IAsyncActionProvider>());
             target.SaveCIServer(ciServer);
 
             Assert.AreEqual("old", ciServer.Title);

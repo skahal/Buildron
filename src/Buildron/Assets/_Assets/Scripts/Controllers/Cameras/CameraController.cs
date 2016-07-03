@@ -222,18 +222,8 @@ public class CameraController : MonoBehaviour, IInitializable
 
             if (server.Status == CIServerStatus.Down)
             {
-                // Wait a new refresh to show server is down effects.
-                SHCoroutine.Start(
-                    server.RefreshSeconds * 1.5f,
-                    () =>
-                    {
-                        // Still down? Show down effects.
-                        if (server.Status == CIServerStatus.Down)
-                        {
-                            m_serverDownBlurEffect.enabled = true;
-                            m_serverDownToneMappingEffect.enabled = true;
-                        }
-                    });
+            	m_serverDownBlurEffect.enabled = true;
+                 m_serverDownToneMappingEffect.enabled = true;
             }
             else
             {

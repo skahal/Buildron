@@ -19,19 +19,19 @@ using Buildron.Domain.CIServers;
 using Buildron.Domain.RemoteControls;
 using Buildron.Controllers;
 using Buildron.Domain.Servers;
+using Skahal.Threading;
 
 namespace Buildron.Infrastructure.IoC
 {
 	public class IoCInstaller : MonoInstaller
 	{
-		#region Editor properties
-
+		#region Properties
 		public Texture2D ScheduledTriggerAvatar;
 		public Texture2D RetryTriggerAvatar;
 		public Texture2D UnunknownAvatar;
-
 		#endregion
 
+		#region Methods
 		public override void InstallBindings ()
 		{
 			var log = InstallLog ();
@@ -65,6 +65,7 @@ namespace Buildron.Infrastructure.IoC
 
 		void InstallDomain ()
 		{
+			Container.Bind<IAsyncActionProvider> ().To<CoroutineAsyncActionProvider>();
 			Container.Bind<IVersionService> ().To<VersionService> ().AsSingle ();
             Container.BindInitializableService<IRemoteControlService, RemoteControlService>();
             Container.Bind<ICIServerService>().To<CIServerService>().AsSingle();
@@ -134,5 +135,6 @@ namespace Buildron.Infrastructure.IoC
 			Container.BindController<NotificationController>();
 			Container.BindController<ConfigPanelController> ();
 		}
+		#endregion
 	}
 }

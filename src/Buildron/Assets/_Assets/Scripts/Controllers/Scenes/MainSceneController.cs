@@ -15,10 +15,10 @@ using Buildron.Domain.RemoteControls;
 public class MainSceneController : MonoBehaviour, IInitializable
 {
 	#region Fields
+
 	private Queue<GameObject> m_buildsToDeploy = new Queue<GameObject> ();
 	private int m_deployedBuildsCount;
 	private bool m_isRefreshingBuilds;
-	private bool m_serverIsDown;
 
 	[Inject]
 	private IBuildService m_buildService;
@@ -31,9 +31,11 @@ public class MainSceneController : MonoBehaviour, IInitializable
 
 	[Inject]
 	private BuildGOService m_buildGOService { get; set; }
+
 	#endregion
 
 	#region Properties
+
 	public float DeployBuildSeconds = 0.5f;
 	public int MaxDeployedBuilds = 32;
 	public Vector3 FirstColumnDeployPosition = new Vector3 (-2.5f, 10, 0);
@@ -43,7 +45,7 @@ public class MainSceneController : MonoBehaviour, IInitializable
 	public Text LogMessageLabel;
 	public Text ServerIPLabel;
 	public InputField Title;
-	public float DelaySecondsUntilMarkAsServerIsDown = 10;
+
 	#endregion
 
 	#region Methods
@@ -123,13 +125,12 @@ public class MainSceneController : MonoBehaviour, IInitializable
 		{
 			if (args.Server.Status == CIServerStatus.Down)
 			{
-				StartCoroutine (DelayServerIsDown ());
-				m_serverIsDown = true;
 				m_isRefreshingBuilds = false;
-			} else
+				SetLogMessage ("{0} server is unavailable!", m_buildService.ServerName);
+				Messenger.Send ("OnServerDown");
+			}
+			else
 			{
-				m_serverIsDown = false;
-
 				if (m_buildService.BuildsCount != 0)
 				{
 					SetLogMessage ("");	
@@ -138,22 +139,6 @@ public class MainSceneController : MonoBehaviour, IInitializable
 		};
 	}
 
-	private IEnumerator DelayServerIsDown ()
-	{
-		// If server is already down, so there is another DelayServerIsDown in action.
-		if (!m_serverIsDown)
-		{
-			yield return new WaitForSeconds (DelaySecondsUntilMarkAsServerIsDown);
-			
-			// After the wait, the server still down?
-			if (m_serverIsDown)
-			{
-				m_isRefreshingBuilds = false;
-				SetLogMessage ("{0} server is unavailable!", m_buildService.ServerName);
-				Messenger.Send ("OnServerDown");
-			}
-		}
-	}
 	#endregion
 
 	#region Updates
@@ -182,7 +167,8 @@ public class MainSceneController : MonoBehaviour, IInitializable
 					SetLastUpdateMessage ("Last update\n{0:HH:mm:ss}", System.DateTime.Now);
 					UpdateServerIP ();
 				}
-			} catch (System.Exception ex)
+			}
+			catch (System.Exception ex)
 			{
 				m_isRefreshingBuilds = false;
 				var baseEx = ex.GetBaseException ();
