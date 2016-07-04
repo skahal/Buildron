@@ -25,7 +25,6 @@ namespace Buildron.Domain.UnitTests.CIServers
 			var startCount = 0;
 			var asyncActionProvider = MockRepository.GenerateMock<IAsyncActionProvider> ();
 			asyncActionProvider.Expect (a => a.Start (0, null)).IgnoreArguments ().WhenCalled (m => {
-				var delay = (float) m.Arguments[0];
 				var action = (Action) m.Arguments[1];
 				startCount++;
 

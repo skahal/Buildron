@@ -2,6 +2,11 @@
 using NUnit.Framework;
 using UnityEngine;
 using Buildron.Domain.Servers;
+using System.Reflection;
+using System.Runtime.Serialization;
+using Skahal.Serialization;
+using Buildron.Domain.Builds;
+using Buildron.Domain.Sorting;
 
 namespace Buildron.Domain.UnitTests.Server
 {
@@ -10,27 +15,26 @@ namespace Buildron.Domain.UnitTests.Server
     {
         [Test]
 		[Category("Unity")]
-		public void GetCameraPosition_State_Position()
+		public void Constructor_SerializationInfo_PropertiesLoaed()
         {
 			var target = new ServerState ();
-			target.CameraPositionX = 1;
-			target.CameraPositionY = 2;
-			target.CameraPositionZ = 3;
+			target.CameraPosition = new Vector3 (1.1f, 2.2f, 3.3f);
+			target.BuildFilter = new BuildFilter {
+				KeyWord = "teste"
+			};
+			target.BuildSortBy = SortBy.Text;
+			target.BuildSortingAlgorithmType = SortingAlgorithmType.Selection;
 
-			var actual = target.GetCameraPosition ();
-			Assert.AreEqual (new Vector3 (1, 2, 3), actual);
-        }
+			var bytes = SHSerializer.SerializeToBytes (target);
 
-		[Test]
-		[Category("Unity")]
-		public void SetCameraPosition_Position_State()
-		{
-			var target = new ServerState ();
-			target.SetCameraPosition (new Vector3 (1, 2, 3));
+			var actual = SHSerializer.DeserializeFromBytes<ServerState> (bytes);
+			Assert.AreEqual (1.1f, actual.CameraPosition.x);
+			Assert.AreEqual (2.2f, actual.CameraPosition.y);
+			Assert.AreEqual (3.3f, actual.CameraPosition.z);
 
-			Assert.AreEqual (1, target.CameraPositionX);
-			Assert.AreEqual (2, target.CameraPositionY);
-			Assert.AreEqual (3, target.CameraPositionZ);
+			Assert.AreEqual ("teste", actual.BuildFilter.KeyWord);
+			Assert.AreEqual (SortBy.Text, actual.BuildSortBy);
+			Assert.AreEqual (SortingAlgorithmType.Selection, actual.BuildSortingAlgorithmType);
 		}
     }
 }

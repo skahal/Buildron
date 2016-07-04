@@ -4,6 +4,7 @@ using Buildron.Domain;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Logging;
 using Skahal.Common;
+using UnityEngine;
 
 namespace Buildron.Domain.Servers
 {
@@ -34,9 +35,9 @@ namespace Buildron.Domain.Servers
 		public ServerService(IRepository<ServerState> repository, ISHLogStrategy log)
 	    {
 			m_log = log;
-		
 			m_repository = repository;
-			m_state = m_repository.All ().FirstOrDefault () ?? new ServerState ();
+			m_state = m_repository.All ().FirstOrDefault (s => !s.IsNew) ?? new ServerState ();
+
 			m_state.IsShowingHistory = false;
 			m_state.IsSorting = false;
 	    }
@@ -49,6 +50,11 @@ namespace Buildron.Domain.Servers
 		/// <param name="state">The state to save.></param>
 		public void SaveState(ServerState state)
 		{
+			if (state == null)
+			{
+				throw new ArgumentNullException ("state");
+			}
+
 			if (m_state.Id == 0)
 			{
 				m_log.Debug("Creating a new ServerState:");
@@ -56,7 +62,7 @@ namespace Buildron.Domain.Servers
 			}
 			else 
 			{
-				m_log.Debug("Updating an current ServerState:");
+				m_log.Warning("Updating an current ServerState: Z: {0}", m_state.CameraPosition.z);
 				state.Id = m_state.Id;
 				m_repository.Modify(state);
 			}

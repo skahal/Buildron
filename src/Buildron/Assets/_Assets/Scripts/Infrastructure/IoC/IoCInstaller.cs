@@ -134,6 +134,7 @@ namespace Buildron.Infrastructure.IoC
 			Container.Bind<IRemoteControlMessagesListener> ().FromInstance (listener);
 			Container.BindController<NotificationController>();
 			Container.BindController<ConfigPanelController> ();
+			Container.BindController<CameraController> ();
 		}
 		#endregion
 	}

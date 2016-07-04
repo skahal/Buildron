@@ -107,18 +107,25 @@ public class CameraController : MonoBehaviour, IInitializable
 
 	public void Initialize()
 	{
-		m_serverService.StateUpdated += (sender, e) => {
-			var cameraPosition = e.State.GetCameraPosition();            
-			m_log.Warning("Setting camera position to latest position: {0}", cameraPosition);
-			m_autoPosition = false;
-			m_originalPosition = cameraPosition;			
-		};
+		var serverState = m_serverService.GetState ();
+		m_originalPosition = serverState.CameraPosition;
+		m_log.Warning ("Setting camera position to latest position: {0}", serverState.Id);
 	}
 
 	private void OnCIServerReady ()
 	{
-		transform.position = m_originalPosition;
 		m_state = CameraState.ShowingBuilds;
+
+		if (m_originalPosition.z == 0)
+		{
+			transform.position = m_originalPosition;
+			OnResetCamera ();
+		}
+		else
+		{
+			m_targetPosition = m_originalPosition;
+			m_autoPosition = false;
+		}
 	}
 	
 	private IEnumerator AdjustCameraPosition ()
@@ -178,8 +185,6 @@ public class CameraController : MonoBehaviour, IInitializable
 			}
 		
 			m_lastVisiblesCount = currentVisiblesCount;
-
-            SaveServerState();
         }
 		
 		return m_originalPosition;
@@ -310,14 +315,17 @@ public class CameraController : MonoBehaviour, IInitializable
 	{
 		m_originalPosition = m_firstPosition;
 		m_autoPosition = true;
-        SaveServerState();
     }
 
     private void SaveServerState()
     {
 		var state = m_serverService.GetState ();
-		state.SetCameraPosition(m_originalPosition);
-        m_serverService.SaveState(state);
+
+		if (state.CameraPosition != m_originalPosition)
+		{
+			state.CameraPosition = m_originalPosition;
+			m_serverService.SaveState (state);
+		}
     }
 	#endregion
 }

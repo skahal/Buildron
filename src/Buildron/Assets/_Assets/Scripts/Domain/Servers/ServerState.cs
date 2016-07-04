@@ -3,6 +3,7 @@ using Buildron.Domain.Builds;
 using Buildron.Domain.Sorting;
 using Skahal.Infrastructure.Framework.Domain;
 using UnityEngine;
+using System.Runtime.Serialization;
 
 namespace Buildron.Domain.Servers
 {
@@ -10,8 +11,13 @@ namespace Buildron.Domain.Servers
 	/// Represents the current Buildron server state.
 	/// </summary>
 	[Serializable]
-	public sealed class ServerState : EntityBase, IAggregateRoot
+	public sealed class ServerState : EntityBase, IAggregateRoot, ISerializable
     {
+		#region Fields
+		[NonSerialized]
+		private Vector3 m_cameraPosition;
+		#endregion
+
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Servers.ServerState"/> class.
@@ -19,9 +25,20 @@ namespace Buildron.Domain.Servers
 		public ServerState ()
 		{
 			BuildFilter = new BuildFilter ();
-            CameraPositionX = 0.0f;
-            CameraPositionY = 3.6f;
-            CameraPositionZ = -19.1f;
+		}
+
+		protected ServerState(SerializationInfo info, StreamingContext context)
+		{
+			Id = info.GetInt32 ("Id");
+			var cameraPositionX = info.GetSingle("CameraPositionX");
+			var cameraPositionY= info.GetSingle("CameraPositionY");
+			var cameraPositionZ = info.GetSingle("CameraPositionZ");
+			m_cameraPosition = new Vector3 (cameraPositionX, cameraPositionY, cameraPositionZ);
+
+	
+			BuildFilter = (BuildFilter) info.GetValue ("BuildFilter", typeof(BuildFilter));
+			BuildSortBy = (SortBy) info.GetValue ("BuildSortBy", typeof(SortBy));
+			BuildSortingAlgorithmType = (SortingAlgorithmType) info.GetValue ("BuildSortingAlgorithmType", typeof(SortingAlgorithmType));
 		}
 		#endregion
 		
@@ -31,12 +48,6 @@ namespace Buildron.Domain.Servers
 		/// </summary>
 		/// <value>The build filter.</value>
 		public BuildFilter BuildFilter { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is sorting.
-		/// </summary>
-		/// <value><c>true</c> if this instance is sorting; otherwise, <c>false</c>.</value>
-		public bool IsSorting { get; set; }
 
 		/// <summary>
 		/// Gets or sets the build sort by.
@@ -51,6 +62,30 @@ namespace Buildron.Domain.Servers
 		public SortingAlgorithmType BuildSortingAlgorithmType { get; set; }
 
 		/// <summary>
+		/// Gets or sets the camera position.
+		/// </summary>
+		/// <value>The camera position.</value>
+		public Vector3 CameraPosition 
+		{
+			get
+			{
+				return m_cameraPosition;
+			}
+
+			set
+			{
+				m_cameraPosition = value;
+			}
+		}
+
+		#region Non stored properties
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is sorting.
+		/// </summary>
+		/// <value><c>true</c> if this instance is sorting; otherwise, <c>false</c>.</value>
+		public bool IsSorting { get; set; }
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this instance has history.
 		/// </summary>
 		/// <value><c>true</c> if this instance has history; otherwise, <c>false</c>.</value>
@@ -61,52 +96,26 @@ namespace Buildron.Domain.Servers
 		/// </summary>
 		/// <value><c>true</c> if this instance is showing history; otherwise, <c>false</c>.</value>
 		public bool IsShowingHistory { get; set; }
-
-        /// <summary>
-		/// Gets or sets the camera position X.
-		/// </summary>   
-		/// <value>The camera position X.</value>
-		public float CameraPositionX { get; set; }
-
-        /// <summary>
-		/// Gets or sets the camera position Y.
-		/// </summary>
-		/// <value>The camera position Y.</value>
-		public float CameraPositionY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the camera position Z.
-        /// </summary>
-        /// <value>The camera position Z.</value>
-        public float CameraPositionZ { get; set; }
+		#endregion
         #endregion
 
-        #region Methods        
-        /// <summary>
-        /// Gets the camera position.
-        /// </summary>
-        /// <remarks>
-        /// Vector3 is not serializable.
-        /// </remarks>
-        /// <returns>The camera position.</returns>
-        public Vector3 GetCameraPosition()
-        {
-            return new Vector3(CameraPositionX, CameraPositionY, CameraPositionZ);
-        }
+        #region Methods
+		/// <summary>
+		/// Gets the object data.
+		/// </summary>
+		/// <param name="info">Info.</param>
+		/// <param name="context">Context.</param>
+		public void GetObjectData (SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue ("Id", Id);
+			info.AddValue ("CameraPositionX", m_cameraPosition.x);
+			info.AddValue ("CameraPositionY", m_cameraPosition.y);
+			info.AddValue ("CameraPositionZ", m_cameraPosition.z);
 
-        /// <summary>
-        /// Sets the camera position.
-        /// </summary>
-        /// <remarks>
-        /// Vector3 is not serializable.
-        /// </remarks>
-        /// <param name="position">The position.</param>
-        public void SetCameraPosition(Vector3 position)
-        {
-            CameraPositionX = position.x;
-            CameraPositionY = position.y;
-            CameraPositionZ = position.z;
-        }
+			info.AddValue ("BuildFilter", BuildFilter);
+			info.AddValue ("BuildSortBy", BuildSortBy);
+			info.AddValue ("BuildSortingAlgorithmType", BuildSortingAlgorithmType);
+		}
         #endregion
     }
 }
