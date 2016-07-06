@@ -102,7 +102,11 @@ namespace Buildron.Application
         {
             foreach (var go in GetVisiblesOrderByPosition())
             {
-                go.GetComponent<Rigidbody>().isKinematic = true;
+                var rb = go.GetComponent<Rigidbody>();
+                rb.isKinematic = true;
+
+                // Allows build game object be moved on X and Y (sorting swap effect).
+                rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
             }
         }
 
@@ -113,7 +117,11 @@ namespace Buildron.Application
         {
             foreach (var go in GetVisiblesOrderByPosition())
             {
-                go.GetComponent<Rigidbody>().isKinematic = false;
+                var rb = go.GetComponent<Rigidbody>();
+                rb.isKinematic = false;
+
+                // Allows build game object be moved only Y (explosion effects).
+                rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
             }
         }
 
