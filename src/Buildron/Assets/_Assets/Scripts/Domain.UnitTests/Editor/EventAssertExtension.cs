@@ -1,16 +1,30 @@
 ﻿using System.Collections;
 using System;
 using NUnit.Framework;
+using System.Linq.Expressions;
 
 public static class EventAssertExtension 
 {
-	public static AssertRaised<TEventArgs> CreateAssert<TEventArgs>(this object instance, string eventName, int expectedRaiseCount)
-	{
+    public static AssertRaised<TEventArgs> CreateAssert<TEventArgs>(this object instance, string eventName, int expectedRaiseCount)
+	{        
 		var result = new AssertRaised<TEventArgs> (eventName, expectedRaiseCount);
 
 		var instanceType = instance.GetType ();
 		var e = instanceType.GetEvent (eventName);
-		e.AddEventHandler (instance, Delegate.CreateDelegate(e.EventHandlerType, result, "AddRaisedCount"));
+
+        if (e == null)
+        {
+            throw new ArgumentException("There is no event with name '{0}' on {1}.".With(eventName, instanceType.Name), "eventName");
+        }
+
+        try
+        {
+            e.AddEventHandler(instance, Delegate.CreateDelegate(e.EventHandlerType, result, "AddRaisedCount"));
+        }
+        catch(ArgumentException ex)
+        {
+            throw new ArgumentException("The '{0}' is not the expected argument to event '{1}'.".With(typeof(TEventArgs).Name, eventName), ex);
+        }
 		return result;
 	}
 
