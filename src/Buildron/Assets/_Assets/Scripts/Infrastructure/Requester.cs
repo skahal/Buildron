@@ -9,6 +9,8 @@ using Skahal.Common;
 using System.Collections.Generic;
 using Buildron.Infrastructure;
 using Skahal.Threading;
+using Buildron.Infrastructure.BuildsProviders;
+using System.Net;
 #endregion
 
 public class Requester : MonoBehaviour
@@ -61,7 +63,7 @@ public class Requester : MonoBehaviour
 		}
 	}
 
-	public void Get (string url, Action<XmlDocument> responseReceived, Action errorReceived = null)
+	public void Get (string url, Action<XmlDocument> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		m_requestsQueue.Enqueue (() =>
 			{
@@ -69,7 +71,7 @@ public class Requester : MonoBehaviour
 			});
 	}
 
-	public void GetImmediately (string url, Action<XmlDocument> responseReceived, Action errorReceived = null)
+	public void GetImmediately (string url, Action<XmlDocument> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		m_requestsImmediatelyQueue.Enqueue (() =>
 			{
@@ -78,7 +80,7 @@ public class Requester : MonoBehaviour
 	}
 
 
-	public void GetText (string url, Action<string> responseReceived, Action errorReceived = null)
+	public void GetText (string url, Action<string> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		m_requestsQueue.Enqueue (() =>
 			{
@@ -86,7 +88,7 @@ public class Requester : MonoBehaviour
 			});
 	}
 
-	public void PostText (string url, Dictionary<string,string> fields,  Action<string> responseReceived, Action errorReceived = null)
+	public void PostText (string url, Dictionary<string,string> fields,  Action<string> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		m_requestsQueue.Enqueue (() =>
 			{
@@ -94,14 +96,14 @@ public class Requester : MonoBehaviour
 			});
 	}
 
-	private IEnumerator DoPost (string url, Dictionary<string,string> fields, Action<string> responseReceived, Action errorReceived = null)
+	private IEnumerator DoPost (string url, Dictionary<string,string> fields, Action<string> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		return DoBasicGet (url, (response) => {
 			responseReceived (response.text);
 		}, errorReceived, fields);
 	}
 
-	public void GetTextImmediately (string url, Action<string> responseReceived, Action errorReceived = null)
+	public void GetTextImmediately (string url, Action<string> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		m_requestsImmediatelyQueue.Enqueue (() =>
 			{
@@ -126,7 +128,7 @@ public class Requester : MonoBehaviour
 			});
 	}
 
-	public void GetTexture (string url, Action<Texture2D> responseReceived, Action errorReceived = null)
+	public void GetTexture (string url, Action<Texture2D> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		m_requestsQueue.Enqueue (() =>
 			{
@@ -134,7 +136,7 @@ public class Requester : MonoBehaviour
 			});
 	}
 
-	private IEnumerator DoGet (string url, Action<XmlDocument> responseReceived, Action errorReceived = null)
+	private IEnumerator DoGet (string url, Action<XmlDocument> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		return DoBasicGet (url, (response) => {
 			var doc = new XmlDocument ();
@@ -143,14 +145,14 @@ public class Requester : MonoBehaviour
 		}, errorReceived);
 	}
 
-	private IEnumerator DoGet (string url, Action<string> responseReceived, Action errorReceived = null)
+	private IEnumerator DoGet (string url, Action<string> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		return DoBasicGet (url, (response) => {
 			responseReceived (response.text);
 		}, errorReceived);
 	}
 
-	private IEnumerator DoGet (string url, Action<Texture2D> responseReceived, Action errorReceived = null)
+	private IEnumerator DoGet (string url, Action<Texture2D> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		return DoBasicGet (url, (response) => {
 			responseReceived (response.texture);
@@ -163,7 +165,7 @@ public class Requester : MonoBehaviour
 		return DoBasicGet(url, responseReceived, null, null);
 	}
 
-	private IEnumerator DoBasicGet (string url, Action<WWW> responseReceived, Action errorReceived, Dictionary<string, string> fields = null)
+	private IEnumerator DoBasicGet (string url, Action<WWW> responseReceived, Action<RequestError> errorReceived, Dictionary<string, string> fields = null)
 	{
 		SHLog.Debug ("Requesting URL '{0}' on the server...", url);
 		WWW request;
@@ -219,7 +221,11 @@ public class Requester : MonoBehaviour
 		{
 			if (errorReceived != null)
 			{
-				errorReceived();
+				errorReceived(new RequestError
+                {
+                    Message = "Timeout",
+                    StatusCode = HttpStatusCode.RequestTimeout
+                });
 			}
 			else
 			{
@@ -252,12 +258,20 @@ public class Requester : MonoBehaviour
 			}
 			else {
 				SHLog.Warning("Error from server to URL '{0}': {1}", url, request.error);
+                var errorMsg = request.error ?? request.text ?? string.Empty;
+                var statusCode = errorMsg.Contains("404 Not Found") || errorMsg.Contains("Status Code: 404")
+                    ? HttpStatusCode.NotFound
+                    : HttpStatusCode.BadRequest;
 
-				if (errorReceived != null)
+                if (errorReceived != null)
 				{
-					errorReceived();
+					errorReceived(new RequestError
+                    {
+                        Message = errorMsg,
+                        StatusCode = statusCode
+                    });
 				}
-				else if (request.error == null || (!request.error.Contains("404 Not Found") && !request.text.Contains("Status Code: 404")))
+				else if (statusCode != HttpStatusCode.NotFound)
 				{
 					SHLog.Warning("Error requesting URL '{0}': {1}", url, request.error == null ? status : request.error);
 					GetFailed.Raise(this, new RequestFailedEventArgs(url));

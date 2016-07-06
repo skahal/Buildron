@@ -137,7 +137,7 @@ namespace Buildron.Infrastructure.BuildsProvider
                 m_currentUpdatedBuildIds.Add(build.Id);
             }
 
-            if (CurrentBuildsFoundCount == m_currentUpdatedBuildIds.Count)
+			if (m_currentUpdatedBuildIds.Count >= CurrentBuildsFoundCount)
             {
                 OnBuildsRefreshed();
             }

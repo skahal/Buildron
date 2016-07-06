@@ -43,7 +43,7 @@ namespace Buildron.Infrastructure.UserAvatarProviders
 									SetCache (cacheKey, photo);
 									photoReceived (photo);
 								},
-								() => {
+								(e) => {
 									// Error.
 									SetCache (cacheKey, null);
 									photoReceived (null);

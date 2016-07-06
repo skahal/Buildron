@@ -5,6 +5,8 @@ using Skahal.Logging;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 using Buildron.Domain.CIServers;
+using Buildron.Infrastructure.BuildsProviders;
+using System.Net;
 
 namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 {
@@ -36,8 +38,8 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 				{
 					// Gets the build.
 					Get ((buildResponse) => 
-					{
-						var build = BuildParser.Parse (config, buildResponse);
+					{                        
+                        var build = BuildParser.Parse (config, buildResponse);
 						
 						if (!build.IsRunning && queuedBuildConfigurationsId.Contains (build.Configuration.Id)) {
 							build.Status = BuildStatus.Queued;
@@ -74,16 +76,24 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 
 										GetUser (UserParser.ParseUserName (usernameNode.Attributes ["username"].Value), build, raiseBuildUpdated);
 										
-									}, raiseBuildUpdated, "changes/id:{0}", changeNode.Attributes ["id"].Value);
+									}, (e) => raiseBuildUpdated(), "changes/id:{0}", changeNode.Attributes ["id"].Value);
 								}
 								
-							}, raiseBuildUpdated, "changes?build=id:{0}", build.Id);
+							}, (e) => raiseBuildUpdated(), "changes?build=id:{0}", build.Id);
 							
 						} else {
 							GetUser (build.TriggeredBy.UserName, build, raiseBuildUpdated);
 						}
 						
-					}, "buildTypes/id:{0}/builds/running:any,canceled:false", config.Id);
+					},
+                    (e) =>
+                    {
+						if(e.StatusCode == HttpStatusCode.NotFound)
+						{
+                        	SHLog.Debug("Looks like '{0}' has no build.", config.Id);
+                       		CurrentBuildsFoundCount--;
+						}
+                    },"buildTypes/id:{0}/builds/running:any,canceled:false", config.Id);
 				});
 			});
 		}
@@ -95,7 +105,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 				{
 					build.TriggeredBy = UserParser.ParseFromUser (build, userResponse);
 					raiseBuildUpdated ();
-				}, raiseBuildUpdated, "users/username:{0}", userName);	
+				}, (e) => raiseBuildUpdated(), "users/username:{0}", userName);	
 			} else {
 				raiseBuildUpdated();
 			}
@@ -125,7 +135,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			{
 				OnUserAuthenticationSuccessful ();
 			},
-			() => 
+			(e) => 
 			{
 				OnUserAuthenticationFailed();
 			});
@@ -172,7 +182,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			});
 		}
 		
-		private void Get (Action<XmlDocument> responseReceived, Action errorReceived, string urlEndPart, params object[] args)
+		private void Get (Action<XmlDocument> responseReceived, Action<RequestError> errorReceived, string urlEndPart, params object[] args)
 		{
 			Requester.Get (GetUrl (urlEndPart, args), (xml) =>
 			{

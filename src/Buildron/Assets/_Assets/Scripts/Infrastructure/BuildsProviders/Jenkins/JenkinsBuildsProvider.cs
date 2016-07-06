@@ -139,7 +139,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
                 {
                     OnUserAuthenticationSuccessful();
                 },
-                () =>
+                (e) =>
                 {
                     OnUserAuthenticationFailed();
                 });
