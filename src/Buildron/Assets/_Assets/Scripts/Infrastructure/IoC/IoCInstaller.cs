@@ -135,7 +135,8 @@ namespace Buildron.Infrastructure.IoC
 			Container.BindController<NotificationController>();
 			Container.BindController<ConfigPanelController> ();
 			Container.BindController<CameraController> ();
-		}
+            Container.BindController<MainSceneController>();
+        }
 		#endregion
 	}
 }
