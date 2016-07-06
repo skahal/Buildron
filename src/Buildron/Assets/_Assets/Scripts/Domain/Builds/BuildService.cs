@@ -40,8 +40,7 @@ namespace Buildron.Domain.Builds
 		#region Fields
 		private IBuildsProvider m_buildsProvider;
 		private ISHLogStrategy m_log;
-		private List<string> m_buildConfigurationIdsRefreshed;
-		private List<Build> m_builds;
+		private List<string> m_buildConfigurationIdsRefreshed;		
 		private List<Build> m_buildsFoundInLastRefresh;		
 		#endregion
 
@@ -54,26 +53,19 @@ namespace Buildron.Domain.Builds
 		{
 			m_log = log;
 		}
-		#endregion
+        #endregion
 
-		#region Properties
-		/// <summary>
-		/// Gets the builds count.
-		/// </summary>
-		/// <value>The builds count.</value>
-		public int BuildsCount
-		{ 
-			get
-			{
-				return m_builds.Count;
-			}
-		}
+        #region Properties		        
+        /// <summary>
+        /// Gets the builds.
+        /// </summary>
+        public IList<Build> Builds { get; private set; }
 
-		/// <summary>
-		/// Gets the name of the server.
-		/// </summary>
-		/// <value>The name of the server.</value>
-		public string ServerName
+        /// <summary>
+        /// Gets the name of the server.
+        /// </summary>
+        /// <value>The name of the server.</value>
+        public string ServerName
 		{
 			get
 			{
@@ -90,7 +82,7 @@ namespace Buildron.Domain.Builds
 		public void Initialize (IBuildsProvider buildsProvider)
 		{
 			m_buildConfigurationIdsRefreshed = new List<string> ();
-			m_builds = new List<Build> ();
+			Builds = new List<Build> ();
 			m_buildsFoundInLastRefresh = new List<Build> ();
 			m_buildsProvider = buildsProvider;
 			
@@ -99,12 +91,12 @@ namespace Buildron.Domain.Builds
 				var newBuild = e.Build;
 
 				m_buildConfigurationIdsRefreshed.Add (newBuild.Configuration.Id);
-				var oldBuild = m_builds.FirstOrDefault (bld => bld.Configuration.Id.Equals (newBuild.Configuration.Id));
+				var oldBuild = Builds.FirstOrDefault (bld => bld.Configuration.Id.Equals (newBuild.Configuration.Id));
 			
 				if (oldBuild == null)
 				{
 					m_log.Debug ("BuildService.BuildUpdated: new build {0}", newBuild.Id);
-					m_builds.Add (newBuild);
+					Builds.Add (newBuild);
 					m_buildsFoundInLastRefresh.Add (newBuild);
 					BuildFound.Raise (this, new BuildFoundEventArgs (newBuild));
 				} else
@@ -131,17 +123,17 @@ namespace Buildron.Domain.Builds
 			m_buildsProvider.BuildsRefreshed += delegate
 			{
 
-				var removedBuilds = m_builds.Where (b => !m_buildConfigurationIdsRefreshed.Any (configId => b.Configuration.Id.Equals (configId))).ToList ();
+				var removedBuilds = Builds.Where (b => !m_buildConfigurationIdsRefreshed.Any (configId => b.Configuration.Id.Equals (configId))).ToList ();
 
-				m_log.Warning ("BuildService.BuildsRefreshed: there is {0} builds and {1} were refreshed. {2} will be removed", m_builds.Count, m_buildConfigurationIdsRefreshed.Count, removedBuilds.Count);
+				m_log.Warning ("BuildService.BuildsRefreshed: there is {0} builds and {1} were refreshed. {2} will be removed", Builds.Count, m_buildConfigurationIdsRefreshed.Count, removedBuilds.Count);
 
 				foreach (var build in removedBuilds)
 				{
-					m_builds.Remove (build);
+					Builds.Remove (build);
 					BuildRemoved.Raise (this, new BuildRemovedEventArgs (build));
 				}
 
-				var buildsStatusChanged = m_builds.Where (b => b.PreviousStatus != BuildStatus.Unknown && b.PreviousStatus != b.Status).ToList ();
+				var buildsStatusChanged = Builds.Where (b => b.PreviousStatus != BuildStatus.Unknown && b.PreviousStatus != b.Status).ToList ();
 
 				m_buildConfigurationIdsRefreshed.Clear ();
 				BuildsRefreshed.Raise (this, new BuildsRefreshedEventArgs (buildsStatusChanged, m_buildsFoundInLastRefresh.ToList (), removedBuilds));
@@ -185,7 +177,7 @@ namespace Buildron.Domain.Builds
 		public Build GetMostRelevantBuildForUser (User user)
 		{
             var comparer = new BuildMostRelevantStatusComparer();
-            var userBuilds = m_builds
+            var userBuilds = Builds
                 .Where(b => b.TriggeredBy != null && b.TriggeredBy == user)
                 .OrderBy(b => b, comparer);
 
@@ -194,7 +186,7 @@ namespace Buildron.Domain.Builds
 
 		private void ExecuteBuildCommand (RemoteControl remoteControl, string buildId, Action<RemoteControl, Build> command)
 		{
-			var build = m_builds.FirstOrDefault (b => b.Id.Equals (buildId, StringComparison.OrdinalIgnoreCase));
+			var build = Builds.FirstOrDefault (b => b.Id.Equals (buildId, StringComparison.OrdinalIgnoreCase));
 
 			if (build == null)
             {

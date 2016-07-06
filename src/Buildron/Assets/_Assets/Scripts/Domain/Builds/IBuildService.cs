@@ -32,17 +32,16 @@ namespace Buildron.Domain.Builds
 		/// </summary>
         event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
 
-		/// <summary>
-		/// Gets the builds count.
-		/// </summary>
-		/// <value>The builds count.</value>
-		int BuildsCount { get; }
+        /// <summary>
+        /// Gets the builds.
+        /// </summary>
+        IList<Build> Builds { get; }
 
-		/// <summary>
-		/// Gets the name of the server.
-		/// </summary>
-		/// <value>The name of the server.</value>
-		string ServerName { get; }
+        /// <summary>
+        /// Gets the name of the server.
+        /// </summary>
+        /// <value>The name of the server.</value>
+        string ServerName { get; }
 
 		/// <summary>
 		/// Gets the most relevant build for user.
