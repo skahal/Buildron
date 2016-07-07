@@ -74,7 +74,7 @@ namespace Buildron.Domain.CIServers
 
 			m_buildsProvider.ServerDown += delegate
 			{
-				if (m_isDownAsyncAction == null)
+				if (m_isDownAsyncAction == null && ciServer.Status != CIServerStatus.Down)
 				{
 					// Wait a new refresh to check if server is really down.
 					m_isDownAsyncAction = m_asyncActionProvider.Start (
@@ -96,8 +96,11 @@ namespace Buildron.Domain.CIServers
 					m_isDownAsyncAction = null;
 				}
 
-				ciServer.Status = CIServerStatus.Up;
-				CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs (ciServer));
+				if (ciServer.Status != CIServerStatus.Up)
+				{
+					ciServer.Status = CIServerStatus.Up;
+					CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs (ciServer));
+				}
 			};
 
 			m_buildsProvider.UserAuthenticationSuccessful += delegate
