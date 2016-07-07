@@ -140,6 +140,15 @@ namespace Buildron.Domain.Users
             return "{0}_{1}_{2}".With(UserName, Name, Email).CompareTo("{0}_{1}_{2}".With(other.UserName, other.Name, other.Email));
         }
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.Users.User"/>.
+		/// </summary>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.Users.User"/>.</returns>
+		public override string ToString ()
+		{
+			return UserName;
+		}
+
         /// <summary>
         /// Implements the operator ==.
         /// </summary>

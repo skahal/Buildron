@@ -14,5 +14,14 @@ namespace Buildron.Domain.RemoteControls
 		/// </summary>
 		/// <value><c>true</c> if connected; otherwise, <c>false</c>.</value>
         public bool Connected { get; set; }
+
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.RemoteControls.RemoteControl"/>.
+		/// </summary>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="Buildron.Domain.RemoteControls.RemoteControl"/>.</returns>
+		public override string ToString ()
+		{
+			return string.Format ("{0} ({1})", UserName, Connected ? "connected" : "disconnected");
+		}
 	}
 }
