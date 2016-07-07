@@ -174,7 +174,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <returns>The most relevant build for user.</returns>
 		/// <param name="user">User.</param>
-		public IBuild GetMostRelevantBuildForUser (User user)
+		public IBuild GetMostRelevantBuildForUser (IUser user)
 		{
             var comparer = new BuildMostRelevantStatusComparer();
             var userBuilds = Builds

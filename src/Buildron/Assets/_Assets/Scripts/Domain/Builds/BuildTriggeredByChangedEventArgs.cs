@@ -13,7 +13,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="build">Build.</param>
 		/// <param name="previousTriggeredBy">Previous triggered by.</param>
-		public BuildTriggeredByChangedEventArgs(IBuild build, User previousTriggeredBy)
+		public BuildTriggeredByChangedEventArgs(IBuild build, IUser previousTriggeredBy)
 			: base (build)
 		{
 			PreviousTriggeredBy = previousTriggeredBy;
@@ -24,7 +24,7 @@ namespace Buildron.Domain.Builds
         /// <summary>
         /// Gets the previous triggered by.
         /// </summary>
-		public User PreviousTriggeredBy { get; private set; }
+		public IUser PreviousTriggeredBy { get; private set; }
 		#endregion
 	}
 }

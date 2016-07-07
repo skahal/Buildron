@@ -15,7 +15,7 @@ public class UserController : MonoBehaviour, IInitializable
     private Vector3 m_targetPosition;
     private bool m_canWalk;
     private bool m_canAnimate;
-    private User m_data;
+    private IUser m_data;
     private Vector3 m_spawnPosition;
     private bool m_alreadyAwake;
     private GameObject m_body;
@@ -36,7 +36,7 @@ public class UserController : MonoBehaviour, IInitializable
 	[Inject]
 	public IUserService UserService { get; set; }
 
-    public User Data
+    public IUser Data
     {
         get
         {
@@ -158,12 +158,12 @@ public class UserController : MonoBehaviour, IInitializable
 
     #region Methods
 
-    public static bool ExistsGameObject(User buildUser)
+    public static bool ExistsGameObject(IUser buildUser)
     {
         return GameObject.Find(buildUser.UserName) != null;
     }
 
-    public static GameObject GetGameObject(User buildUser)
+    public static GameObject GetGameObject(IUser buildUser)
     {
         return GetGameObject(buildUser.UserName);
     }
@@ -178,7 +178,7 @@ public class UserController : MonoBehaviour, IInitializable
         return GameObject.FindGameObjectsWithTag("User");
     }
 
-    public static GameObject CreateGameObject(User buildUser, Factory factory)
+    public static GameObject CreateGameObject(IUser buildUser, Factory factory)
     {
         var go = GameObject.Find(buildUser.UserName);
 

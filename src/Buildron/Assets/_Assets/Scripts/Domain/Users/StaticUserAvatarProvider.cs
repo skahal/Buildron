@@ -21,7 +21,7 @@ namespace Buildron.Domain.Users
 		/// </summary>
 		/// <param name="user">The user.</param>
 		/// <param name="photoReceived">The photo received callback.</param>
-		public void GetUserPhoto (User user, Action<Texture2D> photoReceived)
+		public void GetUserPhoto (IUser user, Action<Texture2D> photoReceived)
 		{
 			if (user == null)
 			{

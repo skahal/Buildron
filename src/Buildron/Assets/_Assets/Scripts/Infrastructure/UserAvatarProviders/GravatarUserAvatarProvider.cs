@@ -14,7 +14,7 @@ namespace Buildron.Infrastructure.UserAvatarProviders
 		/// </summary>
 		/// <param name="user">The user.</param>
 		/// <returns>The url to get the image.</returns>
-        protected override string BuildImageUrl(User user)
+        protected override string BuildImageUrl(IUser user)
         {
 			var email = user.Email;
 

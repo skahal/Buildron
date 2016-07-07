@@ -33,7 +33,7 @@ namespace Buildron.Domain.Builds
 
         #region Fields
         private BuildStatus m_status;
-        private User m_triggeredBy;
+        private IUser m_triggeredBy;
         private static int s_instancesCount;
         private DateTime m_lockCurrentStatusUntil = DateTime.Now;
         #endregion
@@ -194,7 +194,7 @@ namespace Buildron.Domain.Builds
         /// <summary>
         /// Gets or sets the user that triggered the build.
         /// </summary>
-        public User TriggeredBy
+        public IUser TriggeredBy
         {
             get
             {

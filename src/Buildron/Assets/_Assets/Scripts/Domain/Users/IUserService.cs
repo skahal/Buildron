@@ -40,7 +40,7 @@ namespace Buildron.Domain.Users
 		/// Gets the users.
 		/// </summary>
 		/// <value>The users.</value>
-		IList<User> Users { get; }
+		IList<IUser> Users { get; }
 
 
 		/// <summary>
@@ -54,6 +54,6 @@ namespace Buildron.Domain.Users
 		/// </summary>
 		/// <param name="user">User.</param>
 		/// <param name="photoReceived">Photo received.</param>
-        void GetUserPhoto(User user, Action<Texture2D> photoReceived);
+        void GetUserPhoto(IUser user, Action<Texture2D> photoReceived);
     }
 }

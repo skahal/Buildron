@@ -25,7 +25,7 @@ public class UserAnimationController : MonoBehaviour {
 	#endregion
 	
 	#region Properties
-	public User Data { get; set; }
+	public IUser Data { get; set; }
 	public string SuccessAnimation = "ledgeFall";
 	public string RunningAnimation = "idle";
 	public string FailedAnimation = "gotHit";

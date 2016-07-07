@@ -12,7 +12,7 @@ namespace Buildron.Domain.Users
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.UserEventArgsBase"/> class.
 		/// </summary>
 		/// <param name="user">The user.</param>
-		protected UserEventArgsBase(User user)
+		protected UserEventArgsBase(IUser user)
 		{
 			User = user;
 		}
@@ -22,7 +22,7 @@ namespace Buildron.Domain.Users
         /// <summary>
         /// Gets the user.
         /// </summary>
-		public User User { get; private set; }
+		public IUser User { get; private set; }
 		#endregion
 	}
 }

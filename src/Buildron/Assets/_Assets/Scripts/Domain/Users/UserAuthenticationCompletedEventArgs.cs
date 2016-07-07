@@ -11,7 +11,7 @@ namespace Buildron.Domain.Users
 		/// </summary>
 		/// <param name="user">User.</param>
 		/// <param name="success">If set to <c>true</c> success.</param>
-		public UserAuthenticationCompletedEventArgs(User user, bool success) 
+		public UserAuthenticationCompletedEventArgs(IUser user, bool success) 
 			: base (user)
 		{
             Success = success;

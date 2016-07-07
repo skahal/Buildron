@@ -59,7 +59,7 @@ namespace Buildron.Domain.Users
 			IUserAvatarProvider[] nonHumanAvatarProviders,
 			ISHLogStrategy log)
 		{
-			Users = new List<User> ();
+			Users = new List<IUser> ();
 
 			// Use a StaticUserAvatarProvier as a cached user avatar providers.
 			m_userAvatarCache = new StaticUserAvatarProvider ();
@@ -77,7 +77,7 @@ namespace Buildron.Domain.Users
 		/// <summary>
 		/// Gets the users.
 		/// </summary>
-		public IList<User> Users { get; private set; }
+		public IList<IUser> Users { get; private set; }
 		#endregion
 
 		#region Methods
@@ -88,7 +88,7 @@ namespace Buildron.Domain.Users
 		public void Initialize (IBuildsProvider buildsProvider)
 		{
 			var serviceSender = typeof(UserService);
-			var usersInLastBuildsUpdate = new List<User> ();
+			var usersInLastBuildsUpdate = new List<IUser> ();
 		
 			buildsProvider.BuildUpdated += (sender, e) =>
 			{
@@ -151,7 +151,7 @@ namespace Buildron.Domain.Users
 		/// </summary>
 		/// <param name="user">User.</param>
 		/// <param name="photoReceived">Photo received callback.</param>
-		public void GetUserPhoto (User user, Action<Texture2D> photoReceived)
+		public void GetUserPhoto (IUser user, Action<Texture2D> photoReceived)
 		{
 			if (user != null)
 			{
@@ -166,7 +166,7 @@ namespace Buildron.Domain.Users
 			}
 		}
 
-		private void GetUserPhoto (User user, Action<Texture2D> photoReceived, IList<IUserAvatarProvider> providersChain, int providerStartIndex = 0)
+		private void GetUserPhoto (IUser user, Action<Texture2D> photoReceived, IList<IUserAvatarProvider> providersChain, int providerStartIndex = 0)
 		{
 			if (providerStartIndex < providersChain.Count)
 			{
@@ -193,7 +193,7 @@ namespace Buildron.Domain.Users
 			}
 		}
 
-		private void RaiseUserTriggeredBuildEvents (Type serviceSender, User user, IEnumerable<IBuild> triggeredBuilds)
+		private void RaiseUserTriggeredBuildEvents (Type serviceSender, IUser user, IEnumerable<IBuild> triggeredBuilds)
 		{
 			foreach (var build in triggeredBuilds)
 			{

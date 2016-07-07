@@ -66,7 +66,7 @@ namespace Buildron.Domain.Mods
             }
         }
 
-        public IList<User> Users
+        public IList<IUser> Users
         {
             get
             {

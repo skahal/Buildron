@@ -98,7 +98,7 @@ namespace Buildron.Domain.Builds
         BuildStatus PreviousStatus { get; }
 		int Sequence { get; set;}
 		BuildStatus Status { get; set;}
-		User TriggeredBy { get; set;}
+		IUser TriggeredBy { get; set;}
 
         int CompareTo(IBuild other);
 

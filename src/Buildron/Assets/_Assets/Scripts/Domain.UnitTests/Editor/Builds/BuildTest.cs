@@ -203,7 +203,7 @@ namespace Buildron.Domain.UnitTests.Builds
             Build build2 = null;
             var build3 = new Build { Configuration = new BuildConfiguration { Name = "C0", Project = new BuildProject { Name = "P1" } } };
 
-            var builds = new Build[] { build1, build2, build3 };
+            var builds = new IBuild[] { build1, build2, build3 };
             Array.Sort(builds);
 
             Assert.AreEqual(build2, builds[0]);

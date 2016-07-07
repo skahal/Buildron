@@ -9,7 +9,7 @@ using Buildron.Domain.Users;
 public static class UserParser
 {
 	#region Fields
-	public static Dictionary<string, User> s_buildUsers = new Dictionary<string, User>();
+	public static Dictionary<string, IUser> s_buildUsers = new Dictionary<string, IUser>();
 	#endregion
 	
 	#region Methods
@@ -24,9 +24,9 @@ public static class UserParser
 	/// <param name='xmlDoc'>
 	/// Xml document.
 	/// </param>
-	public static User ParseFromTriggered (Build build, XmlDocument xmlDoc)
+	public static IUser ParseFromTriggered (Build build, XmlDocument xmlDoc)
 	{
-		User user = null;
+		IUser user = null;
 		var triggeredNode = xmlDoc.SelectSingleNode ("build/triggered");
 		var userNode = triggeredNode.SelectSingleNode ("user");
 		
@@ -94,9 +94,9 @@ public static class UserParser
 		}
 	}
 	
-	public static User ParseFromUser (Build build, XmlDocument xmlDoc)
+	public static IUser ParseFromUser (Build build, XmlDocument xmlDoc)
 	{
-		User user = null;
+		IUser user = null;
 		var userNode = xmlDoc.SelectSingleNode ("user");
 		
 		if (userNode != null) {

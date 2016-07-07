@@ -6,33 +6,11 @@ using Buildron.Domain.Builds;
 
 namespace Buildron.Domain.Users
 {
-	#region Enums
-	/// <summary>
-	/// User kind.
-	/// </summary>
-	public enum UserKind {
-		/// <summary>
-		/// A human user.
-		/// </summary>
-		Human,
-		
-		/// <summary>
-		/// A scheduled trigger user.
-		/// </summary>
-		ScheduledTrigger,
-		
-		/// <summary>
-		/// A retry trigger user.
-		/// </summary>
-		RetryTrigger
-	}
-    #endregion
-
     /// <summary>
     /// Defines a user that trigger a build.
     /// </summary>
     [DebuggerDisplay("{UserName}")]
-    public class User : IEquatable<User>, IComparable<User>
+    public class User : IUser
     {
 		#region Constructors
 		/// <summary>
@@ -97,7 +75,7 @@ namespace Buildron.Domain.Users
 		/// <param name="other">The <see cref="Buildron.Domain.Users.User"/> to compare with the current <see cref="Buildron.Domain.Users.User"/>.</param>
 		/// <returns><c>true</c> if the specified <see cref="Buildron.Domain.Users.User"/> is equal to the current
 		/// <see cref="Buildron.Domain.Users.User"/>; otherwise, <c>false</c>.</returns>
-        public bool Equals(User other)
+        public bool Equals(IUser other)
         {
             return other != null && other.UserName.Equals(UserName, StringComparison.Ordinal);
         }
@@ -111,7 +89,7 @@ namespace Buildron.Domain.Users
         /// </returns>
         public override bool Equals(object obj)
         {            
-            return Equals(obj as User);
+            return Equals(obj as IUser);
         }
 
         /// <summary>
@@ -130,7 +108,7 @@ namespace Buildron.Domain.Users
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns></returns>
-        public int CompareTo(User other)
+        public int CompareTo(IUser other)
         {
             if (other == null)
             {

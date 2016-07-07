@@ -141,7 +141,7 @@ namespace Buildron.Domain.UnitTests.Users
 				.IgnoreArguments ()
 				.WhenCalled (m =>
 			{
-					var user = m.Arguments[0] as User;
+					var user = m.Arguments[0] as IUser;
 					var action = m.Arguments[1] as Action<Texture2D>;
 
 					if(user == user1) 
@@ -160,7 +160,7 @@ namespace Buildron.Domain.UnitTests.Users
 				.IgnoreArguments ()
 				.WhenCalled (m =>
 				{
-					var user = m.Arguments[0] as User;
+					var user = m.Arguments[0] as IUser;
 					var action = m.Arguments[1] as Action<Texture2D>;
 
 					if(user == user1) 

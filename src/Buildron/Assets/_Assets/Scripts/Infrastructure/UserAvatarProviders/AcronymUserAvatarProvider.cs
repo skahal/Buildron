@@ -8,7 +8,7 @@ namespace Buildron.Infrastructure.UserAvatarProviders
     /// </summary>
     public class AcronymUserAvatarProvider : WebUserAvatarProviderBase
     {
-        protected override string BuildImageUrl(User user)
+        protected override string BuildImageUrl(IUser user)
         {
             var acronym = user.Name.ToAcronym();
 			var backgroundColor = (user.Name.GetHashCode () & 0x00FFFFFF).ToString ().ToUpperInvariant ();

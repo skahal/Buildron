@@ -10,7 +10,7 @@ namespace Buildron.Domain.Users
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.UserFoundArgs"/> class.
 		/// </summary>
 		/// <param name="user">The user.</param>
-		public UserFoundEventArgs (User user)
+		public UserFoundEventArgs (IUser user)
 			: base (user)
 		{
 		}

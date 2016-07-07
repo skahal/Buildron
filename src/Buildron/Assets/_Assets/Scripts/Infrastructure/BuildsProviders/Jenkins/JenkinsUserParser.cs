@@ -14,9 +14,9 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 		#endregion
 
 		#region Methods
-		public static User ParseUserFromBuildResponse (XmlDocument xmlDoc)
+		public static IUser ParseUserFromBuildResponse (XmlDocument xmlDoc)
 		{
-			User user = null;
+			IUser user = null;
 			var userNode = xmlDoc.SelectSingleNode ("//action/cause/userName");
 			
 			if (userNode == null) {
@@ -42,7 +42,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			return user;
 		}
 		
-		public static User ParseUserFromUserResponse (XmlDocument xmlDoc)
+		public static IUser ParseUserFromUserResponse (XmlDocument xmlDoc)
 		{
 			var user = new User ();
 			user.UserName = xmlDoc.SelectSingleNode ("//user/id").InnerText;

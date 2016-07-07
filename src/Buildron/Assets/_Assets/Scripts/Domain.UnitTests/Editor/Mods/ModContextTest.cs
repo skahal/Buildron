@@ -150,7 +150,7 @@ namespace Buildron.Domain.UnitTests.Builds
         [Test]
         public void Users_UserService_SameValues()
         {
-            var users = new List<User>();
+            var users = new List<IUser>();
             m_userService.Expect(u => u.Users).Return(users);
 
             Assert.AreSame(users, m_target.Users);

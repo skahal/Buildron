@@ -16,7 +16,7 @@ namespace Buildron.Infrastructure.UserAvatarProviders
 		#endregion
 		
 		#region Methods
-		public void GetUserPhoto (User user, Action<Texture2D> photoReceived)
+		public void GetUserPhoto (IUser user, Action<Texture2D> photoReceived)
 		{
 			if (user == null) {
 				return;
@@ -59,7 +59,7 @@ namespace Buildron.Infrastructure.UserAvatarProviders
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns>The url to get the image.</returns>
-        protected abstract string BuildImageUrl(User user);
+        protected abstract string BuildImageUrl(IUser user);
 
 		private void SetCache(string cacheKey, Texture2D photo)
 		{
