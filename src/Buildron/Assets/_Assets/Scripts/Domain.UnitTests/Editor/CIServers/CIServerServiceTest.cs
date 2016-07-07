@@ -39,7 +39,7 @@ namespace Buildron.Domain.UnitTests.CIServers
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
             target.Initialize(provider);
 
-            var statusChangedRaised = target.CreateAssert<CIServerStatusChangedEventArgs>("CIServerStatusChanged", 3);
+            var statusChangedRaised = target.CreateAssert<CIServerStatusChangedEventArgs>("CIServerStatusChanged", 2);
 
 			// Should raise ServerUp.
             provider.Raise(p => p.ServerUp += null, null, null);
@@ -53,10 +53,11 @@ namespace Buildron.Domain.UnitTests.CIServers
             provider.Raise(p => p.ServerUp += null, null, null);
 			Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
 
-			// Should raise ServerDown
+			// Should raise ServerDown, because isDownSyncAction already ran.
             provider.Raise(p => p.ServerDown += null, null, null);
             Assert.AreEqual(CIServerStatus.Down, target.GetCIServer().Status);
 
+			// Should not raise events, because is still down.
 			provider.Raise(p => p.ServerDown += null, null, null);
 			Assert.AreEqual(CIServerStatus.Down, target.GetCIServer().Status);
 
