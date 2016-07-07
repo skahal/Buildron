@@ -1,83 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Buildron.Domain.Mods;
 using Buildron.Domain.Users;
 
 namespace Buildron.Domain.Builds
 {
-    #region Enums    
-    /// <summary>
-    /// Build status.
-    /// </summary>
-    public enum BuildStatus
-    {
-        /// <summary>
-        /// Build is in an unknown status.
-        /// </summary>
-        Unknown = 0,
-
-        /// <summary>
-        /// Build has finish with success.
-        /// </summary>
-        Success,
-
-        /// <summary>
-        /// Build is in error status.
-        /// </summary>
-        Error,
-
-        /// <summary>
-        /// Build has failed
-        /// </summary>
-        Failed,
-
-        /// <summary>
-        /// Build has been canceled.
-        /// </summary>
-        Canceled,
-
-        /// <summary>
-        /// Build has been queued.
-        /// </summary>
-        Queued,
-
-        /// <summary>
-        /// Build is running.
-        /// </summary>
-        Running,
-
-        /// <summary>
-        /// Build is running unit tests.
-        /// </summary>
-		RunningUnitTests,
-
-        /// <summary>
-        /// Build is running functional tests.
-        /// </summary>
-		RunningFunctionalTests,
-
-        /// <summary>
-        /// Build is running duplicates finder.
-        /// </summary>
-		RunningDuplicatesFinder,
-
-        /// <summary>
-        /// Build is running code analysis.
-        /// </summary>
-		RunningCodeAnalysis,
-
-        /// <summary>
-        /// Build is running deploy.
-        /// </summary>
-		RunningDeploy
-    }
-    #endregion
-
     /// <summary>
     /// Represents a build in continuous integration server.
     /// </summary>
     [DebuggerDisplay("{Configuration.Project.Name} - {Configuration.Name}: {Status}")]
-    public sealed class Build : IComparable<Build>, ICloneable
+    public sealed class Build : IBuild
     {
         #region Constants        
         /// <summary>
@@ -147,7 +80,7 @@ namespace Buildron.Domain.Builds
 		/// Gets or sets the configuration.
 		/// </summary>
 		/// <value>The configuration.</value>
-        public BuildConfiguration Configuration { get; set; }
+        public IBuildConfiguration Configuration { get; set; }
 
         /// <summary>
         /// Gets or sets the status.
@@ -186,7 +119,7 @@ namespace Buildron.Domain.Builds
 		/// Gets or sets the last ran step.
 		/// </summary>
 		/// <value>The last ran step.</value>
-        public BuildStep LastRanStep { get; set; }
+        public IBuildStep LastRanStep { get; set; }
 
 		/// <summary>
 		/// Gets or sets the last change description.
@@ -301,7 +234,7 @@ namespace Buildron.Domain.Builds
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns></returns>
-        public int CompareTo(Build other)
+        public int CompareTo(IBuild other)
         {
             if (other == null)
             {
@@ -320,7 +253,7 @@ namespace Buildron.Domain.Builds
         /// <returns>The clone.</returns>
         public object Clone()
         {
-            var c = (Build)this.MemberwiseClone();
+            var c = (IBuild)this.MemberwiseClone();
 
             return c;
         }

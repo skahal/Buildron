@@ -7,6 +7,8 @@ using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
 using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Users;
+using UnityEngine;
+using System.Reflection;
 
 namespace Buildron.Domain.Mods
 {
@@ -26,7 +28,7 @@ namespace Buildron.Domain.Mods
 		public ModLoader(ISHLogStrategy log, IBuildService buildService, ICIServerService ciServerService, IRemoteControlService remoteControlService, IUserService userService)
 		{
 			m_originalLog = log;
-			m_log = new PrefixedLogStrategy (log, "ModLoader: ");
+			m_log = new PrefixedLogStrategy (log, "[MOD-LOADER] ");
 			m_buildService = buildService;
 			m_ciServerService = ciServerService;
 			m_remoteControlService = remoteControlService;
@@ -36,9 +38,42 @@ namespace Buildron.Domain.Mods
 
 		#region Methods
 		public void Initialize()
-		{
+		{           
 			m_log.Debug ("Initialization started...");
-			var modTypes = typeof(ModLoader).Assembly.GetTypes ().Where (t => !t.IsAbstract && typeof(IMod).IsAssignableFrom (t)).ToArray ();
+
+            ////var assetBundle = AssetBundle.LoadFromFile("/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/consolemod");
+            //var assetBundle = AssetBundle.LoadFromFile(@"C:\Dropbox\Skahal\Apps\Buildron\build\Mods\consolemod");
+
+            //m_log.Debug("{0} Assets loaded.", assetBundle.GetAllAssetNames().Length);
+
+
+            //// VER ISSO
+            //// https://docs.unity3d.com/Manual/scriptsinassetbundles.html
+            //// Fazer CreateModsAssetBundles criar a versão TextAsset .txt de todos os .cs da pasta do mod. 
+            //// Depois carregar pelo reflection.
+            //var assets = assetBundle.LoadAllAssets<TextAsset>();
+            //Assembly modAssembly = null;
+
+            // http://answers.unity3d.com/questions/259569/how-to-compile-script-to-include-it-to-assetbundle.html
+            // https://docs.unity3d.com/Manual/UsingDLL.html
+
+            //foreach(var txt in assets)
+            //{
+            //    m_log.Debug("Loading code from asset {0}...", txt.name);
+
+            //    try {
+            //        modAssembly = System.Reflection.Assembly.Load(txt.bytes);
+            //        m_log.Debug("Assembly {0} loaded.", modAssembly.FullName);
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        m_log.Warning("Error loading code from asset: {0}", ex.Message);
+            //    }
+            //}
+
+
+
+            var modTypes = typeof(ModLoader).Assembly.GetTypes ().Where (t => !t.IsAbstract && typeof(IMod).IsAssignableFrom (t)).ToArray ();
 			m_log.Debug ("Found {0} mods", modTypes.Length);
 
 			foreach (var modType in modTypes) 

@@ -13,7 +13,7 @@ namespace Buildron.Application
     /// <summary>
     /// Application service to handle with build game objects.
     /// </summary>
-    public class BuildGOService : GOServiceBase<Build, BuildController>
+    public class BuildGOService : GOServiceBase<IBuild, BuildController>
     {
 		#region Fields
 		private ISHLogStrategy m_log;
@@ -161,12 +161,12 @@ namespace Buildron.Application
 			}
 		}
 
-		protected override string GetName (Build model)
+		protected override string GetName (IBuild model)
 		{
 			return model.Id;
 		}
 
-		public override GameObject CreateGameObject (Build model)
+		public override GameObject CreateGameObject (IBuild model)
 		{
 			var go = GetGameObject(model);
 

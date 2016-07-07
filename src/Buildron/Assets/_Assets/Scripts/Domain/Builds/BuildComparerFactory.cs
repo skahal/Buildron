@@ -16,7 +16,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <returns>The comparer.</returns>
 		/// <param name="sortBy">Sort by.</param>
-		public static IComparer<Build> Create(SortBy sortBy)
+		public static IComparer<IBuild> Create(SortBy sortBy)
         {
             switch (sortBy)
             {

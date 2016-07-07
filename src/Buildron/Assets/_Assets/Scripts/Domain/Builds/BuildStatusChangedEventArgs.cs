@@ -13,7 +13,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="build">Build.</param>
 		/// <param name="previousStatus">Previous status.</param>
-		public BuildStatusChangedEventArgs(Build build, BuildStatus previousStatus)
+		public BuildStatusChangedEventArgs(IBuild build, BuildStatus previousStatus)
 			: base(build)
 		{
             PreviousStatus = previousStatus;

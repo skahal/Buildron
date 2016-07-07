@@ -40,7 +40,7 @@ namespace Buildron.Domain.UnitTests.Builds
         [Test]
         public void Builds_BuildService_SameValues()
         {
-            var builds = new List<Build>();
+            var builds = new List<IBuild>();
             m_buildService.Expect(u => u.Builds).Return(builds);
 
             Assert.AreSame(builds, m_target.Builds);

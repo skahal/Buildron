@@ -64,7 +64,7 @@ public class SortingController : MonoBehaviour
 						m_log.Debug ("Sorting - IsSorting: {0}, AlgorithmType: {1}, SortBy: {2}", state.IsSorting, state.BuildSortingAlgorithmType, state.BuildSortBy);
 
 						if (!state.IsSorting) {
-							var sorting = SortingAlgorithmFactory.CreateSortingAlgorithm<Build> (state.BuildSortingAlgorithmType);
+							var sorting = SortingAlgorithmFactory.CreateSortingAlgorithm<IBuild> (state.BuildSortingAlgorithmType);
 							OnBuildSortUpdated (new BuildSortUpdatedEventArgs (sorting, state.BuildSortBy));
 						}
 					});
@@ -94,12 +94,12 @@ public class SortingController : MonoBehaviour
 			m_serverService.GetState().IsSorting = true;
             m_buildGOService.FreezeAll();
 
-            var sorting = sender as ISortingAlgorithm<Build>;
+            var sorting = sender as ISortingAlgorithm<IBuild>;
             UpdateStatusBar("Sorting by {0}  using: {1}".With(sorting.Comparer, sorting.Name));
         }
     }
 
-	private void SortingItemsSwapped (object sender, SortingItemsSwappedEventArgs<Build> args)
+	private void SortingItemsSwapped (object sender, SortingItemsSwappedEventArgs<IBuild> args)
 	{
 		var b1 = args.Item1;
 		var b2 = args.Item2;

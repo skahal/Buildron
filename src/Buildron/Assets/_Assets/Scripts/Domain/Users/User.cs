@@ -40,7 +40,7 @@ namespace Buildron.Domain.Users
 		/// </summary>
 		public User ()
 		{
-			Builds = new List<Build> ();
+			Builds = new List<IBuild> ();
 			Kind = UserKind.Human;
 		}
 		#endregion
@@ -49,7 +49,7 @@ namespace Buildron.Domain.Users
 		/// <summary>
 		/// Gets or sets the build.
 		/// </summary>
-		public IList<Build> Builds { get; private set; }
+		public IList<IBuild> Builds { get; private set; }
 			
 		/// <summary>
 		/// Gets or sets the username
@@ -92,11 +92,11 @@ namespace Buildron.Domain.Users
 		}
 
 		/// <summary>
-		/// Determines whether the specified <see cref="Buildron.Domain.User"/> is equal to the current <see cref="Buildron.Domain.User"/>.
+		/// Determines whether the specified <see cref="Buildron.Domain.Users.User"/> is equal to the current <see cref="Buildron.Domain.Users.User"/>.
 		/// </summary>
-		/// <param name="other">The <see cref="Buildron.Domain.User"/> to compare with the current <see cref="Buildron.Domain.User"/>.</param>
-		/// <returns><c>true</c> if the specified <see cref="Buildron.Domain.User"/> is equal to the current
-		/// <see cref="Buildron.Domain.User"/>; otherwise, <c>false</c>.</returns>
+		/// <param name="other">The <see cref="Buildron.Domain.Users.User"/> to compare with the current <see cref="Buildron.Domain.Users.User"/>.</param>
+		/// <returns><c>true</c> if the specified <see cref="Buildron.Domain.Users.User"/> is equal to the current
+		/// <see cref="Buildron.Domain.Users.User"/>; otherwise, <c>false</c>.</returns>
         public bool Equals(User other)
         {
             return other != null && other.UserName.Equals(UserName, StringComparison.Ordinal);

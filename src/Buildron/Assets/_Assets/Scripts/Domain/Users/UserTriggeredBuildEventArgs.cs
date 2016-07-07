@@ -14,7 +14,7 @@ namespace Buildron.Domain.Users
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="build">The build that user triggered</param>
-        public UserTriggeredBuildEventArgs(User user, Build build)
+        public UserTriggeredBuildEventArgs(User user, IBuild build)
 			: base (user)
 		{
             Build = build;
@@ -25,7 +25,7 @@ namespace Buildron.Domain.Users
         /// <summary>
         /// Gets the build.
         /// </summary>
-        public Build Build { get; private set; }
+        public IBuild Build { get; private set; }
         #endregion
     }
 }

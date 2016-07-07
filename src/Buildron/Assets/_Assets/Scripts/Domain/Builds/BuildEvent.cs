@@ -10,7 +10,7 @@
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildEvent"/> class.
 		/// </summary>
 		/// <param name="build">Build.</param>
-        public BuildEvent(Build build)
+        public BuildEvent(IBuild build)
         {
             Build = build;
         }
@@ -21,7 +21,7 @@
 		/// Gets the build.
 		/// </summary>
 		/// <value>The build.</value>
-        public Build Build { get; private set; }
+        public IBuild Build { get; private set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the event was canceled.

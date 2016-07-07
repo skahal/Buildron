@@ -3,8 +3,8 @@ namespace Buildron.Domain.Builds
 	/// <summary>
 	/// Represents a build project.
 	/// </summary>
-	public class BuildProject
-	{
+	public class BuildProject : IBuildProject
+    {
 		#region Properties
 		/// <summary>
 		/// Gets or sets the name.

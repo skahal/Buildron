@@ -15,7 +15,7 @@ namespace Buildron.Domain.Builds
         /// <param name="buildsStatusChanged">Builds that status changed.</param>
         /// <param name="buildsFound">Builds found.</param>
         /// <param name="buildsRemoved">Builds removed.</param>
-        public BuildsRefreshedEventArgs(IList<Build> buildsStatusChanged, IList<Build> buildsFound, IList<Build> buildsRemoved)
+        public BuildsRefreshedEventArgs(IList<IBuild> buildsStatusChanged, IList<IBuild> buildsFound, IList<IBuild> buildsRemoved)
 		{
             BuildsStatusChanged = buildsStatusChanged;
             BuildsFound = buildsFound;
@@ -27,17 +27,17 @@ namespace Buildron.Domain.Builds
         /// <summary>
         /// Gets the builds that status changed in builds refresh.
         /// </summary>
-        public IList<Build> BuildsStatusChanged { get; private set; }
+        public IList<IBuild> BuildsStatusChanged { get; private set; }
 
         /// <summary>
         /// Gets the builds found in builds refresh.
         /// </summary>
-        public IList<Build> BuildsFound { get; private set; }
+        public IList<IBuild> BuildsFound { get; private set; }
 
         /// <summary>
         /// Gets the builds removed in builds refresh.
         /// </summary>
-        public IList<Build> BuildsRemoved { get; private set; }
+        public IList<IBuild> BuildsRemoved { get; private set; }
         #endregion
     }
 }

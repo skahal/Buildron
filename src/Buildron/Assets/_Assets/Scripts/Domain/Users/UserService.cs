@@ -193,7 +193,7 @@ namespace Buildron.Domain.Users
 			}
 		}
 
-		private void RaiseUserTriggeredBuildEvents (Type serviceSender, User user, IEnumerable<Build> triggeredBuilds)
+		private void RaiseUserTriggeredBuildEvents (Type serviceSender, User user, IEnumerable<IBuild> triggeredBuilds)
 		{
 			foreach (var build in triggeredBuilds)
 			{

@@ -7,15 +7,15 @@ namespace Buildron.Domain.Builds
 	/// Represents a build configuration.
 	/// </summary>
 	[DebuggerDisplay("{Id} - {Name}")]
-	public class BuildConfiguration
-	{
+	public class BuildConfiguration : IBuildConfiguration
+    {
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildConfiguration"/> class.
 		/// </summary>
 		public BuildConfiguration ()
 		{
-			Steps = new List<BuildStep> ();
+			Steps = new List<IBuildStep> ();
 			Project = new BuildProject();
 		}
 		#endregion
@@ -37,13 +37,13 @@ namespace Buildron.Domain.Builds
 		/// Gets or sets the steps.
 		/// </summary>
 		/// <value>The steps.</value>
-		public IList<BuildStep> Steps { get; set; }
+		public IList<IBuildStep> Steps { get; set; }
 
 		/// <summary>
 		/// Gets or sets the project.
 		/// </summary>
 		/// <value>The project.</value>
-		public BuildProject Project { get; set; }
+		public IBuildProject Project { get; set; }
 		#endregion
 	}
 		

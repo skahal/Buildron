@@ -18,7 +18,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		private IBuildsProvider m_underlyingBuildsProvider;
 		private IRemoteControlMessagesListener m_rcListener;
 		private IServerService m_serverService;
-		private Dictionary<string, Build> m_buildsCache = new Dictionary<string, Build> ();
+		private Dictionary<string, IBuild> m_buildsCache = new Dictionary<string, IBuild> ();
 		#endregion
 
 		#region Events
@@ -206,7 +206,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// </summary>
 		/// <param name="user">The user that triggered the run.</param>
 		/// <param name="build">The build to run</param>
-		public void RunBuild (UserBase user, Build build)
+		public void RunBuild (UserBase user, IBuild build)
 		{
 			m_underlyingBuildsProvider.RunBuild (user, build);
 		}
@@ -216,7 +216,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// </summary>
 		/// <param name="user">The user that triggered the stop.</param>
 		/// <param name="build">The build to stop</param>
-		public void StopBuild (UserBase user, Build build)
+		public void StopBuild (UserBase user, IBuild build)
 		{
 			m_underlyingBuildsProvider.StopBuild (user, build);
 		}
@@ -250,7 +250,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// </summary>
 		/// <returns><c>true</c>, if build was filtered, <c>false</c> otherwise.</returns>
 		/// <param name="build">Build.</param>
-		public bool Filter (Build build)
+		public bool Filter (IBuild build)
 		{
 			var f = m_serverService.GetState ().BuildFilter;
 			var success = f.SuccessEnabled;

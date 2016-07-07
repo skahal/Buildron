@@ -147,7 +147,7 @@ namespace Buildron.Controllers
 			SHLog.Debug ("SendToServerSortBuilds: {0}, {1}", sortingType, sortByProperty);
 
 			// TODO: args.SortingAlgorithm is ignored because RC is not passing this at this time.            
-			var sorting = SortingAlgorithmFactory.CreateRandomSortingAlgorithm<Build> ();	
+			var sorting = SortingAlgorithmFactory.CreateRandomSortingAlgorithm<IBuild> ();	
 			var args = new BuildSortUpdatedEventArgs (sorting, sortByProperty);
 			sortingType = SortingAlgorithmFactory.GetAlgorithmType (sorting);
 

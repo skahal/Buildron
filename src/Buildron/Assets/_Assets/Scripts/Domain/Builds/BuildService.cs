@@ -41,7 +41,7 @@ namespace Buildron.Domain.Builds
 		private IBuildsProvider m_buildsProvider;
 		private ISHLogStrategy m_log;
 		private List<string> m_buildConfigurationIdsRefreshed;		
-		private List<Build> m_buildsFoundInLastRefresh;		
+		private List<IBuild> m_buildsFoundInLastRefresh;		
 		#endregion
 
 		#region Constructors
@@ -59,7 +59,7 @@ namespace Buildron.Domain.Builds
         /// <summary>
         /// Gets the builds.
         /// </summary>
-        public IList<Build> Builds { get; private set; }
+        public IList<IBuild> Builds { get; private set; }
 
         /// <summary>
         /// Gets the name of the server.
@@ -82,8 +82,8 @@ namespace Buildron.Domain.Builds
 		public void Initialize (IBuildsProvider buildsProvider)
 		{
 			m_buildConfigurationIdsRefreshed = new List<string> ();
-			Builds = new List<Build> ();
-			m_buildsFoundInLastRefresh = new List<Build> ();
+			Builds = new List<IBuild> ();
+			m_buildsFoundInLastRefresh = new List<IBuild> ();
 			m_buildsProvider = buildsProvider;
 			
 			m_buildsProvider.BuildUpdated += delegate(object sender, BuildUpdatedEventArgs e)
@@ -174,7 +174,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <returns>The most relevant build for user.</returns>
 		/// <param name="user">User.</param>
-		public Build GetMostRelevantBuildForUser (User user)
+		public IBuild GetMostRelevantBuildForUser (User user)
 		{
             var comparer = new BuildMostRelevantStatusComparer();
             var userBuilds = Builds
@@ -184,7 +184,7 @@ namespace Buildron.Domain.Builds
             return userBuilds.FirstOrDefault();
 		}		
 
-		private void ExecuteBuildCommand (RemoteControl remoteControl, string buildId, Action<RemoteControl, Build> command)
+		private void ExecuteBuildCommand (RemoteControl remoteControl, string buildId, Action<RemoteControl, IBuild> command)
 		{
 			var build = Builds.FirstOrDefault (b => b.Id.Equals (buildId, StringComparison.OrdinalIgnoreCase));
 

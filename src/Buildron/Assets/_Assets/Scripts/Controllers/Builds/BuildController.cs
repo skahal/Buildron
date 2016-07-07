@@ -13,7 +13,7 @@ using Buildron.Domain.RemoteControls;
 /// <summary>
 /// Build controller.
 /// </summary>
-public class BuildController : SHController<Build>
+public class BuildController : SHController<IBuild>
 {
     #region Fields
     private static UnityEngine.Object s_buildFailedExplosionPrefab;

@@ -58,7 +58,7 @@ namespace Buildron.Domain.Mods
         #endregion
 
         #region Properties
-        public IList<Build> Builds
+        public IList<IBuild> Builds
         {
             get
             {

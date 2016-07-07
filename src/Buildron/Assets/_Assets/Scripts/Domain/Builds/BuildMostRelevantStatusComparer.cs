@@ -6,7 +6,7 @@ namespace Buildron.Domain.Builds
     /// <summary>
     /// Build most relevant status comparer.
     /// </summary>
-    public class BuildMostRelevantStatusComparer : IComparer<Build>
+    public class BuildMostRelevantStatusComparer : IComparer<IBuild>
 	{     
         #region Methods
         /// <summary>
@@ -14,7 +14,7 @@ namespace Buildron.Domain.Builds
         /// </summary>
         /// <param name="x">The x coordinate.</param>
         /// <param name="y">The y coordinate.</param>
-        public int Compare (Build x, Build y)
+        public int Compare (IBuild x, IBuild y)
 		{
             return x.Status.CompareTo(y.Status) * -1;
 		}

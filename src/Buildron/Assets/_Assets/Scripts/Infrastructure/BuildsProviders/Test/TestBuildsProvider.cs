@@ -105,12 +105,12 @@ public class TestBuildsProvider : IBuildsProvider
 		BuildsRefreshed.Raise (this);
 	}
 	
-	public void RunBuild (UserBase user, Build build)
+	public void RunBuild (UserBase user, IBuild build)
 	{
 		build.Status = BuildStatus.Running;
 	}
 	
-	public void StopBuild (UserBase user, Build build)
+	public void StopBuild (UserBase user, IBuild build)
 	{
 		build.Status = BuildStatus.Canceled;
 	}

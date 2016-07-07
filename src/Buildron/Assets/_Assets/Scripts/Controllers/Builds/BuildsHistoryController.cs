@@ -65,7 +65,7 @@ public class BuildsHistoryController : MonoBehaviour {
 			
 			if (originalBuild.Date.Date == System.DateTime.Now.Date) {
 				m_historyCount ++;
-				Build historyBuild = (Build)originalBuild.Clone (); 
+				var historyBuild = (IBuild)originalBuild.Clone (); 
 				historyBuild.Id = string.Format ("{0}_{1}_history", historyBuild.Id, System.DateTime.Now.Ticks);
 				
 				var cloneGO = Service.CreateGameObject (historyBuild);

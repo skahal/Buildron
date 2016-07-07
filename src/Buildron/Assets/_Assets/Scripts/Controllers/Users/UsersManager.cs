@@ -75,7 +75,7 @@ public class UsersManager : MonoBehaviour
 		}
 	}
 
-	void CreateUserGameObject (Build build)
+	void CreateUserGameObject (IBuild build)
 	{
 		var go = UserController.GetGameObject (build.TriggeredBy);
 		

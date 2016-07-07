@@ -69,9 +69,9 @@ namespace Buildron.Infrastructure.BuildsProvider
 
         protected abstract void PerformRefreshAllBuilds();
 
-        public abstract void RunBuild (UserBase user, Build build);
+        public abstract void RunBuild (UserBase user, IBuild build);
 
-		public abstract void StopBuild (UserBase user, Build build);
+		public abstract void StopBuild (UserBase user, IBuild build);
 
 		public abstract void AuthenticateUser (UserBase user);
 		#endregion

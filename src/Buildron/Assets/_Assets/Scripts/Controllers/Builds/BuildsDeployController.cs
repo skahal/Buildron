@@ -87,7 +87,7 @@ public class BuildsDeployController : MonoBehaviour
 		StartCoroutine (DeployBuilds ());
 	}
 	
-	private void UpdateBuild (Build b)
+	private void UpdateBuild (IBuild b)
 	{
         GameObject go;
 
@@ -119,7 +119,7 @@ public class BuildsDeployController : MonoBehaviour
 		m_currentDeployPosition += Vector3.up;
 	}
 
-	private void RemoveBuild (Build b)
+	private void RemoveBuild (IBuild b)
 	{
 		if (Service.ExistsGameObject (b)) {
 			var go = Service.GetGameObject (b);

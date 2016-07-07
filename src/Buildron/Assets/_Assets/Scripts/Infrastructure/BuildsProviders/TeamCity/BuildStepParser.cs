@@ -15,9 +15,9 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 		/// <param name='xmlNode'>
 		/// Xml node.
 		/// </param>
-		public static IList<BuildStep> Parse (XmlNode xmlNode)
+		public static IList<IBuildStep> Parse (XmlNode xmlNode)
 		{
-			var steps = new List<BuildStep> ();
+			var steps = new List<IBuildStep> ();
 			var nodes = xmlNode.SelectNodes ("buildType/steps/step");
 	
 			if (nodes != null) {

@@ -14,7 +14,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="sortingAlgorithm">Sorting algorithm.</param>
 		/// <param name="sortBy">Sort by.</param>
-		public BuildSortUpdatedEventArgs (ISortingAlgorithm<Build> sortingAlgorithm, SortBy sortBy)
+		public BuildSortUpdatedEventArgs (ISortingAlgorithm<IBuild> sortingAlgorithm, SortBy sortBy)
 		{
 			SortingAlgorithm = sortingAlgorithm;
 			SortBy = sortBy;
@@ -26,7 +26,7 @@ namespace Buildron.Domain.Builds
 		/// Gets the sorting algorithm.
 		/// </summary>
 		/// <value>The sorting algorithm.</value>
-		public ISortingAlgorithm<Build> SortingAlgorithm { get; private set; }
+		public ISortingAlgorithm<IBuild> SortingAlgorithm { get; private set; }
 
 		/// <summary>
 		/// Gets the sort by.

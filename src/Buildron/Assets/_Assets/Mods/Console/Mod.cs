@@ -56,7 +56,7 @@ namespace Buildron.Mods.Console
 			};
 
 			context.UserAuthenticationCompleted += (sender, e) => {
-				c.AddMessage("User authentication completed: {0}:{2}", e.User, e.Success ? "success" : "failed");	
+				c.AddMessage("User authentication completed: {0}:{1}", e.User, e.Success ? "success" : "failed");	
 			};
 
 			context.UserFound += (sender, e) => {

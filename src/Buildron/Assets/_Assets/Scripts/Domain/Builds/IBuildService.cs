@@ -35,7 +35,7 @@ namespace Buildron.Domain.Builds
         /// <summary>
         /// Gets the builds.
         /// </summary>
-        IList<Build> Builds { get; }
+        IList<IBuild> Builds { get; }
 
         /// <summary>
         /// Gets the name of the server.
@@ -48,7 +48,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <returns>The most relevant build for user.</returns>
 		/// <param name="user">User.</param>
-        Build GetMostRelevantBuildForUser(User user);
+        IBuild GetMostRelevantBuildForUser(User user);
 
 		/// <summary>
 		/// Initialize.

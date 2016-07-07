@@ -5,7 +5,7 @@ namespace Buildron.Domain.Builds
 	/// <summary>
 	/// Build text comparer.
 	/// </summary>
-	public class BuildTextComparer : IComparer<Build>
+	public class BuildTextComparer : IComparer<IBuild>
 	{
 		#region Methods
 		/// <summary>
@@ -13,7 +13,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="x">The x coordinate.</param>
 		/// <param name="y">The y coordinate.</param>
-		public int Compare (Build x, Build y)
+		public int Compare (IBuild x, IBuild y)
 		{
 			return x.CompareTo (y);
 		}

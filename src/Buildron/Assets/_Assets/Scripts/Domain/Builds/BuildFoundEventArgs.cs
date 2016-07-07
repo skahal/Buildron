@@ -10,7 +10,7 @@ namespace Buildron.Domain.Builds
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Builds.BuildFoundEventArgs"/> class.
 		/// </summary>
 		/// <param name="build">Build.</param>
-		public BuildFoundEventArgs (Build build) 
+		public BuildFoundEventArgs (IBuild build) 
 			: base (build)
 		{
 		}
