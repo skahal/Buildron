@@ -20,6 +20,7 @@ using Buildron.Domain.RemoteControls;
 using Buildron.Controllers;
 using Buildron.Domain.Servers;
 using Skahal.Threading;
+using Buildron.Domain.Mods;
 
 namespace Buildron.Infrastructure.IoC
 {
@@ -71,6 +72,7 @@ namespace Buildron.Infrastructure.IoC
             Container.Bind<ICIServerService>().To<CIServerService>().AsSingle();
             Container.Bind<IBuildService>().To<BuildService>().AsSingle();
 			Container.Bind<IServerService>().To<ServerService>().AsSingle();
+			Container.Bind<IModLoader>().To<ModLoader>().AsSingle();
 		}
 
 		void InstallRepositories ()
@@ -136,6 +138,7 @@ namespace Buildron.Infrastructure.IoC
 			Container.BindController<ConfigPanelController> ();
 			Container.BindController<CameraController> ();
             Container.BindController<MainSceneController>();
+			Container.BindController<ModLoaderController>();
         }
 		#endregion
 	}

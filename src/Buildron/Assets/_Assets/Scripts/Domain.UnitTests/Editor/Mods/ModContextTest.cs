@@ -82,7 +82,6 @@ namespace Buildron.Domain.UnitTests.Builds
         public void BuildUpdated_BuildServiceRaise_EventRaised()
         {
             var raised = m_target.CreateAssert<BuildUpdatedEventArgs>("BuildUpdated", 1);
-            var b1 = new Build { Status = BuildStatus.Success, Configuration = new BuildConfiguration { Id = "1", Project = new BuildProject { Name = "2" } } };
             m_buildService.Raise(b => b.BuildUpdated += null, null, new BuildUpdatedEventArgs(new Build()));
 
             raised.Assert();
