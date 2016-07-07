@@ -41,17 +41,24 @@ namespace Buildron.Domain.UnitTests.CIServers
 
             var statusChangedRaised = target.CreateAssert<CIServerStatusChangedEventArgs>("CIServerStatusChanged", 3);
 
+			// Should raise ServerUp.
             provider.Raise(p => p.ServerUp += null, null, null);
             Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
 
+			// Should not raise events, because is waiting isDownAsyncAction
             provider.Raise(p => p.ServerDown += null, null, null);
 			Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
 
+			// Should not raise events, because is still up.
             provider.Raise(p => p.ServerUp += null, null, null);
 			Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
 
+			// Should raise ServerDown
             provider.Raise(p => p.ServerDown += null, null, null);
             Assert.AreEqual(CIServerStatus.Down, target.GetCIServer().Status);
+
+			provider.Raise(p => p.ServerDown += null, null, null);
+			Assert.AreEqual(CIServerStatus.Down, target.GetCIServer().Status);
 
             statusChangedRaised.Assert();
         }
