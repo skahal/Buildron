@@ -14,26 +14,21 @@ namespace Buildron.Domain.CIServers
 	public class CIServerService : ICIServerService
 	{
 		#region Events
-
 		/// <summary>
 		/// Occurs when continuous integration server status has changed.
 		/// </summary>
 		public event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
-
 		#endregion
 
 		#region Fields
-
 		private readonly IRepository<CIServer> m_repository;
 		private readonly IAsyncActionProvider m_asyncActionProvider;
 		private IAsyncAction m_isDownAsyncAction;
 		private CIServer m_currentServer;
 		private IBuildsProvider m_buildsProvider;
-
 		#endregion
 
 		#region Constructors
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServers.CIServerService"/> class.
 		/// </summary>
@@ -44,13 +39,11 @@ namespace Buildron.Domain.CIServers
 			m_repository = repository;
 			m_asyncActionProvider = asyncActionProvider;
 		}
-
 		#endregion
 
 		#region Properties
-
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Buildron.Domain.BuildService"/> is initialized.
+		/// Gets a value indicating whether this <see cref="Buildron.Domain.CIServers.CIServerService"/> is initialized.
 		/// </summary>
 		/// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
 		public bool Initialized
@@ -58,7 +51,6 @@ namespace Buildron.Domain.CIServers
 			get;
 			private set;
 		}
-
 		#endregion
 
 		#region Methods
@@ -152,6 +144,9 @@ namespace Buildron.Domain.CIServers
 			if (m_currentServer == null)
 			{
 				m_currentServer = m_repository.All ().FirstOrDefault () ?? new CIServer ();
+
+				// Always starts as down.
+				m_currentServer.Status = CIServerStatus.Down;
 			}
 
 			return m_currentServer;
