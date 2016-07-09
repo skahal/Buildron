@@ -152,8 +152,8 @@ public class CameraController : MonoBehaviour, IInitializable
 			if (m_targetPosition.y < MinY) {
 				m_targetPosition.y = MinY;	
 			}
-			
-			yield return new WaitForSeconds(AdjustPositionInterval);
+            
+            yield return new WaitForSeconds(AdjustPositionInterval);
 		}
 	}
 	
@@ -315,6 +315,11 @@ public class CameraController : MonoBehaviour, IInitializable
 	{
 		m_originalPosition = m_firstPosition;
 		m_autoPosition = true;
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveServerState();
     }
 
     private void SaveServerState()
