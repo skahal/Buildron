@@ -10,7 +10,7 @@
 		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServers.CIServerStatusChangedEventArgs"/> class.
 		/// </summary>
 		/// <param name="server">Server.</param>
-		public CIServerStatusChangedEventArgs (CIServer server)
+		public CIServerStatusChangedEventArgs (ICIServer server)
 			: base (server)
 		{
 		}

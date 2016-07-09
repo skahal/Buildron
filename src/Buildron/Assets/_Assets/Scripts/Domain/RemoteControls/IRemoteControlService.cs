@@ -26,7 +26,7 @@ namespace Buildron.Domain.RemoteControls
 		/// Connects the remote control.
 		/// </summary>
 		/// <param name="rcToConnect">RC to connect.</param>
-        void ConnectRemoteControl(RemoteControl rcToConnect);
+        void ConnectRemoteControl(IRemoteControl rcToConnect);
 
 		/// <summary>
 		/// Disconnects the remote control.
@@ -36,6 +36,6 @@ namespace Buildron.Domain.RemoteControls
 		/// <summary>
 		/// Gets the connected remote control.
 		/// </summary>
-	    RemoteControl GetConnectedRemoteControl();
+	    IRemoteControl GetConnectedRemoteControl();
     }
 }

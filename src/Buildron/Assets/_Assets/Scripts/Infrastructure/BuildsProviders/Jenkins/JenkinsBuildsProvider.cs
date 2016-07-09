@@ -27,7 +27,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
         /// <param name='server'>
         /// Server.
         /// </param>
-        public JenkinsBuildsProvider(CIServer server) : base(server)
+        public JenkinsBuildsProvider(ICIServer server) : base(server)
         {
             Name = "Jenkins";
             AuthenticationRequirement = AuthenticationRequirement.Optional;
@@ -107,7 +107,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
             });
         }
 
-        public override void RunBuild(UserBase user, IBuild build)
+		public override void RunBuild(IBasicUser user, IBuild build)
         {
             var id = build.Configuration.Id;
             var url = GetHttpBasicAuthUrl(user, "job/{0}/build", id);
@@ -118,7 +118,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
            });
         }
 
-        public override void StopBuild(UserBase user, IBuild build)
+		public override void StopBuild(IBasicUser user, IBuild build)
         {
             var id = build.Configuration.Id;
             var url = GetHttpBasicAuthUrl(user, "job/{0}/lastBuild/stop", id);
@@ -129,7 +129,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
            });
         }
 
-        public override void AuthenticateUser(UserBase user)
+		public override void AuthenticateUser(IBasicUser user)
         {
             var url = GetHttpBasicAuthUrl(user, "");
 

@@ -23,7 +23,7 @@ namespace Buildron.Infrastructure.BuildsProvider
         #endregion
 
         #region Constructors
-        protected BuildsProviderBase (CIServer server)
+        protected BuildsProviderBase (ICIServer server)
 		{
 			Server = server;	
 			PrepareProtocol ();
@@ -47,7 +47,7 @@ namespace Buildron.Infrastructure.BuildsProvider
 
 		protected Requester Requester { get; private set; }
 
-		protected CIServer Server { get; private set; }
+		protected ICIServer Server { get; private set; }
 
         protected int CurrentBuildsFoundCount { get; set; }
         #endregion
@@ -69,11 +69,11 @@ namespace Buildron.Infrastructure.BuildsProvider
 
         protected abstract void PerformRefreshAllBuilds();
 
-        public abstract void RunBuild (UserBase user, IBuild build);
+        public abstract void RunBuild (IBasicUser user, IBuild build);
 
-		public abstract void StopBuild (UserBase user, IBuild build);
+		public abstract void StopBuild (IBasicUser user, IBuild build);
 
-		public abstract void AuthenticateUser (UserBase user);
+		public abstract void AuthenticateUser (IBasicUser user);
 		#endregion
 
 		#region Methods
@@ -93,7 +93,7 @@ namespace Buildron.Infrastructure.BuildsProvider
 			}
 		}
 
-		protected string GetHttpBasicAuthUrl (UserBase user, string urlEndPart, params object[] args)
+		protected string GetHttpBasicAuthUrl (IBasicUser user, string urlEndPart, params object[] args)
 		{	
 			var endPart = string.Format (urlEndPart, args);
 			

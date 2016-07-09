@@ -19,8 +19,8 @@ namespace Buildron.Domain.UnitTests.CIServers
         {
             var ciServer = new CIServer();
             ciServer.Status = CIServerStatus.Down;
-            var repository = MockRepository.GenerateMock<IRepository<CIServer>>();
-            repository.Expect(r => r.All()).Return((new CIServer[] { ciServer }).AsQueryable());
+            var repository = MockRepository.GenerateMock<IRepository<ICIServer>>();
+            repository.Expect(r => r.All()).Return((new ICIServer[] { ciServer }).AsQueryable());
 
 			var startCount = 0;
 			var asyncActionProvider = MockRepository.GenerateMock<IAsyncActionProvider> ();
@@ -69,8 +69,8 @@ namespace Buildron.Domain.UnitTests.CIServers
         {
             var ciServer = new CIServer();
             ciServer.Status = CIServerStatus.Down;
-            var repository = MockRepository.GenerateMock<IRepository<CIServer>>();
-            repository.Expect(r => r.All()).Return((new CIServer[] { ciServer }).AsQueryable());
+            var repository = MockRepository.GenerateMock<IRepository<ICIServer>>();
+            repository.Expect(r => r.All()).Return((new ICIServer[] { ciServer }).AsQueryable());
 			var target = new CIServerService(repository, MockRepository.GenerateMock<IAsyncActionProvider>());
 
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
@@ -94,8 +94,8 @@ namespace Buildron.Domain.UnitTests.CIServers
         public void SaveCIServer_New_Default()
         {
             var ciServer = new CIServer() { Id = 0, Title = "new"};
-            var repository = MockRepository.GenerateMock<IRepository<CIServer>>();
-            repository.Expect(r => r.All()).Return((new CIServer[0]).AsQueryable());
+            var repository = MockRepository.GenerateMock<IRepository<ICIServer>>();
+            repository.Expect(r => r.All()).Return((new ICIServer[0]).AsQueryable());
             repository.Expect(r => r.Create(ciServer)).Return(ciServer);
 
 			var target = new CIServerService(repository, MockRepository.GenerateMock<IAsyncActionProvider>());
@@ -109,8 +109,8 @@ namespace Buildron.Domain.UnitTests.CIServers
         public void SaveCIServer_Old_Updates()
         {
             var ciServer = new CIServer() { Id = 1, Title = "old" };
-            var repository = MockRepository.GenerateMock<IRepository<CIServer>>();
-            repository.Expect(r => r.All()).Return((new CIServer[] { ciServer } ).AsQueryable());
+            var repository = MockRepository.GenerateMock<IRepository<ICIServer>>();
+            repository.Expect(r => r.All()).Return((new ICIServer[] { ciServer } ).AsQueryable());
             repository.Expect(r => r.Modify(ciServer));
 
 			var target = new CIServerService(repository, MockRepository.GenerateMock<IAsyncActionProvider>());

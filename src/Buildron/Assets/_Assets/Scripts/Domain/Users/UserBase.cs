@@ -7,7 +7,7 @@ namespace Buildron.Domain.Users
 	/// Defines a abstract user entity.
 	/// </summary>
 	[Serializable]
-	public abstract class UserBase : AggregateRootBase
+	public abstract class UserBase : AggregateRootBase, IBasicUser
 	{
 		#region Fields
 		private string m_userName;

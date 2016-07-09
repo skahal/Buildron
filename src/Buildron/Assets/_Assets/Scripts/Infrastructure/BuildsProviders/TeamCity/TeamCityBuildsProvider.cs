@@ -16,7 +16,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 	public class TeamCityBuildsProvider : BuildsProviderBase
 	{   
         #region Constructors
-        public TeamCityBuildsProvider (CIServer server) : base(server)
+        public TeamCityBuildsProvider (ICIServer server) : base(server)
 		{
 			Name = "TeamCity";
 			AuthenticationRequirement = AuthenticationRequirement.Always;
@@ -111,21 +111,21 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			}
 		}
 		
-		public override void RunBuild (UserBase user, IBuild build)
+		public override void RunBuild (IBasicUser user, IBuild build)
 		{
 			var url = GetHttpBasicAuthUrl (user, "action.html?add2Queue={0}", build.Configuration.Id);
 			SHLog.Debug ("RunBuild URL: {0}", url);
 			Requester.RequestImmediately (url);
 		}
 		
-		public override void StopBuild (UserBase user, IBuild build)
+		public override void StopBuild (IBasicUser user, IBuild build)
 		{
 			var url = GetHttpBasicAuthUrl (user, "httpAuth/ajax.html?submit=Stop&buildId={0}&kill", build.Id);
 			SHLog.Debug ("StopBuild URL: {0}", url);
 			Requester.RequestImmediately (url);
 		}
 		
-		public override void AuthenticateUser (UserBase user)
+		public override void AuthenticateUser (IBasicUser user)
 		{
 			var url = GetHttpBasicAuthUrl (user, "httpAuth/app/rest/users");
 			

@@ -12,7 +12,7 @@ namespace Buildron.Domain.RemoteControls
 		/// Initializes a new instance of the <see cref="Buildron.Domain.RemoteControls.RemoteControlChangedEventArgs"/> class.
         /// </summary>
         /// <param name="remoteControl">The remote control.</param>
-        public RemoteControlChangedEventArgs(RemoteControl remoteControl)
+        public RemoteControlChangedEventArgs(IRemoteControl remoteControl)
         {
             RemoteControl = remoteControl;
         }
@@ -22,7 +22,7 @@ namespace Buildron.Domain.RemoteControls
         /// <summary>
         /// Gets the remote control.
         /// </summary>
-		public RemoteControl RemoteControl { get; private set; }
+		public IRemoteControl RemoteControl { get; private set; }
         #endregion
     }
 }

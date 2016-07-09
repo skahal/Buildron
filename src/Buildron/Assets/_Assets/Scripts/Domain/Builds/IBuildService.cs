@@ -66,13 +66,13 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="remoteControl">Remote control.</param>
 		/// <param name="buildId">Build identifier.</param>
-        void RunBuild(RemoteControl remoteControl, string buildId);
+        void RunBuild(IRemoteControl remoteControl, string buildId);
 
 		/// <summary>
 		/// Stops the build.
 		/// </summary>
 		/// <param name="remoteControl">Remote control.</param>
 		/// <param name="buildId">Build identifier.</param>
-        void StopBuild(RemoteControl remoteControl, string buildId);
+        void StopBuild(IRemoteControl remoteControl, string buildId);
     }
 }

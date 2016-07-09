@@ -89,20 +89,20 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="user">The user that triggered the run.</param>
 		/// <param name="build">The build to run</param>
-		void RunBuild(UserBase user, IBuild build);
+		void RunBuild(IBasicUser user, IBuild build);
 
 		/// <summary>
 		/// Stops the build.
 		/// </summary>
 		/// <param name="user">The user that triggered the stop.</param>
 		/// <param name="build">The build to stop</param>
-		void StopBuild(UserBase user, IBuild build);
+		void StopBuild(IBasicUser user, IBuild build);
 
 		/// <summary>
 		/// Authenticates the user.
 		/// </summary>
 		/// <param name="user">The user to authenticate.</param>
-		void AuthenticateUser(UserBase user);
+		void AuthenticateUser(IBasicUser user);
 		#endregion
 	}
 }

@@ -188,7 +188,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// Authenticates the user.
 		/// </summary>
 		/// <param name="user">The user to authenticate.</param>
-		public void AuthenticateUser (UserBase user)
+		public void AuthenticateUser (IBasicUser user)
 		{
 			m_underlyingBuildsProvider.AuthenticateUser (user);
 		}
@@ -206,7 +206,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// </summary>
 		/// <param name="user">The user that triggered the run.</param>
 		/// <param name="build">The build to run</param>
-		public void RunBuild (UserBase user, IBuild build)
+		public void RunBuild (IBasicUser user, IBuild build)
 		{
 			m_underlyingBuildsProvider.RunBuild (user, build);
 		}
@@ -216,7 +216,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// </summary>
 		/// <param name="user">The user that triggered the stop.</param>
 		/// <param name="build">The build to stop</param>
-		public void StopBuild (UserBase user, IBuild build)
+		public void StopBuild (IBasicUser user, IBuild build)
 		{
 			m_underlyingBuildsProvider.StopBuild (user, build);
 		}

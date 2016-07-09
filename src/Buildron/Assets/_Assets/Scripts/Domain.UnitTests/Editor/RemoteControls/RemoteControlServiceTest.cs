@@ -16,7 +16,7 @@ namespace Buildron.Domain.UnitTests.RemoteControls
         {
             var ciServerService = MockRepository.GenerateMock<ICIServerService>();
             var userService = MockRepository.GenerateMock<IUserService>();
-            var repository = MockRepository.GenerateMock<IRepository<RemoteControl>>();
+            var repository = MockRepository.GenerateMock<IRepository<IRemoteControl>>();
 
             var target = new RemoteControlService(ciServerService, userService, repository);
             var rc = new RemoteControl() { UserName = "u1" };
@@ -38,7 +38,7 @@ namespace Buildron.Domain.UnitTests.RemoteControls
 		{
 			var ciServerService = MockRepository.GenerateMock<ICIServerService>();
 			var userService = MockRepository.GenerateMock<IUserService>();
-			var repository = MockRepository.GenerateMock<IRepository<RemoteControl>>();
+			var repository = MockRepository.GenerateMock<IRepository<IRemoteControl>>();
 
 			var target = new RemoteControlService(ciServerService, userService, repository);
 			var rc = new RemoteControl() { UserName = "u1" };
@@ -57,7 +57,7 @@ namespace Buildron.Domain.UnitTests.RemoteControls
 		{
 			var ciServerService = MockRepository.GenerateMock<ICIServerService>();
 			var userService = MockRepository.GenerateMock<IUserService>();
-			var repository = MockRepository.GenerateMock<IRepository<RemoteControl>>();
+			var repository = MockRepository.GenerateMock<IRepository<IRemoteControl>>();
 
 			var target = new RemoteControlService(ciServerService, userService, repository);
 			var rc = new RemoteControl() { UserName = "u1" };

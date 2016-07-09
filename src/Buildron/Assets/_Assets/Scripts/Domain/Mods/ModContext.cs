@@ -13,7 +13,7 @@ namespace Buildron.Domain.Mods
     /// Represents the mod context.
     /// ModContext is basically a facade to many events that occurs in Buildron.
     /// </summary>
-    public sealed class ModContext
+    public sealed class ModContext : IModContext
 	{    
 		#region Events
 		public event EventHandler<BuildFoundEventArgs> BuildFound;

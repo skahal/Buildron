@@ -12,7 +12,7 @@ namespace Buildron.Domain.CIServers
 		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServers.CIServerdEventArgsBase"/> class.
 		/// </summary>
 		/// <param name="build">The Continuous Integration server.</param>
-		protected CIServerEventArgsBase(CIServer server)
+		protected CIServerEventArgsBase(ICIServer server)
 		{
 			Server = server;
 		}
@@ -22,7 +22,7 @@ namespace Buildron.Domain.CIServers
         /// <summary>
         /// Gets the server.
         /// </summary>
-		public CIServer Server { get; private set; }
+		public ICIServer Server { get; private set; }
 		#endregion
 	}
 }

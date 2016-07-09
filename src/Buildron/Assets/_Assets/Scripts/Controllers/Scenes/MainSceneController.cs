@@ -92,7 +92,7 @@ public class MainSceneController : MonoBehaviour, IInitializable
         ExecuteFocusedBuildCommand(m_buildService.StopBuild);
     }
 
-    private void ExecuteFocusedBuildCommand(Action<RemoteControl, string> command)
+    private void ExecuteFocusedBuildCommand(Action<IRemoteControl, string> command)
     {
         var visibles = m_buildGOService.GetVisibles();
 

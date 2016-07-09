@@ -21,10 +21,10 @@ namespace Buildron.Domain.CIServers
 		#endregion
 
 		#region Fields
-		private readonly IRepository<CIServer> m_repository;
+		private readonly IRepository<ICIServer> m_repository;
 		private readonly IAsyncActionProvider m_asyncActionProvider;
 		private IAsyncAction m_isDownAsyncAction;
-		private CIServer m_currentServer;
+		private ICIServer m_currentServer;
 		private IBuildsProvider m_buildsProvider;
 		#endregion
 
@@ -34,7 +34,7 @@ namespace Buildron.Domain.CIServers
 		/// </summary>
 		/// <param name="repository">Repository.</param>
 		/// <param name="asyncActionProvider">Async action provider.</param>
-		public CIServerService (IRepository<CIServer> repository, IAsyncActionProvider asyncActionProvider)
+		public CIServerService (IRepository<ICIServer> repository, IAsyncActionProvider asyncActionProvider)
 		{
 			m_repository = repository;
 			m_asyncActionProvider = asyncActionProvider;
@@ -107,7 +107,7 @@ namespace Buildron.Domain.CIServers
 		/// Authenticates the user.
 		/// </summary>
 		/// <param name="user">User.</param>
-		public void AuthenticateUser (UserBase user)
+		public void AuthenticateUser (IBasicUser user)
 		{
 			if (m_buildsProvider != null)
 			{
@@ -119,7 +119,7 @@ namespace Buildron.Domain.CIServers
 		/// Saves the CI server.
 		/// </summary>
 		/// <param name="server">Server.</param>
-		public void SaveCIServer (CIServer server)
+		public void SaveCIServer (ICIServer server)
 		{
 			var oldServer = GetCIServer ();
 
@@ -139,7 +139,7 @@ namespace Buildron.Domain.CIServers
 		/// Gets the CI server.
 		/// </summary>
 		/// <returns>The CI server.</returns>
-		public CIServer GetCIServer ()
+		public ICIServer GetCIServer ()
 		{
 			if (m_currentServer == null)
 			{

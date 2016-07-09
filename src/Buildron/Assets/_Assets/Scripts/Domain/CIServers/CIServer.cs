@@ -4,47 +4,10 @@ using Buildron.Domain.Users;
 namespace Buildron.Domain.CIServers
 {
 	/// <summary>
-	/// Continous integration server types.
-	/// </summary>
-	public enum CIServerType
-	{
-		/// <summary>
-		/// Hudson: http://hudson-ci.org
-		/// </summary>
-		Hudson = 1,
-
-		/// <summary>
-		/// Jenkins: https://jenkins.io
-		/// </summary>
-		Jenkins = 2,
-
-		/// <summary>
-		/// TeamCity: https://www.jetbrains.com/teamcity/
-		/// </summary>
-		TeamCity = 3
-	}
-
-	/// <summary>
-	/// Continuous integration server status.
-	/// </summary>
-	public enum CIServerStatus
-	{
-		/// <summary>
-		/// Continous integration server is Up.
-		/// </summary>
-		Up,
-
-		/// <summary>
-		/// Continous integration server is down.
-		/// </summary>
-		Down
-	}
-
-	/// <summary>
 	/// The Continuous Integration Server entity.
 	/// </summary>
 	[Serializable]
-	public sealed class CIServer : UserBase
+	public sealed class CIServer : UserBase, ICIServer
 	{
 		#region Constructors
 		/// <summary>

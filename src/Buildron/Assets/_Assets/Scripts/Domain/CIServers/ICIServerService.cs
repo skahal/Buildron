@@ -30,18 +30,18 @@ namespace Buildron.Domain.CIServers
         /// Authenticates the user.
         /// </summary>
         /// <param name="user">User.</param>
-        void AuthenticateUser(UserBase user);
+        void AuthenticateUser(IBasicUser user);
 
 		/// <summary>
 		/// Gets the CI server.
 		/// </summary>
 		/// <returns>The CI server.</returns>
-        CIServer GetCIServer();
+        ICIServer GetCIServer();
 
 		/// <summary>
 		/// Saves the CI server.
 		/// </summary>
 		/// <param name="server">Server.</param>
-        void SaveCIServer(CIServer server);
+        void SaveCIServer(ICIServer server);
     }
 }

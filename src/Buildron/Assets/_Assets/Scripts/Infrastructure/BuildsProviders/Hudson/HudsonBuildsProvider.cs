@@ -18,7 +18,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Hudson
 		/// <param name='server'>
 		/// Server.
 		/// </param>
-		public HudsonBuildsProvider (CIServer server) : base(server)
+		public HudsonBuildsProvider (ICIServer server) : base(server)
 		{
 			Name = "Hudson";
 			AuthenticationRequirement = AuthenticationRequirement.Optional;

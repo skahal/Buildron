@@ -11,7 +11,7 @@ namespace Buildron.Domain.Servers
 	/// Represents the current Buildron server state.
 	/// </summary>
 	[Serializable]
-	public sealed class ServerState : EntityBase, IAggregateRoot, ISerializable
+	public class ServerState : EntityBase, IAggregateRoot, ISerializable
     {
 		#region Fields
 		[NonSerialized]
@@ -97,6 +97,7 @@ namespace Buildron.Domain.Servers
 		/// <value><c>true</c> if this instance is showing history; otherwise, <c>false</c>.</value>
 		public bool IsShowingHistory { get; set; }
 		#endregion
+
         #endregion
 
         #region Methods

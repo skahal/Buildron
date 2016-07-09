@@ -154,7 +154,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="remoteControl">Remote control.</param>
 		/// <param name="buildId">Build identifier.</param>
-		public void RunBuild (RemoteControl remoteControl, string buildId)
+		public void RunBuild (IRemoteControl remoteControl, string buildId)
 		{
 			ExecuteBuildCommand (remoteControl, buildId, m_buildsProvider.RunBuild);
 		}
@@ -164,7 +164,7 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="remoteControl">Remote control.</param>
 		/// <param name="buildId">Build identifier.</param>
-		public void StopBuild (RemoteControl remoteControl, string buildId)
+		public void StopBuild (IRemoteControl remoteControl, string buildId)
 		{
 			ExecuteBuildCommand (remoteControl, buildId, m_buildsProvider.StopBuild);
 		}
@@ -184,7 +184,7 @@ namespace Buildron.Domain.Builds
             return userBuilds.FirstOrDefault();
 		}		
 
-		private void ExecuteBuildCommand (RemoteControl remoteControl, string buildId, Action<RemoteControl, IBuild> command)
+		private void ExecuteBuildCommand (IRemoteControl remoteControl, string buildId, Action<IRemoteControl, IBuild> command)
 		{
 			var build = Builds.FirstOrDefault (b => b.Id.Equals (buildId, StringComparison.OrdinalIgnoreCase));
 

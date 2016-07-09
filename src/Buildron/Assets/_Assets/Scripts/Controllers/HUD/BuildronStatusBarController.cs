@@ -40,7 +40,7 @@ public class BuildronStatusBarController : StatusBarController
 			"OnBuildFilterUpdated");
 	}
 	
-	private void OnRemoteControlConnected (RemoteControl remoteControl)
+	private void OnRemoteControlConnected (IRemoteControl remoteControl)
 	{
 		RemoteControlInfoLabel.text = remoteControl.UserName;
 		RemoteControlInfoLabel.enabled = true;

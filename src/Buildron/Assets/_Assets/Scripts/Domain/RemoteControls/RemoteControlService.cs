@@ -23,8 +23,8 @@ namespace Buildron.Domain.RemoteControls
 		#region Fields
 		private readonly ICIServerService m_ciServerService;
 		private readonly IUserService m_userService;
-		private readonly IRepository<RemoteControl> m_repository;
-		private RemoteControl m_connectedRC;
+		private readonly IRepository<IRemoteControl> m_repository;
+		private IRemoteControl m_connectedRC;
 		private bool? m_hasRemoteControlConnectedSomeDay;
 		#endregion
 
@@ -35,7 +35,7 @@ namespace Buildron.Domain.RemoteControls
 		/// <param name="ciServerService">CI server service.</param>
 		/// <param name="userService">User service.</param>
 		/// <param name="repository">Repository.</param>
-		public RemoteControlService (ICIServerService ciServerService, IUserService userService, IRepository<RemoteControl> repository)
+		public RemoteControlService (ICIServerService ciServerService, IUserService userService, IRepository<IRemoteControl> repository)
 		{
 			m_ciServerService = ciServerService;
 			m_userService = userService;
@@ -102,7 +102,7 @@ namespace Buildron.Domain.RemoteControls
 		/// Connects the remote control.
 		/// </summary>
 		/// <param name="rcToConnect">Rc to connect.</param>
-		public void ConnectRemoteControl (RemoteControl rcToConnect)
+		public void ConnectRemoteControl (IRemoteControl rcToConnect)
 		{
 			m_connectedRC = rcToConnect;
 			m_connectedRC.Connected = true;
@@ -129,7 +129,7 @@ namespace Buildron.Domain.RemoteControls
 		/// Gets the connected remote control.
 		/// </summary>
 		/// <returns>The connected remote control.</returns>
-		public RemoteControl GetConnectedRemoteControl ()
+		public IRemoteControl GetConnectedRemoteControl ()
 		{
 			return m_connectedRC;
 		}

@@ -24,7 +24,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 {
 	#region Fields
 
-	private CIServer m_ciServer;
+	private ICIServer m_ciServer;
 	private IBuildsProvider m_buildsProvider;
 	private Animator m_animator;
 
