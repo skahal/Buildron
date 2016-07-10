@@ -53,10 +53,6 @@ public class TestBuildsProvider : IBuildsProvider
 			addBuild ("1.?.?", "Card-o-matic");
 		
 			addBuild ("Mac", "Buildron");
-			//addBuild ("Windows", "Buildron");
-		
-			//addBuild ("iOS", "Buildron RC");
-			//addBuild ("Android", "Buildron RC");	
 		}
 	}
 	#endregion
@@ -86,11 +82,12 @@ public class TestBuildsProvider : IBuildsProvider
 			};
 			
 			b.PercentageComplete = Random.Range (0f, 1f);
-			
+
+			var userId = Random.Range (0, 2);
 			var user = new User () 
 			{
-				Name = "User " + Random.Range (0, 10),
-				Email = SHRandomHelper.NextBool () ? "giacomelli@gmail.com" : "giusepe@gmail.com",
+				Name = "User " + userId,
+				Email = userId == 0 ? "giacomelli@gmail.com" : "giusepe@gmail.com",
 			};
 
 			user.UserName = user.Name;
@@ -117,7 +114,7 @@ public class TestBuildsProvider : IBuildsProvider
 	
 	private BuildStatus RandomStatus ()
 	{
-		return (BuildStatus)Random.Range (1, (int)BuildStatus.RunningDeploy);
+		return (BuildStatus)Random.Range (1, (int)BuildStatus.Running);
 	}
 	
 	public void AuthenticateUser (IBasicUser user)

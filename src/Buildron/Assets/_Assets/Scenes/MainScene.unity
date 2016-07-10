@@ -1653,7 +1653,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 486385115}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89614b57ed38240e5a214f501be1937e, type: 3}
+  m_Script: {fileID: 270000476, guid: 6f618ced3538b4c6b89b98197ad170b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &486385118
@@ -1664,7 +1664,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 486385115}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f75af8f3fb78b43daabb8f35ea48951b, type: 3}
+  m_Script: {fileID: 1497475963, guid: 6f618ced3538b4c6b89b98197ad170b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Ball
@@ -2314,12 +2314,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 614427173}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f840055c02f3e4e4d8de5e02ef802863, type: 3}
+  m_Script: {fileID: 1308320081, guid: 6f618ced3538b4c6b89b98197ad170b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_version: 1.11.4
   m_isBetaVersion: 0
-  m_multiplayerVersion: 
+  m_multiplayerVersion: v1.11.4
 --- !u!1 &639640094
 GameObject:
   m_ObjectHideFlags: 0

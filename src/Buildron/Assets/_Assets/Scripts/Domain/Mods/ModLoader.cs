@@ -9,6 +9,7 @@ using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Users;
 using UnityEngine;
 using System.Reflection;
+using System.IO;
 
 namespace Buildron.Domain.Mods
 {
@@ -22,6 +23,10 @@ namespace Buildron.Domain.Mods
 		private readonly IRemoteControlService m_remoteControlService;
 		private readonly IUserService m_userService;
         private List<IMod> m_loadedMods = new List<IMod>();
+
+		// TODO: remove, just for test:
+		public static string RootFolder = "/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/";
+
 		#endregion
 
 		#region Constructors
@@ -41,6 +46,71 @@ namespace Buildron.Domain.Mods
 		{           
 			m_log.Debug ("Initialization started...");
 
+			var modsFolders = System.IO.Directory.GetDirectories (RootFolder);
+			m_log.Debug ("{0} mods folders found at {1}", modsFolders.Length, RootFolder);
+		
+			foreach (var modFolder in modsFolders) {
+				var modFolderName = System.IO.Path.GetFileName (modFolder);
+
+				m_log.Debug ("Loading mod from folder '{0}'...", modFolderName);
+
+				try 
+				{
+					var modAssembly = System.IO.Path.Combine(modFolder, "{0}.dll".With(modFolderName));
+					var modTypeFullName = "{0}.Mod".With(modFolderName);
+					var modAssetBundlePath = System.IO.Path.Combine(modFolder, modFolderName.ToLowerInvariant());
+					var mod = AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap (modAssembly, modTypeFullName) as IMod;
+
+					if (mod == null)
+					{
+						m_log.Warning("{0} does not implement IMod interface. Will not be loaded.", modTypeFullName);
+					}
+					else 
+					{
+						if (File.Exists(modAssetBundlePath)) {
+							m_log.Debug("Loading mod asset bundle from {0}...", modAssetBundlePath);
+							var assetBundle = AssetBundle.LoadFromFile(modAssetBundlePath);
+
+							assetBundle.LoadAllAssets();
+							m_log.Debug("{0} Assets loaded.", assetBundle.GetAllAssetNames().Length);
+						}
+
+						m_log.Debug("Creating mod context...");
+						var context = new ModContext (mod, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);
+
+						m_log.Debug("Initializing mod...");
+						mod.Initialize (context);
+
+						m_log.Debug ("Mod successful created: {0}", mod.Name);
+					}
+				}
+				catch(Exception ex) 
+				{
+					m_log.Error (ex.Message);
+				}
+			}
+
+
+			m_log.Debug ("Looking for IMod implmentations in Buildron assembly...");
+			var buildronAssemblyModTypes = GetType ().Assembly.GetTypes ().Where (t => !t.IsAbstract && typeof(IMod).IsAssignableFrom (t)).ToArray ();
+			m_log.Debug ("Found {0} mods", buildronAssemblyModTypes.Length);
+
+			foreach (var modType in buildronAssemblyModTypes) 
+			{
+				m_log.Debug ("Loading mod from class '{0}'...", modType.FullName);
+				var mod = Activator.CreateInstance (modType) as IMod;
+
+				if (mod == null) {
+					m_log.Warning ("Cannot create mod, there is no default constructor.");
+					continue;
+				}
+
+				m_log.Debug ("Initializing mod {0}...", mod.Name);
+				var context = new ModContext (mod, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);
+				mod.Initialize (context);
+			}
+
+
            // var assetBundle = AssetBundle.LoadFromFile("/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/consolemod");
             //var assetBundle = AssetBundle.LoadFromFile(@"C:\Dropbox\Skahal\Apps\Buildron\build\Mods\consolemod");
 
@@ -52,21 +122,10 @@ namespace Buildron.Domain.Mods
             // Fazer CreateModsAssetBundles criar a versão TextAsset .txt de todos os .cs da pasta do mod. 
             // Depois carregar pelo reflection.
 //            var assets = assetBundle.LoadAllAssets<TextAsset>();
-            Assembly modAssembly = null;
+//            Assembly modAssembly = null;
 
 
-			try 
-			{
-				var mod = AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap ("/Users/giacomelli/Dropbox/Console/test.dll", "Buildron.Mods.Console.Mod") as IMod;
 
-				var context = new ModContext (mod, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);
-				mod.Initialize (context);
-
-				m_log.Debug ("Mod created: {0}", mod.Name);
-			}
-			catch(Exception ex) {
-				m_log.Error (ex.Message);
-			}
 				
            // http://answers.unity3d.com/questions/259569/how-to-compile-script-to-include-it-to-assetbundle.html
            // https://docs.unity3d.com/Manual/UsingDLL.html

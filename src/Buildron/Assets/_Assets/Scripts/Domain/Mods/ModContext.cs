@@ -43,7 +43,7 @@ namespace Buildron.Domain.Mods
         public ModContext(IMod mod, ISHLogStrategy log, IBuildService buildService, ICIServerService ciServerService, IRemoteControlService remoteControlService, IUserService userService)
         {            
             m_mod = mod;
-            Log = new PrefixedLogStrategy(log, "MOD [{0}]: ".With(mod.Name));
+			Log = new PrefixedLogStrategy(log, "MOD [{0}]: ".With(m_mod.Name));
 
             m_buildService = buildService;
             m_ciServerService = ciServerService;
@@ -84,8 +84,8 @@ namespace Buildron.Domain.Mods
             {
                 var build = e.Build;
 
-                build.StatusChanged += BuildStatusChanged;
-                build.TriggeredByChanged += BuildTriggeredByChanged;
+				build.StatusChanged += (s2, e2) => BuildStatusChanged.Raise(s2, e2);
+				build.TriggeredByChanged += (s2, e2) => BuildTriggeredByChanged.Raise(s2, e2);
 
                 BuildFound.Raise(s, e);
             };
