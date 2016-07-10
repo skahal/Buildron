@@ -52,7 +52,7 @@ public class ModBuilder
 			File.Move (assetFile, Path.Combine (modDeployFolder, Path.GetFileName(assetFile)));
 		}
 
-		Directory.Delete (assetsDeployFolder);
+		Directory.Delete (assetsDeployFolder, true);
 	}
 
 	static void CompileMods(string modsSourceFolder, string deployRootFolder)
@@ -72,31 +72,35 @@ public class ModBuilder
 				Directory.CreateDirectory (modDeployFolder);
 			}
 
-			SHLog.Debug ("Compiling mod {0}...", modFolderName);
-			var arguments = new StringBuilder ();
-			arguments.AppendLine ("cd {0}".With(modFolder));
-			arguments.Append ("mcs");
-			arguments.Append (" -reference:\"/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll\"");
-			arguments.Append (" -reference:\"/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll\"");
-			arguments.Append (" -reference:\"../../References/Buildron.ModSdk.dll\"");
-			arguments.Append (" -reference:\"../../References/Skahal.Unity.Scripts.dll\"");
-			arguments.Append (" -reference:\"../../References/Skahal.Unity.Scripts.Externals.dll\"");
-			arguments.Append (" -target:library");
-			arguments.AppendFormat (" -out:{0}.dll", Path.Combine (modDeployFolder, modFolderName));
-			arguments.Append (" -sdk:2");
+			var fromAssembly = Path.Combine(modFolder, "{0}.dll".With(modFolderName));
+			var toAssembly = Path.Combine(modDeployFolder, "{0}.dll".With(modFolderName));
+			File.Copy (fromAssembly, toAssembly);
 
-			var csFiles = Directory.GetFiles (modFolder, "*.cs");
-
-			foreach (var csFile in csFiles) {
-				arguments.AppendFormat (" {0}", Path.GetFileName (csFile));
-			}
-
-			var args = arguments.ToString ();
-			SHLog.Debug ("Executing mcs{0}", args);
-
-			var compileModPath = Path.Combine (modFolder, "mod.compile.sh");
-			File.WriteAllText (compileModPath, args);
-			Run ("open", "-b com.apple.terminal {0}".With(compileModPath));
+//			SHLog.Debug ("Compiling mod {0}...", modFolderName);
+//			var arguments = new StringBuilder ();
+//			arguments.AppendLine ("cd {0}".With(modFolder));
+//			arguments.Append ("mcs");
+//			arguments.Append (" -reference:\"/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll\"");
+//			arguments.Append (" -reference:\"/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll\"");
+//			arguments.Append (" -reference:\"../../References/Buildron.ModSdk.dll\"");
+//			arguments.Append (" -reference:\"../../References/Skahal.Unity.Scripts.dll\"");
+//			arguments.Append (" -reference:\"../../References/Skahal.Unity.Scripts.Externals.dll\"");
+//			arguments.Append (" -target:library");
+//			arguments.AppendFormat (" -out:{0}.dll", Path.Combine (modDeployFolder, modFolderName));
+//			arguments.Append (" -sdk:2");
+//
+//			var csFiles = Directory.GetFiles (modFolder, "*.cs");
+//
+//			foreach (var csFile in csFiles) {
+//				arguments.AppendFormat (" {0}", Path.GetFileName (csFile));
+//			}
+//
+//			var args = arguments.ToString ();
+//			SHLog.Debug ("Executing mcs{0}", args);
+//
+//			var compileModPath = Path.Combine (modFolder, "mod.compile.sh");
+//			File.WriteAllText (compileModPath, args);
+//			Run ("open", "-b com.apple.terminal {0}".With(compileModPath));
 		}
 	}
 	static string Run(string exePath, string arguments = "", bool waitForExit = true)

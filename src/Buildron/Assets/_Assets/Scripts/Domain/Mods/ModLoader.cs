@@ -57,10 +57,13 @@ namespace Buildron.Domain.Mods
 
 				try 
 				{
-					var modAssembly = System.IO.Path.Combine(modFolder, "{0}.dll".With(modFolderName));
+					var modAssemblyPath = System.IO.Path.Combine(modFolder, "{0}.dll".With(modFolderName));
 					var modTypeFullName = "{0}.Mod".With(modFolderName);
 					var modAssetBundlePath = System.IO.Path.Combine(modFolder, modFolderName.ToLowerInvariant());
-					var mod = AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap (modAssembly, modTypeFullName) as IMod;
+
+					m_log.Debug("Loading assembly '{0}'...", modAssemblyPath);
+					var modAssembly = Assembly.LoadFile(modAssemblyPath);
+					var mod = Activator.CreateInstance(modAssembly.GetType(modTypeFullName)) as IMod;
 
 					if (mod == null)
 					{
@@ -74,32 +77,41 @@ namespace Buildron.Domain.Mods
 							m_log.Debug("Loading mod asset bundle from {0}...", modAssetBundlePath);
 							assetBundle = AssetBundle.LoadFromFile(modAssetBundlePath);
 
-							//assetBundle.LoadAllAssets();
 							m_log.Debug("{0} Assets loaded.", assetBundle.GetAllAssetNames().Length);
 						}
 
 						m_log.Debug("Creating mod context...");
-						var context = new ModContext (mod, m_originalLog, new AssetBundleAssetsLoader(assetBundle), m_buildService, m_ciServerService, m_remoteControlService, m_userService);
+						var context = new ModContext (mod, m_originalLog, new AssetBundleAssetsLoader(modAssembly, assetBundle), m_buildService, m_ciServerService, m_remoteControlService, m_userService);
 
 						m_log.Debug("Initializing mod...");
 						mod.Initialize (context);
+						LoadMod (mod);
 
 						m_log.Debug ("Mod successful created: {0}", mod.Name);
 					}
 				}
+				catch(FileNotFoundException ex) {
+					m_log.Error ("{0}: {1}", ex.GetBaseException().Message, ex.FileName);
+				}
 				catch(Exception ex) 
 				{
-					m_log.Error (ex.Message);
+					m_log.Error ("{0}: {1}\n{2}", ex.GetType().Name, ex.Message, ex.StackTrace);
 				}
 			}
 
 
-			m_log.Debug ("Looking for IMod implmentations in Buildron assembly...");
-			var buildronAssemblyModTypes = GetType ().Assembly.GetTypes ().Where (t => !t.IsAbstract && typeof(IMod).IsAssignableFrom (t)).ToArray ();
+			m_log.Debug ("Looking for IMod implementations in Buildron assembly...");
+			var allTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (a => a.GetTypes ());
+			var buildronAssemblyModTypes = allTypes.Where (t => !t.IsAbstract && typeof(IMod).IsAssignableFrom (t)).ToArray ();
 			m_log.Debug ("Found {0} mods", buildronAssemblyModTypes.Length);
 
 			foreach (var modType in buildronAssemblyModTypes) 
 			{
+				if (m_loadedMods.Any (m => m.GetType () == modType)) {
+					m_log.Debug	("Ignoring {0}. Already loaded from mod files", modType.Name);
+					continue;
+				}
+
 				m_log.Debug ("Loading mod from class '{0}'...", modType.FullName);
 				var mod = Activator.CreateInstance (modType) as IMod;
 
@@ -111,6 +123,7 @@ namespace Buildron.Domain.Mods
 				m_log.Debug ("Initializing mod {0}...", mod.Name);
 				var context = new ModContext (mod, m_originalLog, new ResourcesFolderAssetsLoader(), m_buildService, m_ciServerService, m_remoteControlService, m_userService);
 				mod.Initialize (context);
+				LoadMod (mod);
 			}
 
 
@@ -187,7 +200,7 @@ namespace Buildron.Domain.Mods
 			m_log.Debug ("Initialization finished.");
 		}
 
-        public void LoadMod(IMod mod)
+        private void LoadMod(IMod mod)
         {
             ValidateMod(mod);
             m_loadedMods.Add(mod);
