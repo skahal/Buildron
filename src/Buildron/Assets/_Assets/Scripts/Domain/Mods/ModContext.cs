@@ -40,11 +40,12 @@ namespace Buildron.Domain.Mods
         #endregion
 
         #region Constructors
-        public ModContext(IMod mod, ISHLogStrategy log, IBuildService buildService, ICIServerService ciServerService, IRemoteControlService remoteControlService, IUserService userService)
+		public ModContext(IMod mod, ISHLogStrategy log, IAssetsLoader assetsLoader, IBuildService buildService, ICIServerService ciServerService, IRemoteControlService remoteControlService, IUserService userService)
         {            
             m_mod = mod;
 			Log = new PrefixedLogStrategy(log, "MOD [{0}]: ".With(m_mod.Name));
 
+			AssetsLoader = new LogAssetsLoader (assetsLoader, Log);
             m_buildService = buildService;
             m_ciServerService = ciServerService;
             m_remoteControlService = remoteControlService;
@@ -75,6 +76,8 @@ namespace Buildron.Domain.Mods
         }
 
         public ISHLogStrategy Log { get; private set; }
+
+		public IAssetsLoader AssetsLoader { get; private set; }
         #endregion
 
         #region Methods     

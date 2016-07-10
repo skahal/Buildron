@@ -36,6 +36,8 @@ namespace Buildron.Domain.Mods
         IList<IUser> Users { get; }
 
         ISHLogStrategy Log { get; }
+
+		IAssetsLoader AssetsLoader { get; }
         #endregion
     }
 }

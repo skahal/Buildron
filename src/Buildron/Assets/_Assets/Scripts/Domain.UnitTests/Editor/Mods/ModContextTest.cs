@@ -28,11 +28,12 @@ namespace Buildron.Domain.UnitTests.Builds
         {
             var mod = MockRepository.GenerateMock<IMod>();
             var log = MockRepository.GenerateMock<ISHLogStrategy>();
+			var assetsLoader = MockRepository.GenerateMock<IAssetsLoader> ();
             m_buildService = MockRepository.GenerateMock<IBuildService>();
             m_ciService = MockRepository.GenerateMock<ICIServerService>();
             m_remoteControlService = MockRepository.GenerateMock<IRemoteControlService>();
             m_userService = MockRepository.GenerateMock<IUserService>();            
-            m_target = new ModContext(mod, log, m_buildService, m_ciService, m_remoteControlService, m_userService);
+			m_target = new ModContext(mod, log, assetsLoader, m_buildService, m_ciService, m_remoteControlService, m_userService);
         }
         #endregion
 

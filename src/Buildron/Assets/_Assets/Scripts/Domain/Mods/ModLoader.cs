@@ -10,6 +10,7 @@ using Buildron.Domain.Users;
 using UnityEngine;
 using System.Reflection;
 using System.IO;
+using Buildron.Infrastructure.AssetsLoaders;
 
 namespace Buildron.Domain.Mods
 {
@@ -67,16 +68,18 @@ namespace Buildron.Domain.Mods
 					}
 					else 
 					{
+						AssetBundle assetBundle = null;
+
 						if (File.Exists(modAssetBundlePath)) {
 							m_log.Debug("Loading mod asset bundle from {0}...", modAssetBundlePath);
-							var assetBundle = AssetBundle.LoadFromFile(modAssetBundlePath);
+							assetBundle = AssetBundle.LoadFromFile(modAssetBundlePath);
 
-							assetBundle.LoadAllAssets();
+							//assetBundle.LoadAllAssets();
 							m_log.Debug("{0} Assets loaded.", assetBundle.GetAllAssetNames().Length);
 						}
 
 						m_log.Debug("Creating mod context...");
-						var context = new ModContext (mod, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);
+						var context = new ModContext (mod, m_originalLog, new AssetBundleAssetsLoader(assetBundle), m_buildService, m_ciServerService, m_remoteControlService, m_userService);
 
 						m_log.Debug("Initializing mod...");
 						mod.Initialize (context);
@@ -106,7 +109,7 @@ namespace Buildron.Domain.Mods
 				}
 
 				m_log.Debug ("Initializing mod {0}...", mod.Name);
-				var context = new ModContext (mod, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);
+				var context = new ModContext (mod, m_originalLog, new ResourcesFolderAssetsLoader(), m_buildService, m_ciServerService, m_remoteControlService, m_userService);
 				mod.Initialize (context);
 			}
 

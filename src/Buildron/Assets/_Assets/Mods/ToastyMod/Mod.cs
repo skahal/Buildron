@@ -11,7 +11,7 @@ namespace ToastyMod
 		#region IMod implementation
 		public void Initialize (IModContext context)
 		{
-			var holder = (GameObject)Object.Instantiate (Resources.Load("ToastyHolderPrefab"));
+			var holder = GameObject.Instantiate(context.AssetsLoader.Load ("ToastyHolderPrefab") as Object) as GameObject;
 
 			context.BuildStatusChanged += (sender, e) => {
 				if (e.Build.Status == BuildStatus.Success)
