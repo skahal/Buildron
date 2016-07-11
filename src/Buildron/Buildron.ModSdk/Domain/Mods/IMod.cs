@@ -10,10 +10,5 @@
 		/// </summary>
 		/// <param name="context">The mod context.</param>
 		void Initialize(IModContext context);
-
-        /// <summary>
-        /// Gets the name.
-        /// </summary>
-        string Name { get; }
 	}
 }

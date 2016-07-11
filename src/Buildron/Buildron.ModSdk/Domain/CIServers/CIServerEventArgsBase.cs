@@ -9,9 +9,9 @@ namespace Buildron.Domain.CIServers
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServers.CIServerdEventArgsBase"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.CIServers.CIServerEventArgsBase"/> class.
 		/// </summary>
-		/// <param name="build">The Continuous Integration server.</param>
+		/// <param name="server">The continuous integration server.</param>
 		protected CIServerEventArgsBase(ICIServer server)
 		{
 			Server = server;

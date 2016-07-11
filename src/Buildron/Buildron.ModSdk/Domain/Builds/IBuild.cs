@@ -71,6 +71,9 @@ namespace Buildron.Domain.Builds
     }
     #endregion
 
+	/// <summary>
+	/// Defines an interface to a build.
+	/// </summary>
 	public interface IBuild : IComparable<IBuild>, ICloneable 
     {
 		#region Events        
@@ -85,27 +88,76 @@ namespace Buildron.Domain.Builds
 		event EventHandler<BuildTriggeredByChangedEventArgs> TriggeredByChanged;
 		#endregion
 
+		#region Properties
+		/// <summary>
+		/// Gets or sets the configuration.
+		/// </summary>
 		IBuildConfiguration Configuration { get; set; }
-		DateTime Date { get; set; } 
-		string Id { get; set;}
-        bool IsFailed { get; }
-        bool IsQueued { get; }
-        bool IsRunning { get; }
-        bool IsSuccess { get; }
-		string LastChangeDescription { get; set;}
-		IBuildStep LastRanStep { get; set;}
-		float PercentageComplete { get; set;}
-        BuildStatus PreviousStatus { get; }
-		int Sequence { get; set;}
-		BuildStatus Status { get; set;}
-		IUser TriggeredBy { get; set;}
-
-        int CompareTo(IBuild other);
 
 		/// <summary>
-		/// Clones this instance.
+		/// Gets or sets the date.
 		/// </summary>
-		/// <returns>The clone.</returns>
-		object Clone();
+		DateTime Date { get; set; } 
+
+		/// <summary>
+		/// Gets or sets the identifier.
+		/// </summary>
+		string Id { get; set;}
+
+		/// <summary>
+		/// Gets a value indicating whether the build has failed (Canceled | Error | Failed)
+		/// </summary>
+        bool IsFailed { get; }
+        
+		/// <summary>
+		/// Gets a value indicating whether the build has been queued.
+		/// </summary>
+		bool IsQueued { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether the build is running.
+		/// </summary>
+        bool IsRunning { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether the build is finish with success.
+		/// </summary>
+        bool IsSuccess { get; }
+
+		/// <summary>
+		/// Gets or sets the last change description.
+		/// </summary>
+		string LastChangeDescription { get; set;}
+
+		/// <summary>
+		/// Gets or sets the last ran step.
+		/// </summary>
+		IBuildStep LastRanStep { get; set;}
+
+		/// <summary>
+		/// Gets or sets the percentage complete.
+		/// </summary>
+		float PercentageComplete { get; set;}
+
+		/// <summary>
+		/// Gets the previous status.
+		/// </summary>
+        BuildStatus PreviousStatus { get; }
+
+		/// <summary>
+		/// Gets or sets the sequence.
+		/// </summary>
+		int Sequence { get; set;}
+
+		/// <summary>
+		/// Gets or sets the status.
+		/// </summary>	
+		BuildStatus Status { get; set;}
+
+		/// <summary>
+		/// Gets or sets the user that triggered the build.
+		/// </summary>
+		IUser TriggeredBy { get; set;}
+		#endregion
     }
 }

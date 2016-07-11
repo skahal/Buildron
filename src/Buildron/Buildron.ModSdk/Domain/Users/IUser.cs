@@ -72,21 +72,6 @@ namespace Buildron.Domain.Users
 		/// </summary>
 		/// <returns><c>true</c> if this instance has running build; otherwise, <c>false</c>.</returns>
 		bool HasRunningBuild ();
-
-		/// <summary>
-		/// Determines whether the specified <see cref="Buildron.Domain.Users.User"/> is equal to the current <see cref="Buildron.Domain.Users.User"/>.
-		/// </summary>
-		/// <param name="other">The <see cref="Buildron.Domain.Users.User"/> to compare with the current <see cref="Buildron.Domain.Users.User"/>.</param>
-		/// <returns><c>true</c> if the specified <see cref="Buildron.Domain.Users.User"/> is equal to the current
-		/// <see cref="Buildron.Domain.Users.User"/>; otherwise, <c>false</c>.</returns>
-		bool Equals(IUser other);
-
-        /// <summary>
-        /// Compares to.
-        /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns></returns>
-		int CompareTo(IUser other);
 	    #endregion
     }
 }

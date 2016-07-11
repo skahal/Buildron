@@ -7,7 +7,7 @@ namespace Buildron.Domain.Users
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.UserFoundArgs"/> class.
+		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.UserFoundEventArgs"/> class.
 		/// </summary>
 		/// <param name="user">The user.</param>
 		public UserFoundEventArgs (IUser user)

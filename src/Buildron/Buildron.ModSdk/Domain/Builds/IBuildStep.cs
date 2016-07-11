@@ -48,9 +48,21 @@
     }
     #endregion
 
+	/// <summary>
+	/// Defines an interface to a build's step.
+	/// </summary>
     public interface IBuildStep
     {
+		/// <summary>
+		/// Gets or sets the name.
+		/// </summary>
+		/// <value>The name.</value>
         string Name { get; set; }
+
+		/// <summary>
+		/// Gets or sets the type of the step.
+		/// </summary>
+		/// <value>The type of the step.</value>
         BuildStepType StepType { get; set; }
     }
 }
