@@ -5,12 +5,12 @@ using Skahal.Logging;
 
 namespace Buildron.Domain.Mods
 {
-	public class LogAssetsLoader : IAssetsLoader
+	public class LogAssetsProxy : IAssetsProxy
 	{
-		private IAssetsLoader m_underlying;
+		private IAssetsProxy m_underlying;
 		private ISHLogStrategy m_log;
 
-		public LogAssetsLoader(IAssetsLoader underlying, ISHLogStrategy log)
+		public LogAssetsProxy(IAssetsProxy underlying, ISHLogStrategy log)
 		{
 			m_underlying = underlying;
 			m_log = log;

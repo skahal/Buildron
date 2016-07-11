@@ -21,6 +21,7 @@ using Buildron.Controllers;
 using Buildron.Domain.Servers;
 using Skahal.Threading;
 using Buildron.Domain.Mods;
+using Buildron.Infrastructure.ModsProvider;
 
 namespace Buildron.Infrastructure.IoC
 {
@@ -30,6 +31,7 @@ namespace Buildron.Infrastructure.IoC
 		public Texture2D ScheduledTriggerAvatar;
 		public Texture2D RetryTriggerAvatar;
 		public Texture2D UnunknownAvatar;
+		public string ModsFolder = "/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/";
 		#endregion
 
 		#region Methods
@@ -73,6 +75,11 @@ namespace Buildron.Infrastructure.IoC
             Container.Bind<IBuildService>().To<BuildService>().AsSingle();
 			Container.Bind<IServerService>().To<ServerService>().AsSingle();
 			Container.Bind<IModLoader>().To<ModLoader>().AsSingle();
+
+			var log = Container.Resolve<ISHLogStrategy> ();
+			var fileSystemModsProvider = new FileSystemModsProvider (ModsFolder, log);
+			var appDomainModsProvider = new AppDomainModsProvider (log);
+			Container.Bind<IModsProvider[]> ().FromInstance (new IModsProvider[] { fileSystemModsProvider, appDomainModsProvider });
 		}
 
 		void InstallRepositories ()

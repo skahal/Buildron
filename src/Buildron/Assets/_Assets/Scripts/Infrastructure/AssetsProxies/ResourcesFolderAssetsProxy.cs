@@ -2,9 +2,9 @@
 using Buildron.Domain.Mods;
 using UnityEngine;
 
-namespace Buildron.Infrastructure.AssetsLoaders
+namespace Buildron.Infrastructure.AssetsProxies
 {
-	public class ResourcesFolderAssetsLoader : IAssetsLoader
+	public class ResourcesFolderAssetsProxy : IAssetsProxy
 	{
 		public object Load (string assetName)
 		{

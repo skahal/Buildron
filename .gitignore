@@ -28,3 +28,4 @@ UpgradeLog.htm
 build
 src/Buildron/Buildron.ModSdk/bin/Debug
 src/Buildron/Buildron.ModSdk/obj/Debug
+src/Buildron/Buildron.ModSdk/packages

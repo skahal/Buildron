@@ -35,7 +35,6 @@ namespace Buildron.Domain.Builds
         private BuildStatus m_status;
         private IUser m_triggeredBy;
         private static int s_instancesCount;
-        private DateTime m_lockCurrentStatusUntil = DateTime.Now;
         #endregion
 
         #region Constructors
@@ -94,14 +93,8 @@ namespace Buildron.Domain.Builds
 
             set
             {
-                if (m_status != value && DateTime.Now >= m_lockCurrentStatusUntil)
+                if (m_status != value)
                 {
-
-                    //if (value == BuildStatus.Queued)
-                    //{
-                    //    m_lockCurrentStatusUntil = DateTime.Now.AddSeconds(SecondsToLockQueueStatus);
-                    //}
-
                     PreviousStatus = m_status;
                     m_status = value;
 
@@ -189,7 +182,10 @@ namespace Buildron.Domain.Builds
             }
         }
 
-        public float PercentageComplete { get; set; }
+		/// <summary>
+		/// Gets or sets the percentage complete.
+		/// </summary>
+	    public float PercentageComplete { get; set; }
 
         /// <summary>
         /// Gets or sets the user that triggered the build.

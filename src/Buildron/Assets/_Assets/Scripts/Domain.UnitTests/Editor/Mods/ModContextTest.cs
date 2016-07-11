@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Buildron.Domain.Mods;
 using Skahal.Logging;
 
-namespace Buildron.Domain.UnitTests.Builds
+namespace Buildron.Domain.UnitTests.Mods
 {
     [Category("Buildron.Domain")]
     [Category("Mods")]
@@ -27,13 +27,15 @@ namespace Buildron.Domain.UnitTests.Builds
         public void Initialize()
         {
             var mod = MockRepository.GenerateMock<IMod>();
+			var assetsProxy = MockRepository.GenerateMock<IAssetsProxy> ();
+			var instance = new ModInstanceInfo (mod, new ModInfo("test"), assetsProxy);
             var log = MockRepository.GenerateMock<ISHLogStrategy>();
-			var assetsLoader = MockRepository.GenerateMock<IAssetsLoader> ();
+
             m_buildService = MockRepository.GenerateMock<IBuildService>();
             m_ciService = MockRepository.GenerateMock<ICIServerService>();
             m_remoteControlService = MockRepository.GenerateMock<IRemoteControlService>();
             m_userService = MockRepository.GenerateMock<IUserService>();            
-			m_target = new ModContext(mod, log, assetsLoader, m_buildService, m_ciService, m_remoteControlService, m_userService);
+			m_target = new ModContext(instance, log, m_buildService, m_ciService, m_remoteControlService, m_userService);
         }
         #endregion
 

@@ -1311,6 +1311,7 @@ MonoBehaviour:
     type: 3}
   RetryTriggerAvatar: {fileID: 2800000, guid: 80ba897a99a254866823d382f7816035, type: 3}
   UnunknownAvatar: {fileID: 2800000, guid: 6f2f14440482e4449b3a2877897f7909, type: 3}
+  ModsFolder: /Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/
 --- !u!1 &365713297
 GameObject:
   m_ObjectHideFlags: 0
