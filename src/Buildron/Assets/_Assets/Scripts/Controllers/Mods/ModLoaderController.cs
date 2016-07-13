@@ -15,5 +15,10 @@ public class ModLoaderController : MonoBehaviour, IInitializable
 	{
 		m_modLoader.Initialize();
 	}
+
+    void OnApplicationQuit()
+    {
+        m_modLoader.UnloadMods();
+    }
 	#endregion
 }

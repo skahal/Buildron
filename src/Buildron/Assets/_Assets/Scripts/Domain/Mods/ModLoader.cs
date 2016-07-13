@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
 using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Users;
-using Buildron.Infrastructure.AssetsProxies;
-using Skahal.Logging;
-using UnityEngine;
 using Skahal.Common;
+using Skahal.Logging;
 
 namespace Buildron.Domain.Mods
 {
-	public class ModLoader : IModLoader
+    public class ModLoader : IModLoader
     {
 		#region Fields
 		private ISHLogStrategy m_originalLog;
@@ -26,10 +21,6 @@ namespace Buildron.Domain.Mods
 		private readonly IRemoteControlService m_remoteControlService;
 		private readonly IUserService m_userService;
 		private List<ModInstanceInfo> m_loadedMods = new List<ModInstanceInfo>();
-
-		// TODO: remove, just for test:
-		public static string RootFolder = "/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/";
-
 		#endregion
 
 		#region Constructors
@@ -81,7 +72,24 @@ namespace Buildron.Domain.Mods
 			m_log.Debug ("Initialization finished.");
 		}
 
-		private void InitializeMod(ModInstanceInfo instance)
+        public void UnloadMods()
+        {
+            foreach (var mod in m_loadedMods)
+            {
+                var modAsDisposable = mod.Mod as IDisposable;
+
+                if (modAsDisposable != null)
+                {
+                    m_log.Debug("Calling mod '{0}' Dispose method...", mod.Info.Name);
+                    modAsDisposable.Dispose();
+                }
+            }
+
+            m_loadedMods.Clear();
+            m_log.Debug("All mods unloaded.");
+        }
+
+        private void InitializeMod(ModInstanceInfo instance)
         {
 			m_log.Debug ("Creating mod context...");
 			var context = new ModContext (instance, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);

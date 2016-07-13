@@ -1,4 +1,6 @@
-﻿namespace Buildron.Domain.Mods
+﻿using System;
+
+namespace Buildron.Domain.Mods
 {
     /// <summary>
     /// Defines an interface for a Buildron's mod.
