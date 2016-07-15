@@ -95,11 +95,13 @@ namespace Buildron.Domain.CIServers
 				}
 			};
 
-			m_buildsProvider.UserAuthenticationSuccessful += delegate
+			m_buildsProvider.UserAuthenticationCompleted += (sender, e) => 
 			{
-				Initialized = true;
-				ciServer.Status = CIServerStatus.Up;
-				CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs (ciServer));
+				if (e.Success) {
+					Initialized = true;
+					ciServer.Status = CIServerStatus.Up;
+					CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs (ciServer));
+				}
 			};
 		}
 
@@ -107,7 +109,7 @@ namespace Buildron.Domain.CIServers
 		/// Authenticates the user.
 		/// </summary>
 		/// <param name="user">User.</param>
-		public void AuthenticateUser (IBasicUser user)
+		public void AuthenticateUser (IAuthUser user)
 		{
 			if (m_buildsProvider != null)
 			{

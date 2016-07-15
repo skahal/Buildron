@@ -57,7 +57,7 @@ namespace Buildron.Infrastructure.BuildsProvider
 		public event EventHandler BuildsRefreshed;
 		public event EventHandler ServerUp;
 		public event EventHandler ServerDown;
-		public event EventHandler UserAuthenticationSuccessful;
+		public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 		public event EventHandler UserAuthenticationFailed;
 
 		public void RefreshAllBuilds ()
@@ -69,11 +69,11 @@ namespace Buildron.Infrastructure.BuildsProvider
 
         protected abstract void PerformRefreshAllBuilds();
 
-        public abstract void RunBuild (IBasicUser user, IBuild build);
+		public abstract void RunBuild (IAuthUser user, IBuild build);
 
-		public abstract void StopBuild (IBasicUser user, IBuild build);
+		public abstract void StopBuild (IAuthUser user, IBuild build);
 
-		public abstract void AuthenticateUser (IBasicUser user);
+		public abstract void AuthenticateUser (IAuthUser user);
 		#endregion
 
 		#region Methods
@@ -93,7 +93,7 @@ namespace Buildron.Infrastructure.BuildsProvider
 			}
 		}
 
-		protected string GetHttpBasicAuthUrl (IBasicUser user, string urlEndPart, params object[] args)
+		protected string GetHttpBasicAuthUrl (IAuthUser user, string urlEndPart, params object[] args)
 		{	
 			var endPart = string.Format (urlEndPart, args);
 			
@@ -158,14 +158,9 @@ namespace Buildron.Infrastructure.BuildsProvider
 			ServerDown.Raise (this);
 		}
 
-		protected void OnUserAuthenticationSuccessful ()
+		protected void OnUserAuthenticationCompleted (UserAuthenticationCompletedEventArgs args)
 		{
-			UserAuthenticationSuccessful.Raise (this);
-		}
-
-		protected void OnUserAuthenticationFailed ()
-		{
-			UserAuthenticationFailed.Raise (this);
+			UserAuthenticationCompleted.Raise (this, args);
 		}
 		#endregion
 	}

@@ -26,7 +26,7 @@ namespace Buildron.Domain.UnitTests.RemoteControls
             Assert.IsTrue(target.HasRemoteControlConnectedSomeDay);
 
             target.Initialize();
-            userService.Raise(u => u.UserAuthenticationCompleted += null, null, new UserAuthenticationCompletedEventArgs(new User(), false));
+            userService.Raise(u => u.UserAuthenticationCompleted += null, null, new UserAuthenticationCompletedEventArgs(new RemoteControl(), false));
 
             Assert.IsNull(target.GetConnectedRemoteControl());
             Assert.IsFalse(rc.Connected);

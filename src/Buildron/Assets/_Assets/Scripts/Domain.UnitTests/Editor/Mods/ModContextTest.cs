@@ -163,7 +163,7 @@ namespace Buildron.Domain.UnitTests.Mods
         public void UserAuthenticationCompleted_UserServiceRaise_EventRaised()
         {
             var raised = m_target.CreateAssert<UserAuthenticationCompletedEventArgs>("UserAuthenticationCompleted", 1);
-            m_userService.Raise(b => b.UserAuthenticationCompleted += null, null, new UserAuthenticationCompletedEventArgs(new User(), true));
+            m_userService.Raise(b => b.UserAuthenticationCompleted += null, null, new UserAuthenticationCompletedEventArgs(new RemoteControl(), true));
 
             raised.Assert();
         }

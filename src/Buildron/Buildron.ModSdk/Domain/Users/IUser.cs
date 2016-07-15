@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Buildron.Domain.Builds;
+using UnityEngine;
 
 namespace Buildron.Domain.Users
 {
@@ -33,6 +34,13 @@ namespace Buildron.Domain.Users
     /// </summary>
     public interface IUser : IEquatable<IUser>, IComparable<IUser>
     {
+		#region Events
+		/// <summary>
+		/// Occurs when photo updated.
+		/// </summary>
+		event EventHandler PhotoUpdated;
+		#endregion
+
 		#region Properties
 		/// <summary>
 		/// Gets the build.
@@ -58,6 +66,12 @@ namespace Buildron.Domain.Users
 		/// Gets or sets the kind.
 		/// </summary>
 		UserKind Kind { get; set; }
+
+		/// <summary>
+		/// Gets or sets the photo.
+		/// </summary>
+		/// <value>The photo.</value>
+		Texture2D Photo { get; set; }
 		#endregion
 		
 		#region Methods

@@ -62,8 +62,7 @@ public class TestBuildsProvider : IBuildsProvider
 	public event System.EventHandler BuildsRefreshed;	
 	public event System.EventHandler ServerUp;
 	public event System.EventHandler ServerDown;
-	public event System.EventHandler UserAuthenticationSuccessful;
-	public event System.EventHandler UserAuthenticationFailed;
+	public event System.EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 	
 	public string Name { get { return "Test"; }}
 	public AuthenticationRequirement AuthenticationRequirement { get { return AuthenticationRequirement.Never; } }
@@ -102,12 +101,12 @@ public class TestBuildsProvider : IBuildsProvider
 		BuildsRefreshed.Raise (this);
 	}
 	
-	public void RunBuild (IBasicUser user, IBuild build)
+	public void RunBuild (IAuthUser user, IBuild build)
 	{
 		build.Status = BuildStatus.Running;
 	}
 	
-	public void StopBuild (IBasicUser user, IBuild build)
+	public void StopBuild (IAuthUser user, IBuild build)
 	{
 		build.Status = BuildStatus.Canceled;
 	}
@@ -117,12 +116,12 @@ public class TestBuildsProvider : IBuildsProvider
 		return (BuildStatus)Random.Range (1, (int)BuildStatus.Running);
 	}
 	
-	public void AuthenticateUser (IBasicUser user)
+	public void AuthenticateUser (IAuthUser user)
 	{
 		if (string.IsNullOrEmpty (user.Password)) {
-			UserAuthenticationFailed (this, System.EventArgs.Empty);
+			UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (user, false));
 		} else {
-			UserAuthenticationSuccessful(this, System.EventArgs.Empty);
+			UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (user, true));
 		}
 	}
 	

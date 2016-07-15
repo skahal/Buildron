@@ -51,23 +51,20 @@ namespace Buildron.Infrastructure.FunctionalTests.BuildsProviders.Filter
 			var serverDownRaised = target.CreateAssert<EventArgs>("ServerDown", 1);
 			var serverUpRaised = target.CreateAssert<EventArgs>("ServerUp", 1);
 			target.StopBuild (user1, build2);
-			var userAuthenticationFailedRaised = target.CreateAssert<EventArgs> ("UserAuthenticationFailed", 1);
-			var userAuthenticationSuccessful = target.CreateAssert<EventArgs> ("UserAuthenticationSuccessful", 1);
-
+			var userAuthenticationCompletedRaised = target.CreateAssert<UserAuthenticationCompletedEventArgs> ("UserAuthenticationCompleted", 1);
+		
 			underlying.Raise (u => u.BuildsRefreshed += null, null, new BuildsRefreshedEventArgs (null, null, null));
 			underlying.Raise (u => u.BuildUpdated += null, null, new BuildUpdatedEventArgs (build1));
 			underlying.Raise (u => u.BuildUpdated += null, null, new BuildUpdatedEventArgs (build2));
 			underlying.Raise (u => u.ServerDown += null, null, EventArgs.Empty);
 			underlying.Raise (u => u.ServerUp += null, null, EventArgs.Empty);
-			underlying.Raise (u => u.UserAuthenticationFailed += null, null, EventArgs.Empty);
-			underlying.Raise (u => u.UserAuthenticationSuccessful += null, null, EventArgs.Empty);
-
+			underlying.Raise (u => u.UserAuthenticationCompleted += null, null, new UserAuthenticationCompletedEventArgs(null, true));
+		
 			buildsRefreshedRaised.Assert ();
 			buildUpdatedRaised.Assert ();
 			serverDownRaised.Assert ();
 			serverUpRaised.Assert ();
-			userAuthenticationFailedRaised.Assert ();
-			userAuthenticationSuccessful.Assert ();
+			userAuthenticationCompletedRaised.Assert ();
 			underlying.VerifyAllExpectations ();
 		}
 

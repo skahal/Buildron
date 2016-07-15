@@ -8,6 +8,7 @@ using Rhino.Mocks;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Logging;
 using Skahal.Threading;
+using Buildron.Domain.Users;
 
 namespace Buildron.Domain.UnitTests.CIServers
 {
@@ -76,7 +77,7 @@ namespace Buildron.Domain.UnitTests.CIServers
             var provider = MockRepository.GenerateMock<IBuildsProvider>();
             provider.Expect(p => p.AuthenticateUser(null)).IgnoreArguments().WhenCalled(m =>
             {
-                provider.Raise(p => p.UserAuthenticationSuccessful += null, null, null);
+				provider.Raise(p => p.UserAuthenticationCompleted += null, null, new UserAuthenticationCompletedEventArgs (null, true));
             });
 
             var statusChangedRaised = target.CreateAssert<CIServerStatusChangedEventArgs>("CIServerStatusChanged", 1);

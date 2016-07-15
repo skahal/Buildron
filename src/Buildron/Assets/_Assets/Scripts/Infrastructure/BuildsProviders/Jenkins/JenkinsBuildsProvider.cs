@@ -107,7 +107,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
             });
         }
 
-		public override void RunBuild(IBasicUser user, IBuild build)
+		public override void RunBuild(IAuthUser user, IBuild build)
         {
             var id = build.Configuration.Id;
             var url = GetHttpBasicAuthUrl(user, "job/{0}/build", id);
@@ -118,7 +118,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
            });
         }
 
-		public override void StopBuild(IBasicUser user, IBuild build)
+		public override void StopBuild(IAuthUser user, IBuild build)
         {
             var id = build.Configuration.Id;
             var url = GetHttpBasicAuthUrl(user, "job/{0}/lastBuild/stop", id);
@@ -129,7 +129,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
            });
         }
 
-		public override void AuthenticateUser(IBasicUser user)
+		public override void AuthenticateUser(IAuthUser user)
         {
             var url = GetHttpBasicAuthUrl(user, "");
 
@@ -137,11 +137,11 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
                 url,
                 (r) =>
                 {
-                    OnUserAuthenticationSuccessful();
+					OnUserAuthenticationCompleted(new UserAuthenticationCompletedEventArgs(user, true));
                 },
                 (e) =>
                 {
-                    OnUserAuthenticationFailed();
+					OnUserAuthenticationCompleted(new UserAuthenticationCompletedEventArgs(user, false));
                 });
         }
         #endregion

@@ -48,14 +48,9 @@ namespace Buildron.Domain.Builds
 		event EventHandler ServerDown;
 
 		/// <summary>
-		/// Occurs when user authentication is successful.
+		/// Occurs when user authentication completed.
 		/// </summary>
-		event EventHandler UserAuthenticationSuccessful;
-
-		/// <summary>
-		/// Occurs when user authentication failed.
-		/// </summary>
-		event EventHandler UserAuthenticationFailed;
+		event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 		#endregion
 		
 		#region Properties
@@ -89,20 +84,20 @@ namespace Buildron.Domain.Builds
 		/// </summary>
 		/// <param name="user">The user that triggered the run.</param>
 		/// <param name="build">The build to run</param>
-		void RunBuild(IBasicUser user, IBuild build);
+		void RunBuild(IAuthUser user, IBuild build);
 
 		/// <summary>
 		/// Stops the build.
 		/// </summary>
 		/// <param name="user">The user that triggered the stop.</param>
 		/// <param name="build">The build to stop</param>
-		void StopBuild(IBasicUser user, IBuild build);
+		void StopBuild(IAuthUser user, IBuild build);
 
 		/// <summary>
 		/// Authenticates the user.
 		/// </summary>
 		/// <param name="user">The user to authenticate.</param>
-		void AuthenticateUser(IBasicUser user);
+		void AuthenticateUser(IAuthUser user);
 		#endregion
 	}
 }

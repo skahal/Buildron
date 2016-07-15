@@ -103,7 +103,12 @@ namespace Buildron.Domain.Users
 						// New user found.
 						Users.Add (user);
 						UserFound.Raise (serviceSender, new UserFoundEventArgs (user));
-						RaiseUserTriggeredBuildEvents (serviceSender, user, user.Builds);                       
+						RaiseUserTriggeredBuildEvents (serviceSender, user, user.Builds);  
+
+						GetUserPhoto(user, (photo) => {
+							user.Photo = photo;
+							UserUpdated.Raise (serviceSender, new UserUpdatedEventArgs (user));
+						});
 					}
 					else
 					{
@@ -134,16 +139,7 @@ namespace Buildron.Domain.Users
 				usersInLastBuildsUpdate.Clear ();
 			};
 
-			buildsProvider.UserAuthenticationSuccessful += delegate
-			{
-				// TODO: change buildsProvider.UserAuthenticationSuccessful to pass user.
-				UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (null, true));                
-			};
-
-			buildsProvider.UserAuthenticationFailed += delegate
-			{
-				UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (null, false));
-			};
+			buildsProvider.UserAuthenticationCompleted += (sender, e) => UserAuthenticationCompleted.Raise (sender, e);
 		}
 
 		/// <summary>

@@ -111,21 +111,21 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			}
 		}
 		
-		public override void RunBuild (IBasicUser user, IBuild build)
+		public override void RunBuild (IAuthUser user, IBuild build)
 		{
 			var url = GetHttpBasicAuthUrl (user, "action.html?add2Queue={0}", build.Configuration.Id);
 			SHLog.Debug ("RunBuild URL: {0}", url);
 			Requester.RequestImmediately (url);
 		}
 		
-		public override void StopBuild (IBasicUser user, IBuild build)
+		public override void StopBuild (IAuthUser user, IBuild build)
 		{
 			var url = GetHttpBasicAuthUrl (user, "httpAuth/ajax.html?submit=Stop&buildId={0}&kill", build.Id);
 			SHLog.Debug ("StopBuild URL: {0}", url);
 			Requester.RequestImmediately (url);
 		}
 		
-		public override void AuthenticateUser (IBasicUser user)
+		public override void AuthenticateUser (IAuthUser user)
 		{
 			var url = GetHttpBasicAuthUrl (user, "httpAuth/app/rest/users");
 			
@@ -133,11 +133,11 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			url, 
 			(doc) => 
 			{
-				OnUserAuthenticationSuccessful ();
+					OnUserAuthenticationCompleted(new UserAuthenticationCompletedEventArgs(user, true));
 			},
 			(e) => 
 			{
-				OnUserAuthenticationFailed();
+					OnUserAuthenticationCompleted(new UserAuthenticationCompletedEventArgs(user, false));
 			});
 		}
 		#endregion

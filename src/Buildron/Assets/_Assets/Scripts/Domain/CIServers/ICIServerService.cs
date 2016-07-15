@@ -30,7 +30,7 @@ namespace Buildron.Domain.CIServers
         /// Authenticates the user.
         /// </summary>
         /// <param name="user">User.</param>
-        void AuthenticateUser(IBasicUser user);
+        void AuthenticateUser(IAuthUser user);
 
 		/// <summary>
 		/// Gets the CI server.

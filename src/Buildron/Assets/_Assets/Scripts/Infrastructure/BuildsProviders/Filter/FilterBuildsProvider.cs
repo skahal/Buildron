@@ -6,6 +6,7 @@ using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Servers;
+using Skahal.Common;
 
 namespace Buildron.Infrastructure.BuildsProviders.Filter
 {
@@ -43,14 +44,9 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		public event EventHandler ServerUp;
 
 		/// <summary>
-		/// Occurs when user authentication failed.
+		/// Occurs when user authentication completed.
 		/// </summary>
-		public event EventHandler UserAuthenticationFailed;
-
-		/// <summary>
-		/// Occurs when user authentication is successful.
-		/// </summary>
-		public event EventHandler UserAuthenticationSuccessful;
+		public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 		#endregion
 
 		#region Constructors
@@ -107,21 +103,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 				}
 			};
 
-			m_underlyingBuildsProvider.UserAuthenticationFailed += (sender, e) =>
-			{
-				if (UserAuthenticationFailed != null)
-				{
-					UserAuthenticationFailed (sender, e);
-				}
-			};
-
-			m_underlyingBuildsProvider.UserAuthenticationSuccessful += (sender, e) =>
-			{
-				if (UserAuthenticationSuccessful != null)
-				{
-					UserAuthenticationSuccessful (sender, e);
-				}
-			};
+			m_underlyingBuildsProvider.UserAuthenticationCompleted += (sender, e) => UserAuthenticationCompleted.Raise (sender, e);
 
 			m_rcListener.BuildFilterUpdated += (sender2, e2) =>
 			{
@@ -188,7 +170,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// Authenticates the user.
 		/// </summary>
 		/// <param name="user">The user to authenticate.</param>
-		public void AuthenticateUser (IBasicUser user)
+		public void AuthenticateUser (IAuthUser user)
 		{
 			m_underlyingBuildsProvider.AuthenticateUser (user);
 		}
@@ -206,7 +188,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// </summary>
 		/// <param name="user">The user that triggered the run.</param>
 		/// <param name="build">The build to run</param>
-		public void RunBuild (IBasicUser user, IBuild build)
+		public void RunBuild (IAuthUser user, IBuild build)
 		{
 			m_underlyingBuildsProvider.RunBuild (user, build);
 		}
@@ -216,7 +198,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// </summary>
 		/// <param name="user">The user that triggered the stop.</param>
 		/// <param name="build">The build to stop</param>
-		public void StopBuild (IBasicUser user, IBuild build)
+		public void StopBuild (IAuthUser user, IBuild build)
 		{
 			m_underlyingBuildsProvider.StopBuild (user, build);
 		}
