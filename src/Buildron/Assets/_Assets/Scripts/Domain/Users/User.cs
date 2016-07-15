@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Buildron.Domain.Builds;
+using UnityEngine;
+using Skahal.Common;
 
 namespace Buildron.Domain.Users
 {
@@ -12,6 +14,17 @@ namespace Buildron.Domain.Users
     [DebuggerDisplay("{UserName}")]
     public class User : IUser
     {
+		#region Events
+		/// <summary>
+		/// Occurs when photo updated.
+		/// </summary>
+		public event EventHandler PhotoUpdated;
+		#endregion
+
+		#region Fields
+		private Texture2D m_photo;
+		#endregion
+
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Buildron.Domain.Users.User"/> class.
@@ -48,6 +61,24 @@ namespace Buildron.Domain.Users
 		/// Gets or sets the kind.
 		/// </summary>
 		public UserKind Kind { get; set; }
+
+		/// <summary>
+		/// Gets or sets the photo.
+		/// </summary>
+		/// <value>The photo.</value>
+		public Texture2D Photo 
+		{
+			get {
+				return m_photo;
+			}
+
+			set {
+				if (value != m_photo) {
+					m_photo = value;
+					PhotoUpdated.Raise (this);
+				}
+			}
+		}
 		#endregion
 		
 		#region Methods

@@ -48,6 +48,9 @@ public class UserController : MonoBehaviour, IInitializable
             m_data = value;
             m_animationController.Data = value;
             UpdateFromData();
+			m_data.PhotoUpdated += (sender, e) => {
+				UpdateUserPhoto();
+			};
         }
     }
     #endregion
@@ -92,15 +95,14 @@ public class UserController : MonoBehaviour, IInitializable
 
     private void UpdateUserPhoto()
     {
-        if (!m_photoAlreadySet)
+		var photo = m_data.Photo;
+
+		if (!m_photoAlreadySet && photo != null)
         {
-            UserService.GetUserPhoto(m_data, (photo) =>
-            {
-                m_photoAlreadySet = true;
-                var photoHolder = transform.FindChild("Canvas/Photo").GetComponent<Image>();
-                photoHolder.enabled = true;
-                photoHolder.sprite = photo.ToSprite();
-            });
+            m_photoAlreadySet = true;
+            var photoHolder = transform.FindChild("Canvas/Photo").GetComponent<Image>();
+            photoHolder.enabled = true;
+			photoHolder.sprite = photo.ToSprite();
         }
     }
 

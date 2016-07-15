@@ -48,12 +48,5 @@ namespace Buildron.Domain.Users
 		/// </summary>
 		/// <param name="buildsProvider">Builds provider.</param>
 		void Initialize(IBuildsProvider buildsProvider);
-
-		/// <summary>
-		/// Gets the user photo.
-		/// </summary>
-		/// <param name="user">User.</param>
-		/// <param name="photoReceived">Photo received.</param>
-        void GetUserPhoto(IUser user, Action<Texture2D> photoReceived);
-    }
+	}
 }

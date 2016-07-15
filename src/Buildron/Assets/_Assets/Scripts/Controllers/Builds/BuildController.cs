@@ -118,6 +118,7 @@ public class BuildController : SHController<IBuild>
 
         m_progressBar = GetComponentInChildren<BuildProgressBarController> ();
 		CheckState ();
+		MonitorTriggeredByPhotoUpdated ();
 	
 		if (!IsHistoryBuild) {
 			Model.StatusChanged += delegate {
@@ -128,7 +129,9 @@ public class BuildController : SHController<IBuild>
 				CheckState ();
 			};
 				
-			Model.TriggeredByChanged += delegate {
+			Model.TriggeredByChanged += (sender, e) => {
+				MonitorTriggeredByPhotoUpdated();
+
 				UpdateUserAvatar ();	
 			};
 		}
@@ -137,6 +140,15 @@ public class BuildController : SHController<IBuild>
 			"OnRemoteControlConnected", 
 			"OnRemoteControlDisconnected");
 	} 
+
+	private void MonitorTriggeredByPhotoUpdated()
+	{
+		if (Model.TriggeredBy != null) {
+			Model.TriggeredBy.PhotoUpdated += delegate {
+				UpdateUserAvatar ();
+			};
+		}
+	}
 
     private void OnRemoteControlConnected ()
 	{
@@ -242,11 +254,14 @@ public class BuildController : SHController<IBuild>
 	private void UpdateUserAvatar ()
 	{
 		m_userAvatarIcon.enabled = !(!IsVisible || Model.IsRunning);
-		
-		UserService.GetUserPhoto (Model.TriggeredBy, (photo) => {
-			m_userAvatarIcon.enabled = !(!IsVisible || Model.IsRunning);
-			m_userAvatarIcon.sprite = photo.ToSprite();
-		});
+
+		if (Model.TriggeredBy != null) {
+			var photo = Model.TriggeredBy.Photo;
+	
+			if (photo != null) {
+				m_userAvatarIcon.sprite = photo.ToSprite ();
+			}
+		}
 	}
 	
 	private void OnCollisionEnter ()
