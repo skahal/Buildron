@@ -1,9 +1,11 @@
+using System;
+
 namespace Buildron.Domain.Users
 {
 	/// <summary>
 	/// User authentication completed event arguments.
 	/// </summary>
-	public class UserAuthenticationCompletedEventArgs : UserEventArgsBase
+	public class UserAuthenticationCompletedEventArgs : EventArgs
 	{
 		#region Constructors
 		/// <summary>
@@ -11,14 +13,19 @@ namespace Buildron.Domain.Users
 		/// </summary>
 		/// <param name="user">User.</param>
 		/// <param name="success">If set to <c>true</c> success.</param>
-		public UserAuthenticationCompletedEventArgs(IUser user, bool success) 
-			: base (user)
+		public UserAuthenticationCompletedEventArgs(IAuthUser user, bool success) 
 		{
+			User = user;
             Success = success;
 		}
         #endregion
 
         #region Properties
+		/// <summary>
+		/// Gets the user.
+		/// </summary>
+		public IAuthUser User { get; private set; }
+
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Buildron.Domain.Users.UserAuthenticationCompletedEventArgs"/> is success.
 		/// </summary>

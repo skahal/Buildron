@@ -4,9 +4,9 @@ using Skahal.Infrastructure.Framework.Domain;
 namespace Buildron.Domain.Users
 {
 	/// <summary>
-	/// Defines an interface to a basic user entity.
+	/// Defines an interface to an user that can authenticate at CI sserver.
 	/// </summary>
-	public interface IBasicUser : IAggregateRoot
+	public interface IAuthUser : IAggregateRoot
 	{
 		#region Properties
 		/// <summary>

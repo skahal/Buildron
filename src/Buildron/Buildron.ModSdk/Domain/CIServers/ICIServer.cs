@@ -43,7 +43,7 @@ namespace Buildron.Domain.CIServers
 	/// <summary>
 	/// Defines an interface to the Continuous Integration Server entity.
 	/// </summary>
-	public interface ICIServer : IBasicUser
+	public interface ICIServer : IAuthUser
 	{
 		#region Properties
 		/// <summary>
