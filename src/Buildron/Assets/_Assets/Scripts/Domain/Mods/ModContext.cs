@@ -47,6 +47,9 @@ namespace Buildron.Domain.Mods
 			Log = new PrefixedLogStrategy(log, "MOD [{0}]: ".With(m_instance.Info.Name));
 
 			Assets = new LogAssetsProxy (instance.Assets, Log);
+			GameObjects = instance.GameObjects;
+			UI = instance.UI;
+
             m_buildService = buildService;
             m_ciServerService = ciServerService;
             m_remoteControlService = remoteControlService;
@@ -86,6 +89,10 @@ namespace Buildron.Domain.Mods
         public ISHLogStrategy Log { get; private set; }
 
 		public IAssetsProxy Assets { get; private set; }
+
+		public IGameObjectsProxy GameObjects { get; private set; }
+
+		public IUIProxy UI { get; private set; }
         #endregion
 
         #region Methods     
@@ -109,6 +116,7 @@ namespace Buildron.Domain.Mods
 
         private void AttachToCIServerService()
         {
+			m_ciServerService.CIServerConnected += (s, e) => CIServerConnected.Raise (s, e);
             m_ciServerService.CIServerStatusChanged += (s, e) => CIServerStatusChanged.Raise(s, e);
         }
 

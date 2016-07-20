@@ -116,6 +116,18 @@ namespace Buildron.Domain.Mods
 		/// </summary>
 		/// <value>The assets.</value>
 		IAssetsProxy Assets { get; }
+
+		/// <summary>
+		/// Gets the game objects.
+		/// </summary>
+		/// <value>The game objects.</value>
+		IGameObjectsProxy GameObjects { get; }
+
+		/// <summary>
+		/// Gets the UI.
+		/// </summary>
+		/// <value>The U.</value>
+		IUIProxy UI { get; } 
         #endregion
     }
 }

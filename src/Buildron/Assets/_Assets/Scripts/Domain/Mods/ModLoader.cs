@@ -7,6 +7,7 @@ using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Users;
 using Skahal.Common;
 using Skahal.Logging;
+using UnityEngine;
 
 namespace Buildron.Domain.Mods
 {
@@ -76,13 +77,8 @@ namespace Buildron.Domain.Mods
         {
             foreach (var mod in m_loadedMods)
             {
-                var modAsDisposable = mod.Mod as IDisposable;
-
-                if (modAsDisposable != null)
-                {
-                    m_log.Debug("Calling mod '{0}' Dispose method...", mod.Info.Name);
-                    modAsDisposable.Dispose();
-                }
+                m_log.Debug("Destroying mod '{0}'...", mod.Info.Name);
+                mod.Destroy();   
             }
 
             m_loadedMods.Clear();
@@ -92,11 +88,12 @@ namespace Buildron.Domain.Mods
         private void InitializeMod(ModInstanceInfo instance)
         {
 			m_log.Debug ("Creating mod context...");
-			var context = new ModContext (instance, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);
+            m_loadedMods.Add(instance);
+
+            var context = new ModContext (instance, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);
 
 			m_log.Debug ("Initializing mod {0}...", instance.Info.Name);
-			instance.Mod.Initialize (context);
-			m_loadedMods.Add (instance);
+			instance.Mod.Initialize (context);			
 
 			m_log.Debug ("Mod successful initialized: {0}", instance.Info.Name);
 	    }
@@ -113,7 +110,7 @@ namespace Buildron.Domain.Mods
                 throw new InvalidOperationException("Mod should have a name.");
             }
 
-            if (m_loadedMods.Any(m => m.Info.Name.Equals(info.Name)))
+			if (m_loadedMods.Any(m => m.Info.Name.Equals(info.Name, StringComparison.OrdinalIgnoreCase)))
             {
 				m_log.Warning("There is another mod already loaded with the name '{0}'.", info.Name);
 				return false;
