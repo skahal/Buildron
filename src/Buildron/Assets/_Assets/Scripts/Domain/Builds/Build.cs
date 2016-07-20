@@ -126,62 +126,6 @@ namespace Buildron.Domain.Builds
 		/// <value>The date.</value>
         public DateTime Date { get; set; }
 
-        /// <summary>
-        /// Gets a value indicating whether the build is finish with success.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is success; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsSuccess
-        {
-            get
-            {
-                return m_status == BuildStatus.Success;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the build is running.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is running; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsRunning
-        {
-            get
-            {
-                return m_status >= BuildStatus.Running;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the build has been queued.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is queued; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsQueued
-        {
-            get
-            {
-                return m_status == BuildStatus.Queued;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the build has failed (Canceled | Error | Failed)
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is failed; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsFailed
-        {
-            get
-            {
-                return m_status >= BuildStatus.Error && m_status <= BuildStatus.Canceled;
-            }
-        }
-
 		/// <summary>
 		/// Gets or sets the percentage complete.
 		/// </summary>
