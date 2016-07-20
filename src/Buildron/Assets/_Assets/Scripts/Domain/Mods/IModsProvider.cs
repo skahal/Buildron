@@ -7,5 +7,6 @@ namespace Buildron.Domain.Mods
 	{
 		IEnumerable<ModInfo> GetModInfos();
 		ModInstanceInfo CreateInstance(ModInfo modInfo);
+        void DestroyInstance(ModInstanceInfo modInstanceInfo);
 	}
 }

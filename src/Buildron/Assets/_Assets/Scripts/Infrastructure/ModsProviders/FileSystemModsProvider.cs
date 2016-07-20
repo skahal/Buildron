@@ -8,6 +8,8 @@ using UnityEngine;
 using System.Linq;
 using Buildron.Infrastructure.AssetsProxies;
 using Skahal.Common;
+using Buildron.Infrastructure.GameObjectsProxies;
+using Buildron.Infrastructure.UIProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -16,14 +18,17 @@ namespace Buildron.Infrastructure.ModsProvider
 		#region Fields
 		private readonly string m_rootFolder;
 		private readonly ISHLogStrategy m_log;
+		private readonly IUIProxy m_uiProxy;
+        private Dictionary<string, AppDomain> m_createdMods = new Dictionary<string, AppDomain>();
 		#endregion
 
-		public FileSystemModsProvider (string rootFolder, ISHLogStrategy log)
+		public FileSystemModsProvider (string rootFolder, ISHLogStrategy log, IUIProxy uiProxy)
 		{
 			Throw.AnyNull (new { rootFolder, log });
 
 			m_rootFolder = rootFolder;
 			m_log = log;
+			m_uiProxy = uiProxy;
 		}
 
 		#region Methods
@@ -53,13 +58,68 @@ namespace Buildron.Infrastructure.ModsProvider
 		{
 			var modFolderName = modInfo.Name;
 			var modFolder = Path.Combine(m_rootFolder, modFolderName);
-			var modAssemblyPath = Path.Combine(modFolder, "{0}.dll".With(modFolderName));
-			var modTypeFullName = "{0}.Mod".With(modFolderName);
-			var modAssetBundlePath = Path.Combine(modFolder, modFolderName.ToLowerInvariant());
+            var modsInstancesFolder = Path.Combine(modFolder, "instances");
+            var modInstanceFolder = Path.Combine(modsInstancesFolder,  DateTime.UtcNow.Ticks.ToString());
 
-			m_log.Debug("Loading assembly '{0}'...", modAssemblyPath);
-			var modAssembly = Assembly.LoadFile(modAssemblyPath);
-			var mod = Activator.CreateInstance(modAssembly.GetType(modTypeFullName)) as IMod;
+            if (Directory.Exists(modsInstancesFolder))
+            {
+                // Clear old instances and ignore the latest one, because Unity can be holding it yet.
+                var oldInstanceFolders = Directory.GetDirectories(modsInstancesFolder).OrderByDescending(f => f).Skip(1).ToArray();
+
+                foreach (var oldFolder in oldInstanceFolders)
+                {
+                    Directory.Delete(oldFolder, true);
+                }
+            }
+
+            Directory.CreateDirectory(modInstanceFolder);
+            var filesToCopy = Directory.GetFiles(modFolder);
+            
+            foreach(var f in filesToCopy)
+            {
+                File.Copy(f, Path.Combine(modInstanceFolder, Path.GetFileName(f)));
+            }
+
+			var modAssemblyPath = Path.Combine(modInstanceFolder, "{0}.dll".With(modFolderName));
+			var modTypeFullName = "{0}.Mod".With(modFolderName);
+			var modAssetBundlePath = Path.Combine(modInstanceFolder, modFolderName.ToLowerInvariant());
+
+
+            //var modAssembly = Assembly.LoadFile(modAssemblyPath);
+            m_log.Debug("Creating ModsAppDomain with ApplicationBase '{0}'...", modInstanceFolder);
+
+            var domainSetup = new AppDomainSetup();
+            domainSetup.ApplicationBase = modInstanceFolder;
+            domainSetup.LoaderOptimization = LoaderOptimization.MultiDomainHost;
+            domainSetup.ShadowCopyFiles = "true";
+            var evidence = AppDomain.CurrentDomain.Evidence;
+            AppDomain modAppDomain = AppDomain.CreateDomain("{0}AppDomain".With(modInfo.Name), evidence, domainSetup);
+
+            m_log.Debug("Creating proxy...");
+
+            var proxy = new Proxy();            
+
+            m_log.Debug("Loading assembly '{0}'...", modAssemblyPath);
+            var modAssembly = proxy.GetAssembly(modAssemblyPath);
+            // AppDomain.Unload(domain);
+
+
+            m_log.Debug ("Assembly loaded. Looking for type '{0}' on mod assembly {1}...", modTypeFullName, modAssembly.FullName);
+			var modType = modAssembly.GetType (modTypeFullName, false, true);
+
+			if (modType == null) {
+				var availableTypes = modAssembly
+					.GetTypes ()
+					.Where(t => t.Name.IndexOf("mod", StringComparison.OrdinalIgnoreCase) != -1)
+					.Select (t => t.Name)
+					.ToArray ();
+				
+				throw new InvalidOperationException (
+					"Mod type {0} not found. Available types on assembly are: {1}"
+					.With(modTypeFullName, String.Join(", ", availableTypes)));
+			}
+				
+			var mod = Activator.CreateInstance(modType) as IMod;
 
 			if (mod == null)
 			{
@@ -75,11 +135,43 @@ namespace Buildron.Infrastructure.ModsProvider
 
 					m_log.Debug("{0} Assets loaded.", assetBundle.GetAllAssetNames().Length);
 				}
+                
+                var modInstance = new ModInstanceInfo(mod, modInfo, this, new AssetBundleAssetsProxy(assetBundle), new ModGameObjectsProxy(modInfo), m_uiProxy);
+                m_createdMods.Add(modInfo.Name, modAppDomain);
 
-				return new ModInstanceInfo(mod, modInfo, new AssetBundleAssetsProxy(assetBundle));
+                return modInstance;
 			}
 		}
-		#endregion
-	}
+
+        public void DestroyInstance(ModInstanceInfo modInstanceInfo)
+        {
+            var key = modInstanceInfo.Info.Name;
+
+            if (m_createdMods.ContainsKey(key))
+            {
+                m_log.Debug("Unloading {0} AppDomain...", key);
+                var modAppDomain = m_createdMods[key];
+                AppDomain.Unload(modAppDomain);
+                m_createdMods.Remove(key);
+            }            
+        }
+        #endregion
+
+        public class Proxy : MarshalByRefObject
+        {
+            public Assembly GetAssembly(string assemblyPath)
+            {
+                try
+                {
+                    return Assembly.LoadFile(assemblyPath);
+                }
+                catch (Exception)
+                {
+                    return null;
+                    // throw new InvalidOperationException(ex);
+                }
+            }
+        }
+    }
 }
 

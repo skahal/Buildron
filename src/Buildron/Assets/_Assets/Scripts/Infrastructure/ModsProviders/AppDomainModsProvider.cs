@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Skahal.Logging;
 using Buildron.Infrastructure.AssetsProxies;
+using Buildron.Infrastructure.GameObjectsProxies;
+using Buildron.Infrastructure.UIProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -55,9 +57,12 @@ namespace Buildron.Infrastructure.ModsProvider
 				throw new InvalidOperationException ("Cannot create mod, there is no default constructor.");
 			}
 
-			return new ModInstanceInfo (mod, modInfo, new ResourcesFolderAssetsProxy());
+			return new ModInstanceInfo (mod, modInfo, this, new ResourcesFolderAssetsProxy(), new ModGameObjectsProxy(modInfo), new DefaultUIProxy());
 		}
-		#endregion
-	}
-}
 
+        public void DestroyInstance(ModInstanceInfo modInstanceInfo)
+        {            
+        }
+        #endregion
+    }
+}
