@@ -11,6 +11,6 @@ namespace Buildron.Domain.Mods
 		/// Load an asset..
 		/// </summary>
 		/// <param name="assetName">The asset name.</param>
-		object Load(string assetName);
+		UnityEngine.Object Load(string assetName);
 	}
 }

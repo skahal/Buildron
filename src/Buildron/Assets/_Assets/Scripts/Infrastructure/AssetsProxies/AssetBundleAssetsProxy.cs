@@ -16,7 +16,7 @@ namespace Buildron.Infrastructure.AssetsProxies
 			m_assetBundle = assetBundle;
 		}
 
-		public object Load (string assetName)
+		public UnityEngine.Object Load (string assetName)
 		{
 			return m_assetBundle.LoadAsset (assetName);
 		}

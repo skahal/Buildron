@@ -16,7 +16,7 @@ namespace Buildron.Domain.Mods
 			m_log = log;
 		}
 
-		public object Load (string assetName)
+		public UnityEngine.Object Load (string assetName)
 		{
 			m_log.Debug ("Loading asset '{0}'...", assetName);
 			var asset = m_underlying.Load (assetName);

@@ -6,7 +6,7 @@ namespace Buildron.Infrastructure.AssetsProxies
 {
 	public class ResourcesFolderAssetsProxy : IAssetsProxy
 	{
-		public object Load (string assetName)
+		public UnityEngine.Object Load (string assetName)
 		{
 			return Resources.Load (assetName);
 		}
