@@ -28,7 +28,11 @@ namespace Buildron.Domain.UnitTests.Mods
         {
             var mod = MockRepository.GenerateMock<IMod>();
 			var assetsProxy = MockRepository.GenerateMock<IAssetsProxy> ();
-			var instance = new ModInstanceInfo (mod, new ModInfo("test"), assetsProxy);
+            var provider = MockRepository.GenerateMock<IModsProvider>();
+            var gameObjectsProxy = MockRepository.GenerateMock<IGameObjectsProxy> ();
+			var uiProxy = MockRepository.GenerateMock<IUIProxy> ();
+
+			var instance = new ModInstanceInfo (mod, new ModInfo("test"), provider, assetsProxy, gameObjectsProxy, uiProxy);
             var log = MockRepository.GenerateMock<ISHLogStrategy>();
 
             m_buildService = MockRepository.GenerateMock<IBuildService>();
@@ -128,6 +132,15 @@ namespace Buildron.Domain.UnitTests.Mods
         #endregion
 
         #region CI server
+		[Test]
+		public void CIServerConnected_CIServerRaise_EventRaised()
+		{
+			var raised = m_target.CreateAssert<CIServerConnectedEventArgs>("CIServerConnected", 1);
+			m_ciService.Raise(b => b.CIServerConnected += null, null, new CIServerConnectedEventArgs(new CIServer()));
+
+			raised.Assert();
+		}
+
         [Test]
         public void CIServerStatusChanged_CIServerRaise_EventRaised()
         {

@@ -9,6 +9,11 @@ namespace Buildron.Domain.CIServers
 	/// </summary>
     public interface ICIServerService
     {
+		/// <summary>
+		/// Occurs when continuous integration server is connected.
+		/// </summary>
+		event EventHandler<CIServerConnectedEventArgs> CIServerConnected;
+
         /// <summary>
         /// Occurs when continuous integration server status has changed.
         /// </summary>

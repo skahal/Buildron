@@ -13,7 +13,7 @@ namespace Buildron.Domain.Mods
     /// Represents the mod context.
     /// ModContext is basically a facade to many events that occurs in Buildron.
     /// </summary>
-    public sealed class ModContext : IModContext
+	public sealed class ModContext : IModContext
 	{    
 		#region Events
 		public event EventHandler<BuildFoundEventArgs> BuildFound;
@@ -21,7 +21,8 @@ namespace Buildron.Domain.Mods
 		public event EventHandler<BuildUpdatedEventArgs> BuildUpdated;    
 		public event EventHandler<BuildStatusChangedEventArgs> BuildStatusChanged;
 		public event EventHandler<BuildTriggeredByChangedEventArgs> BuildTriggeredByChanged;
-		public event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;    
+		public event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;  
+		public event EventHandler<CIServerConnectedEventArgs> CIServerConnected;
 		public event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
 		public event EventHandler<UserFoundEventArgs> UserFound;
 		public event EventHandler<UserUpdatedEventArgs> UserUpdated;
@@ -74,6 +75,13 @@ namespace Buildron.Domain.Mods
                 return m_userService.Users;
             }
         }
+
+		public ICIServer CIServer 
+		{
+			get {
+				return m_ciServerService.GetCIServer ();
+			}
+		}
 
         public ISHLogStrategy Log { get; private set; }
 

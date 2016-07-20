@@ -15,6 +15,11 @@ namespace Buildron.Domain.CIServers
 	{
 		#region Events
 		/// <summary>
+		/// Occurs when continuous integration server is connected.
+		/// </summary>
+		public event EventHandler<CIServerConnectedEventArgs> CIServerConnected;
+
+		/// <summary>
 		/// Occurs when continuous integration server status has changed.
 		/// </summary>
 		public event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
@@ -99,6 +104,8 @@ namespace Buildron.Domain.CIServers
 			{
 				if (e.Success) {
 					Initialized = true;
+					CIServerConnected.Raise(this, new CIServerConnectedEventArgs(ciServer));
+
 					ciServer.Status = CIServerStatus.Up;
 					CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs (ciServer));
 				}

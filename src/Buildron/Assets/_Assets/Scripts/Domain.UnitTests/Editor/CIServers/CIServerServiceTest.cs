@@ -80,6 +80,7 @@ namespace Buildron.Domain.UnitTests.CIServers
 				provider.Raise(p => p.UserAuthenticationCompleted += null, null, new UserAuthenticationCompletedEventArgs (null, true));
             });
 
+			var connectedRaised = target.CreateAssert<CIServerConnectedEventArgs>("CIServerConnected", 1);
             var statusChangedRaised = target.CreateAssert<CIServerStatusChangedEventArgs>("CIServerStatusChanged", 1);
 
             target.Initialize(provider);
@@ -88,6 +89,8 @@ namespace Buildron.Domain.UnitTests.CIServers
             target.AuthenticateUser(new CIServer());
             Assert.IsTrue(target.Initialized);
             Assert.AreEqual(CIServerStatus.Up, target.GetCIServer().Status);
+
+			connectedRaised.Assert ();
             statusChangedRaised.Assert();
         }
 
