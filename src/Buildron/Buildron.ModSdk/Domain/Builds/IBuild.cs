@@ -106,23 +106,7 @@ namespace Buildron.Domain.Builds
 
 		/// <summary>
 		/// Gets a value indicating whether the build has failed (Canceled | Error | Failed)
-		/// </summary>
-        bool IsFailed { get; }
-        
-		/// <summary>
-		/// Gets a value indicating whether the build has been queued.
-		/// </summary>
-		bool IsQueued { get; }
-
-		/// <summary>
-		/// Gets a value indicating whether the build is running.
-		/// </summary>
-        bool IsRunning { get; }
-
-		/// <summary>
-		/// Gets a value indicating whether the build is finish with success.
-		/// </summary>
-        bool IsSuccess { get; }
+		/// </summary> 
 
 		/// <summary>
 		/// Gets or sets the last change description.

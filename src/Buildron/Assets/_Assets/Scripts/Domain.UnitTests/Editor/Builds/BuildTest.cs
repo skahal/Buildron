@@ -67,76 +67,76 @@ namespace Buildron.Domain.UnitTests.Builds
         public void IsProperties_DiffStatus_DiffIsResult()
         {
             var target = new Build();
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsFalse(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsFalse(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.Canceled;
-            Assert.IsTrue(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsFalse(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsTrue(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsFalse(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.Error;
-            Assert.IsTrue(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsFalse(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsTrue(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsFalse(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.Failed;
-            Assert.IsTrue(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsFalse(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsTrue(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsFalse(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.Queued;
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsTrue(target.IsQueued);
-            Assert.IsFalse(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsTrue(target.IsQueued());
+			Assert.IsFalse(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.Running;
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsTrue(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsTrue(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.RunningCodeAnalysis;
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsTrue(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsTrue(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.RunningDeploy;
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsTrue(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsTrue(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.RunningDuplicatesFinder;
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsTrue(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsTrue(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.RunningFunctionalTests;
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsTrue(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsTrue(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.RunningUnitTests;
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsTrue(target.IsRunning);
-            Assert.IsFalse(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsTrue(target.IsRunning());
+			Assert.IsFalse(target.IsSuccess());
 
             target.Status = BuildStatus.Success;
-            Assert.IsFalse(target.IsFailed);
-            Assert.IsFalse(target.IsQueued);
-            Assert.IsFalse(target.IsRunning);
-            Assert.IsTrue(target.IsSuccess);
+			Assert.IsFalse(target.IsFailed());
+			Assert.IsFalse(target.IsQueued());
+			Assert.IsFalse(target.IsRunning());
+			Assert.IsTrue(target.IsSuccess());
         }
 
         [Test]
