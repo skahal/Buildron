@@ -6,7 +6,6 @@ using Skahal.Logging;
 using Skahal.Serialization;
 using UnityEngine;
 using Zenject;
-using Buildron.Application;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 using Buildron.Domain.RemoteControls;
@@ -23,9 +22,6 @@ namespace Buildron.Controllers
 		#endregion
 
 		#region Fields
-		[Inject]
-		private BuildGOService m_buildGOService;
-
 		[Inject]
 		private IUserService m_userService;
 
@@ -81,7 +77,9 @@ namespace Buildron.Controllers
 			SHLog.Debug ("Remote control connected.");	
 		
 			SendToRCCurrentServerState ();
-			OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
+
+			// TODO: see this after move builds to BuildMod
+			// OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
 		}
 
 		private void OnPlayerDisconnected ()
@@ -93,13 +91,15 @@ namespace Buildron.Controllers
 
 		private void OnBuildHidden ()
 		{
-			OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
+			// TODO: see this after move builds to BuildMod
+			// OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
 	
 		}
 
 		private void OnBuildVisible ()
 		{
-			OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
+			// TODO: see this after move builds to BuildMod
+			// OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
 		}
 
 		private void OnScreenshotTaken (Texture2D texture)

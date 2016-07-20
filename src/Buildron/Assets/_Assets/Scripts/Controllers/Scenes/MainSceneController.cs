@@ -6,7 +6,6 @@ using Skahal.Logging;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using Buildron.Application;
 using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
 using Buildron.Domain.RemoteControls;
@@ -26,10 +25,7 @@ public class MainSceneController : MonoBehaviour, IInitializable
     private IRemoteControlService m_remoteControlService;
 
     [Inject]
-    private ICIServerService m_ciServerService;
-
-    [Inject]
-    private BuildGOService m_buildGOService { get; set; }
+	private ICIServerService m_ciServerService;
     #endregion
 
     #region Properties
@@ -57,10 +53,18 @@ public class MainSceneController : MonoBehaviour, IInitializable
 
         Messenger.Register(
             gameObject,
-            "OnCIServerReady",
             "OnBuildRunRequested",
             "OnBuildStopRequested");
     }
+
+	private void Start()
+	{
+		m_ciServerService.CIServerConnected += (sender, e) => {
+			InitializeBuildService();
+			StartCoroutine(UpdateBuildsStatus());
+			StartCoroutine(CheckLastUpdate());
+		};
+	}
 
     public void Initialize()
     {
@@ -75,13 +79,6 @@ public class MainSceneController : MonoBehaviour, IInitializable
         m_ciServerService.SaveCIServer(server);
     }
 
-    private void OnCIServerReady()
-    {
-        InitializeBuildService();
-        StartCoroutine(UpdateBuildsStatus());
-        StartCoroutine(CheckLastUpdate());
-    }
-
     private void OnBuildRunRequested()
     {
         ExecuteFocusedBuildCommand(m_buildService.RunBuild);
@@ -94,12 +91,13 @@ public class MainSceneController : MonoBehaviour, IInitializable
 
     private void ExecuteFocusedBuildCommand(Action<IRemoteControl, string> command)
     {
-        var visibles = m_buildGOService.GetVisibles();
-
-        if (visibles.Count == 1)
-        {
-            command(m_remoteControlService.GetConnectedRemoteControl(), visibles[0].GetComponent<BuildController>().Model.Id);
-        }
+		// TODO: see this after move builds to BuildMod
+//        var visibles = m_buildGOService.GetVisibles();
+//
+//        if (visibles.Count == 1)
+//        {
+//            command(m_remoteControlService.GetConnectedRemoteControl(), visibles[0].GetComponent<BuildController>().Model.Id);
+//        }
     }
 
     private void InitializeBuildService()
@@ -171,8 +169,9 @@ public class MainSceneController : MonoBehaviour, IInitializable
             {
                 m_isRefreshingBuilds = false;
                 var baseEx = ex.GetBaseException();
-                SetLogMessage("ERROR: can't update. Please, check your connection with continuous integration server.\n{0}: {1}.", baseEx.GetType().Name, baseEx.Message);
-                SHLog.Warning(ex.Message);
+                SetLogMessage ("ERROR: can't update. Please, check your connection with continuous integration server.\n{0}: {1}.", baseEx.GetType().Name, baseEx.Message);
+                SHLog.Warning (ex.Message);
+				SHLog.Warning (ex.StackTrace);
             }
 
             SHLog.Debug("Builds updated. Next update in {0} seconds.", refreshSeconds);

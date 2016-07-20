@@ -241,10 +241,10 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 			var queued = f.QueuedEnabled;
 
 			var show =
-				(success && build.IsSuccess)
-				|| (running && build.IsRunning)
-				|| (failed && build.IsFailed)
-				|| (queued && build.IsQueued);
+				(success && build.IsSuccess())
+				|| (running && build.IsRunning())
+				|| (failed && build.IsFailed())
+				|| (queued && build.IsQueued());
 
 			if (!String.IsNullOrEmpty (f.KeyWord))
 			{

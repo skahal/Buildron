@@ -200,8 +200,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			m_userService.UserAuthenticationCompleted -= HandleUserAuthenticationCompleted;
 
 			//m_animator.enabled = true;
-			PanelTransitionController.Instance.ShowMainPanel ();
-			Messenger.Send ("OnCIServerReady");
+			PanelTransitionController.Instance.ShowMainPanel ();	
 		} 
 		else
 		{

@@ -59,10 +59,10 @@ public class UserAnimationController : MonoBehaviour {
 				GetComponent<Animation>().Stop();
 				m_currentStatus = build.Status;
 				
-				if (build.IsRunning || build.IsQueued) {
+				if (build.IsRunning() || build.IsQueued()) {
 					AnimateAsRunning ();
 				
-				} else if (build.IsFailed) {
+				} else if (build.IsFailed()) {
 					AnimateAsFailed ();
 				
 				} else {
