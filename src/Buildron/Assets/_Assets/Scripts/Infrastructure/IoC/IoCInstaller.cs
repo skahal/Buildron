@@ -9,7 +9,6 @@ using Buildron.Infrastructure.Repositories;
 using Buildron.Domain.Versions;
 using Buildron.Infrastructure.Clients;
 using Buildron.Domain.Notifications;
-using Buildron.Application;
 using Buildron.Domain.EasterEggs;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Infrastructure.Repositories;
@@ -22,6 +21,7 @@ using Buildron.Domain.Servers;
 using Skahal.Threading;
 using Buildron.Domain.Mods;
 using Buildron.Infrastructure.ModsProvider;
+using Buildron.Infrastructure.UIProxies;
 
 namespace Buildron.Infrastructure.IoC
 {
@@ -31,6 +31,7 @@ namespace Buildron.Infrastructure.IoC
 		public Texture2D ScheduledTriggerAvatar;
 		public Texture2D RetryTriggerAvatar;
 		public Texture2D UnunknownAvatar;
+		public Font DefaultFont;
 		#endregion
 
 		#region Methods
@@ -46,9 +47,6 @@ namespace Buildron.Infrastructure.IoC
 
 			log.Debug ("IOC :: Installing user bindings...");
 			InstallUser ();
-
-			log.Debug ("IOC :: Installing build bindings...");
-			InstallBuild ();  
 
 			log.Debug ("IOC :: Installing misc bindings...");
 			InstallMisc ();			
@@ -83,7 +81,10 @@ namespace Buildron.Infrastructure.IoC
             var folder =  UnityEngine.Application.dataPath.Substring(0, UnityEngine.Application.dataPath.LastIndexOf("/")) + "/mods/";
             folder = folder.Replace(@"\", "/");
 #endif
-            var fileSystemModsProvider = new FileSystemModsProvider(folder, log);
+			var uiProxy = new DefaultUIProxy {
+				Font = DefaultFont
+			};
+            var fileSystemModsProvider = new FileSystemModsProvider(folder, log, uiProxy);
             var appDomainModsProvider = new AppDomainModsProvider (log);
 			Container.Bind<IModsProvider[]> ().FromInstance (new IModsProvider[] { fileSystemModsProvider, appDomainModsProvider });
 		}
@@ -118,15 +119,7 @@ namespace Buildron.Infrastructure.IoC
             .FromPrefabResource("UserPrefab")
             .UnderGameObjectGroup("Users");
 		}
-
-		void InstallBuild ()
-		{
-			Container.Bind<BuildGOService> ().AsSingle ();
-			Container.BindFactory<BuildController, BuildController.Factory> ()
-			.FromPrefabResource ("BuildPrefab")
-			.UnderGameObjectGroup ("Builds");
-		}
-
+			
 		void InstallMisc ()
 		{
 			Container.BindController<MatrixEasterEggController> ();

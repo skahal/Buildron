@@ -5,7 +5,6 @@ using Skahal.Logging;
 using UnityEngine;
 using Skahal.Rendering;
 using Skahal.Threading;
-using Buildron.Application;
 using Zenject;
 using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
@@ -71,9 +70,6 @@ public class CameraController : MonoBehaviour, IInitializable
 	public float VelocityToShowTop = 0.1f;
 	public float VelocityToShowSides = 0.1f;
 	public float MinY = 0;
-
-	[Inject]
-	public BuildGOService BuildGOService { get; set; }
 	#endregion
 	
 	#region Methods
@@ -85,7 +81,6 @@ public class CameraController : MonoBehaviour, IInitializable
 		m_historyPosition = m_originalPosition + new Vector3 (0, 30, 25);	
 	
 		Messenger.Register (gameObject, 
-			"OnCIServerReady",
 			"OnBuildReachGround",
 			"OnBuildHidden",
 			"OnBuildVisible", 
@@ -100,7 +95,8 @@ public class CameraController : MonoBehaviour, IInitializable
 			"OnGoDown",
 			"OnResetCamera",
 			"OnBuildFilterUpdated");
-		
+
+		m_ciServerService.CIServerConnected +=  HandleCIServerConnected;
 		PrepareEffects ();
 		StartCoroutine (AdjustCameraPosition ());
 	}
@@ -112,7 +108,7 @@ public class CameraController : MonoBehaviour, IInitializable
 		m_log.Warning ("Setting camera position to latest position: {0}", serverState.Id);
 	}
 
-	private void OnCIServerReady ()
+	void HandleCIServerConnected (object sender, CIServerConnectedEventArgs e)
 	{
 		m_state = CameraState.ShowingBuilds;
 
@@ -164,28 +160,29 @@ public class CameraController : MonoBehaviour, IInitializable
 	
 	private Vector3 CalculatePositionToShowAllBuilds ()
 	{
-		if (m_autoPosition) {
-			var currentVisiblesCount = BuildGOService.CountVisibles();
-			var diff = m_lastVisiblesCount - currentVisiblesCount;
-		
-			if (diff > 0) {
-				m_originalPosition = m_firstPosition;
-			} else {
-				var hasNotVisiblesFromTop = false;
-				var hasNotVisiblesFromSides = BuildGOService.HasNotVisiblesFromSides ();
-
-				if (!hasNotVisiblesFromSides) {
-					hasNotVisiblesFromTop = BuildGOService.HasNotVisiblesFromTop ();
-				}
-			
-				m_originalPosition += new Vector3 (
-													0, 
-													hasNotVisiblesFromTop ? VelocityToShowTop : 0, 
-													hasNotVisiblesFromSides ? -VelocityToShowSides : 0);
-			}
-		
-			m_lastVisiblesCount = currentVisiblesCount;
-        }
+		// TODO: see this after move builds to BuildMod
+//		if (m_autoPosition) {
+//			var currentVisiblesCount = BuildGOService.CountVisibles();
+//			var diff = m_lastVisiblesCount - currentVisiblesCount;
+//		
+//			if (diff > 0) {
+//				m_originalPosition = m_firstPosition;
+//			} else {
+//				var hasNotVisiblesFromTop = false;
+//				var hasNotVisiblesFromSides = BuildGOService.HasNotVisiblesFromSides ();
+//
+//				if (!hasNotVisiblesFromSides) {
+//					hasNotVisiblesFromTop = BuildGOService.HasNotVisiblesFromTop ();
+//				}
+//			
+//				m_originalPosition += new Vector3 (
+//													0, 
+//													hasNotVisiblesFromTop ? VelocityToShowTop : 0, 
+//													hasNotVisiblesFromSides ? -VelocityToShowSides : 0);
+//			}
+//		
+//			m_lastVisiblesCount = currentVisiblesCount;
+//        }
 		
 		return m_originalPosition;
 	}
@@ -202,16 +199,17 @@ public class CameraController : MonoBehaviour, IInitializable
 	
 	private void ChangeByBuilds ()
 	{
-		if (BuildGOService.CountVisibles() == 1) {
-			var visibleOne = BuildGOService.GetVisibles () [0];
-			m_target = visibleOne.transform;
-			m_state = CameraState.ShowingFocusBuild;
-			Messenger.Send ("OnCameraZoomIn");
-		} else {
-			m_target = null;
-			m_state = CameraState.ShowingBuilds;
-			Messenger.Send ("OnCameraZoomOut");
-		}
+		// TODO: see this after move builds to BuildMod
+//		if (BuildGOService.CountVisibles() == 1) {
+//			var visibleOne = BuildGOService.GetVisibles () [0];
+//			m_target = visibleOne.transform;
+//			m_state = CameraState.ShowingFocusBuild;
+//			Messenger.Send ("OnCameraZoomIn");
+//		} else {
+//			m_target = null;
+//			m_state = CameraState.ShowingBuilds;
+//			Messenger.Send ("OnCameraZoomOut");
+//		}
 	}
 	
 	private void PrepareEffects ()
@@ -240,27 +238,28 @@ public class CameraController : MonoBehaviour, IInitializable
 
 	private void OnShowHistoryRequested ()
 	{
-		var histories = BuildsHistoryController.GetAll ();
-		
-		if (histories.Length > 0) {
-			m_state = CameraState.GoingToHistory;
-			
-			StatusBarController.SetStatusText ("Today's builds history");
-			
-			SHCoroutine.Start (2f, () => 
-			{
-				SHCoroutine.Loop (1.5f, 0, histories.Length, (t) => 
-				{
-					if (m_serverService.GetState().IsShowingHistory) {
-						m_state = CameraState.ShowingHistory;
-						m_targetPosition = histories [histories.Length - 1 - Mathf.FloorToInt (t)].transform.position + DistanceFromHistory; 
-						return true;
-					}
-					
-					return false;
-				});
-			});
-		}
+		// TODO: see this after move builds to BuildMod
+//		var histories = BuildsHistoryController.GetAll ();
+//		
+//		if (histories.Length > 0) {
+//			m_state = CameraState.GoingToHistory;
+//			
+//			StatusBarController.SetStatusText ("Today's builds history");
+//			
+//			SHCoroutine.Start (2f, () => 
+//			{
+//				SHCoroutine.Loop (1.5f, 0, histories.Length, (t) => 
+//				{
+//					if (m_serverService.GetState().IsShowingHistory) {
+//						m_state = CameraState.ShowingHistory;
+//						m_targetPosition = histories [histories.Length - 1 - Mathf.FloorToInt (t)].transform.position + DistanceFromHistory; 
+//						return true;
+//					}
+//					
+//					return false;
+//				});
+//			});
+//		}
 	}
 
 	private void OnShowBuildsRequested ()

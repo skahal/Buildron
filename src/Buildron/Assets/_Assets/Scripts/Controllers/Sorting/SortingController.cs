@@ -6,7 +6,6 @@ using Skahal.Threading;
 using Skahal.Tweening;
 using UnityEngine;
 using Zenject;
-using Buildron.Application;
 using System.Linq;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Servers;
@@ -17,9 +16,6 @@ using Buildron.Domain.Servers;
 public class SortingController : MonoBehaviour
 {
 	#region Fields
-	[Inject]
-	private BuildGOService m_buildGOService;
-
     [Inject]
     private IBuildService m_buildService;
 
@@ -47,77 +43,81 @@ public class SortingController : MonoBehaviour
 
 	private void PerformOnBuildSortUpdated ()
 	{
-		SHCoroutine.Start (
-			1f, // This 1 second give the time to build physics activate when became visible because a filter sent from RC.
-			() => {
-				SHCoroutine.WaitFor (
-					() => {
-						var areAllSleeping = m_buildGOService.AreAllSleeping ();
-						m_log.Warning (
-							"Waiting all builds physics sleep. Are all sleeping: {0}",
-							areAllSleeping);
-
-						return areAllSleeping;
-					},
-					() => {
-						var state = m_serverService.GetState();
-						m_log.Debug ("Sorting - IsSorting: {0}, AlgorithmType: {1}, SortBy: {2}", state.IsSorting, state.BuildSortingAlgorithmType, state.BuildSortBy);
-
-						if (!state.IsSorting) {
-							var sorting = SortingAlgorithmFactory.CreateSortingAlgorithm<IBuild> (state.BuildSortingAlgorithmType);
-							OnBuildSortUpdated (new BuildSortUpdatedEventArgs (sorting, state.BuildSortBy));
-						}
-					});
-			});
+		// TODO: see this after move builds to BuildMod
+//		SHCoroutine.Start (
+//			1f, // This 1 second give the time to build physics activate when became visible because a filter sent from RC.
+//			() => {
+//				SHCoroutine.WaitFor (
+//					() => {
+//						var areAllSleeping = m_buildGOService.AreAllSleeping ();
+//						m_log.Warning (
+//							"Waiting all builds physics sleep. Are all sleeping: {0}",
+//							areAllSleeping);
+//
+//						return areAllSleeping;
+//					},
+//					() => {
+//						var state = m_serverService.GetState();
+//						m_log.Debug ("Sorting - IsSorting: {0}, AlgorithmType: {1}, SortBy: {2}", state.IsSorting, state.BuildSortingAlgorithmType, state.BuildSortBy);
+//
+//						if (!state.IsSorting) {
+//							var sorting = SortingAlgorithmFactory.CreateSortingAlgorithm<IBuild> (state.BuildSortingAlgorithmType);
+//							OnBuildSortUpdated (new BuildSortUpdatedEventArgs (sorting, state.BuildSortBy));
+//						}
+//					});
+//			});
 	}
 
 	private void OnBuildSortUpdated (BuildSortUpdatedEventArgs args)
 	{		
-		var sorting = args.SortingAlgorithm;
-		var comparer = BuildComparerFactory.Create(args.SortBy);
-        var builds = m_buildGOService
-            .GetVisiblesOrderByPosition()
-            .Select(go => go.GetComponent<BuildController>().Model)
-            .ToList();        
-
-        sorting.SortingBegin += SortingBegin;
-        sorting.SortingItemsSwapped += SortingItemsSwapped;
-        sorting.SortingEnded += SortingEnded;
-
-        StartCoroutine(sorting.Sort(builds, comparer));        
+		// TODO: see this after move builds to BuildMod
+//		var sorting = args.SortingAlgorithm;
+//		var comparer = BuildComparerFactory.Create(args.SortBy);
+//        var builds = m_buildGOService
+//            .GetVisiblesOrderByPosition()
+//            .Select(go => go.GetComponent<BuildController>().Model)
+//            .ToList();        
+//
+//        sorting.SortingBegin += SortingBegin;
+//        sorting.SortingItemsSwapped += SortingItemsSwapped;
+//        sorting.SortingEnded += SortingEnded;
+//
+//        StartCoroutine(sorting.Sort(builds, comparer));        
 	}
 
     private void SortingBegin (object sender, SortingBeginEventArgs args)
     {
-        if (!args.WasAlreadySorted)
-        {
-			m_serverService.GetState().IsSorting = true;
-            m_buildGOService.FreezeAll();
-
-            var sorting = sender as ISortingAlgorithm<IBuild>;
-            UpdateStatusBar("Sorting by {0}  using: {1}".With(sorting.Comparer, sorting.Name));
-        }
+		// TODO: see this after move builds to BuildMod
+//        if (!args.WasAlreadySorted)
+//        {
+//			m_serverService.GetState().IsSorting = true;
+//            m_buildGOService.FreezeAll();
+//
+//            var sorting = sender as ISortingAlgorithm<IBuild>;
+//            UpdateStatusBar("Sorting by {0}  using: {1}".With(sorting.Comparer, sorting.Name));
+//        }
     }
 
 	private void SortingItemsSwapped (object sender, SortingItemsSwappedEventArgs<IBuild> args)
 	{
-		var b1 = args.Item1;
-		var b2 = args.Item2;
-
-		var b1GO = m_buildGOService.GetGameObject (b1);
-		var b2GO = m_buildGOService.GetGameObject (b2);
-
-        if (b1GO == null || b2GO == null)
-        {
-			m_log.Warning("Aborting swap because could not found one of the builds game object: b1: {0}, b2: {1}", b1GO, b2GO);
-        }
-
-		m_log.Debug ("Swapping position between {0} and {1}...", b1GO.name, b2GO.name);
-
-		var b1Position = b1GO.transform.position;
-
-		AnimateSwap (b1GO, b2GO.transform.position);
-		AnimateSwap (b2GO, b1Position);
+		// TODO: see this after move builds to BuildMod
+//		var b1 = args.Item1;
+//		var b2 = args.Item2;
+//
+//		var b1GO = m_buildGOService.GetGameObject (b1);
+//		var b2GO = m_buildGOService.GetGameObject (b2);
+//
+//        if (b1GO == null || b2GO == null)
+//        {
+//			m_log.Warning("Aborting swap because could not found one of the builds game object: b1: {0}, b2: {1}", b1GO, b2GO);
+//        }
+//
+//		m_log.Debug ("Swapping position between {0} and {1}...", b1GO.name, b2GO.name);
+//
+//		var b1Position = b1GO.transform.position;
+//
+//		AnimateSwap (b1GO, b2GO.transform.position);
+//		AnimateSwap (b2GO, b1Position);
 	}
 
 	private void AnimateSwap (GameObject go, Vector3 toPosition)
@@ -131,13 +131,14 @@ public class SortingController : MonoBehaviour
 
 	private void SortingEnded (object sender, SortingEndedEventArgs args)
 	{
-        if (!args.WasAlreadySorted)
-        {
-            m_buildGOService.UnfreezeAll();
-
-			m_serverService.GetState().IsSorting = false;
-            UpdateStatusBar("Sorting finished.", 2f);
-        }
+		// TODO: see this after move builds to BuildMod
+//        if (!args.WasAlreadySorted)
+//        {
+//            m_buildGOService.UnfreezeAll();
+//
+//			m_serverService.GetState().IsSorting = false;
+//            UpdateStatusBar("Sorting finished.", 2f);
+//        }
 	}
 
 	private void UpdateStatusBar (string text, float secondsTimeout = 0)

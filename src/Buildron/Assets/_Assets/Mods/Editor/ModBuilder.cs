@@ -6,23 +6,25 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using Skahal.Debugging;
-using Skahal.Logging;
+using Skahal.Logging; 
 using System;
 
 public class ModBuilder
 {
 
-	[MenuItem ("Buildron/Build mods")]
+	[MenuItem ("Buildron/Build mods2")]
 	static void Build ()
 	{
-        //var modsSourceFolder = "/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Assets/_Assets/Mods";
-        //var deployRootFolder = "/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/";
-        //var buildTarget = BuildTarget.StandaloneOSXIntel;
-
-        var modsSourceFolder = @"C:\Dropbox\Skahal\Apps\Buildron\src\Buildron\Assets\_Assets\Mods\";
-        var deployRootFolder = @"C:\Dropbox\Skahal\Apps\Buildron\build\Mods";
-        var buildTarget = BuildTarget.StandaloneWindows;
-
+		#if UNITY_STANDALONE_OSX
+		var modsSourceFolder = "/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Assets/_Assets/Mods";
+		var deployRootFolder = "/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/";
+		var buildTarget = BuildTarget.StandaloneOSXIntel;
+		#else
+		var modsSourceFolder = @"C:\Dropbox\Skahal\Apps\Buildron\src\Buildron\Assets\_Assets\Mods\";
+		var deployRootFolder = @"C:\Dropbox\Skahal\Apps\Buildron\build\Mods";
+		var buildTarget = BuildTarget.StandaloneWindows;
+		#endif
+        
         BuildMods(modsSourceFolder, deployRootFolder, buildTarget);
 
     }
@@ -51,8 +53,11 @@ public class ModBuilder
 			}
 
 			var fromAssembly = Path.Combine(modFolder, "{0}.dll".With(modFolderName));
-			var toAssembly = Path.Combine(modDeployFolder, "{0}.dll".With(modFolderName));
-			File.Copy (fromAssembly, toAssembly);
+
+			if (File.Exists (fromAssembly)) {
+				var toAssembly = Path.Combine (modDeployFolder, "{0}.dll".With (modFolderName));
+				File.Copy (fromAssembly, toAssembly);
+			}
 		}
 	}
 

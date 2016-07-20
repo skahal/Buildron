@@ -4,6 +4,7 @@ using System.Collections;
 using Buildron.Domain;
 using Zenject;
 using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
 
 #endregion
@@ -18,6 +19,9 @@ public class UsersManager : MonoBehaviour
 	private Vector3 m_currentSpawnPosition;
 	private int m_currentRowUserCount;
 	private int m_rowsCount = 1;
+
+	[Inject]
+	private IBuildService m_buildService;
 	#endregion
 	
 	#region Properties
@@ -32,39 +36,17 @@ public class UsersManager : MonoBehaviour
 	#region Methods
 	private void Awake ()
 	{
-		Messenger.Register (gameObject, 
-			"OnBuildFailed",
-			"OnBuildSuccess",
-			"OnBuildRunning",
-			"OnBuildQueued");
-		
+		m_buildService.BuildFound += (sender, e) => {
+			e.Build.StatusChanged += (sender1, e1) => {
+				CreateUserGameObject(e.Build);
+			};
+		};
+
 		m_currentSpawnPosition = FirstSpawnPosition;
 	}
 
-	private void OnBuildFailed (GameObject buildGO)
+	private void CreateUserGameObject (Build build)
 	{
-		CreateUserGameObject (buildGO);
-	}
-	
-	private void OnBuildSuccess (GameObject buildGO)
-	{
-		CreateUserGameObject (buildGO);
-	}
-	
-	private void OnBuildRunning (GameObject buildGO)
-	{
-		CreateUserGameObject (buildGO);
-	}
-	
-	private void OnBuildQueued (GameObject buildGO)
-	{
-		CreateUserGameObject (buildGO);
-	}
-	
-	private void CreateUserGameObject (GameObject buildGO)
-	{
-		var build = buildGO.GetComponent<BuildController> ().Model;
-	
 		if (build.TriggeredBy == null) {
 			build.TriggeredByChanged += delegate {
 				CreateUserGameObject (build);
