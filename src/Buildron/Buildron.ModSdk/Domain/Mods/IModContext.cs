@@ -46,6 +46,11 @@ namespace Buildron.Domain.Mods
 		event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed; 
 
 		/// <summary>
+		/// Occurs when CI server is connected.
+		/// </summary>
+		event EventHandler<CIServerConnectedEventArgs> CIServerConnected;
+
+		/// <summary>
 		/// Occurs when CI server status changed.
 		/// </summary>
 		event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
@@ -93,6 +98,12 @@ namespace Buildron.Domain.Mods
 		/// </summary>
 		/// <value>The users.</value>
         IList<IUser> Users { get; }
+
+		/// <summary>
+		/// Gets the CI server.
+		/// </summary>
+		/// <value>The CI server.</value>
+		ICIServer CIServer { get; }
 
 		/// <summary>
 		/// Gets the log.
