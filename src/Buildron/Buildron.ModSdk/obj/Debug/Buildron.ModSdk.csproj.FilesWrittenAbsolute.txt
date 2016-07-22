@@ -1,9 +1,0 @@
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/bin/Debug/Buildron.ModSdk.dll.mdb
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/bin/Debug/Buildron.ModSdk.dll
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/obj/Debug/Buildron.ModSdk.dll
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/obj/Debug/Buildron.ModSdk.dll.mdb
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/bin/Debug/Skahal.Unity.Scripts.dll
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/bin/Debug/Skahal.Unity.Scripts.dll.mdb
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/bin/Debug/UnityEngine.dll
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/bin/Debug/Skahal.Unity.Scripts.Externals.dll
-/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/src/Buildron/Buildron.ModSdk/bin/Debug/Skahal.Unity.Scripts.Externals.dll.mdb

@@ -37,7 +37,8 @@ public class UsersManager : MonoBehaviour
 	private void Awake ()
 	{
 		m_buildService.BuildFound += (sender, e) => {
-			e.Build.StatusChanged += (sender1, e1) => {
+            CreateUserGameObject(e.Build);
+            e.Build.StatusChanged += (sender1, e1) => {
 				CreateUserGameObject(e.Build);
 			};
 		};
