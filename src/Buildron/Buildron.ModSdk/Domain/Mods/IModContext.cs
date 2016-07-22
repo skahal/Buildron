@@ -128,6 +128,8 @@ namespace Buildron.Domain.Mods
 		/// </summary>
 		/// <value>The U.</value>
 		IUIProxy UI { get; } 
+
+        IFileSystemProxy FileSystem { get; }
         #endregion
     }
 }
