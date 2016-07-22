@@ -1669,7 +1669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Ball
-  Size: 10
+  Size: 0
   IsSizeFixed: 0
   AutoDisableTime: 0
   RaiseOnGameObjectEnabledInPoolMessage: 0
