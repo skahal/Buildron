@@ -1,11 +1,11 @@
  <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> 
-      <ItemGroup> 
-          <FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\$(MSBuildProjectName).dll" />
-          <FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\Skahal.Unity.Scripts.dll" />
-          <FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\Skahal.Unity.Scripts.Externals.dll" />
-      </ItemGroup>
- 	
       <Target Name="AfterBuild">
+	      <ItemGroup> 
+			<FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\$(MSBuildProjectName).dll" />
+			<FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\Skahal.Unity.Scripts.dll" />
+			<FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\Skahal.Unity.Scripts.Externals.dll" />
+	      </ItemGroup>
+      
           <Message Text="### Copying $(MSBuildProjectName) files ..." Importance="high" />
   		  <Copy
               SourceFiles="@(FilesToCopy)"
