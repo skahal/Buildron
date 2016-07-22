@@ -20,7 +20,12 @@ namespace Buildron.Domain.Mods
 		{
 			m_log.Debug ("Loading asset '{0}'...", assetName);
 			var asset = m_underlying.Load (assetName);
-			m_log.Debug ("Asset loaded: {0}", asset);
+
+			if (asset == null) {
+				m_log.Warning ("There is no asset with name '{0}'. Do you have associate it to the mod AssetBundle?", assetName);
+			} else {
+				m_log.Debug ("Asset loaded: {0}", asset);
+			}
 
 			return asset;
 		}
