@@ -8,13 +8,13 @@ namespace Buildron.Domain.Mods
 	/// </summary>
 	public interface IGameObjectsProxy
 	{
-		/// <summary>
-		/// Create the game object.
-		/// </summary>
-		/// <param name="name">The game object name.</param>
-		/// <param name="parent">The parent game object.</param>
-		/// <typeparam name="TComponent">The main component of game object.</typeparam>
-		TComponent Create<TComponent> (string name = null, Transform parent = null) where TComponent : Component;
+        /// <summary>
+        /// Create the game object.
+        /// </summary>
+        /// <param name="name">The game object name.</param>
+        /// <param name="parent">The parent game object.</param>
+        /// <typeparam name="TComponent">The main component of game object.</typeparam>
+        TComponent Create<TComponent> (string name = null, Transform parent = null) where TComponent : Component;
 
         /// <summary>
         /// Creates the game object using the specified prefab.

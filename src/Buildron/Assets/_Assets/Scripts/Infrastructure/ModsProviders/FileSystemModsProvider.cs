@@ -58,7 +58,7 @@ namespace Buildron.Infrastructure.ModsProvider
 		{
 			var modFolderName = modInfo.Name;
 			var modFolder = Path.Combine(m_rootFolder, modFolderName);
-            var modsInstancesFolder = Path.Combine(modFolder, "instances");
+            var modsInstancesFolder = Path.Combine(modFolder, "__instances__");
             var modInstanceFolder = Path.Combine(modsInstancesFolder,  DateTime.UtcNow.Ticks.ToString());
 
             if (Directory.Exists(modsInstancesFolder))
@@ -72,13 +72,14 @@ namespace Buildron.Infrastructure.ModsProvider
                 }
             }
 
-            Directory.CreateDirectory(modInstanceFolder);
-            var filesToCopy = Directory.GetFiles(modFolder);
-            
-            foreach(var f in filesToCopy)
-            {
-                File.Copy(f, Path.Combine(modInstanceFolder, Path.GetFileName(f)));
-            }
+			CopyFolder (modFolder, modInstanceFolder);
+//            Directory.CreateDirectory(modInstanceFolder);
+//            var filesToCopy = Directory.GetFiles(modFolder);
+//            
+//            foreach(var f in filesToCopy)
+//            {
+//                File.Copy(f, Path.Combine(modInstanceFolder, Path.GetFileName(f)));
+//            }
 
 			var modAssemblyPath = Path.Combine(modInstanceFolder, "{0}.dll".With(modFolderName));
 			var modTypeFullName = "{0}.Mod".With(modFolderName);
@@ -140,6 +141,24 @@ namespace Buildron.Infrastructure.ModsProvider
                 m_createdMods.Add(modInfo.Name, modAppDomain);
 
                 return modInstance;
+			}
+		}
+
+		private void CopyFolder(string sourceFolder, string destFolder)
+		{
+			Debug.LogFormat ("FOLDER: {0} | {1}", sourceFolder, destFolder);
+			Directory.CreateDirectory(destFolder);
+			var filesToCopy = Directory.GetFiles(sourceFolder);
+
+			foreach(var f in filesToCopy)
+			{
+				File.Copy(f, Path.Combine(destFolder, Path.GetFileName(f)));
+			}
+
+			var subFolders = Directory.GetDirectories (sourceFolder).Where (s => !s.EndsWith ("__instances__"));
+
+			foreach (var subFolder in subFolders) {
+				CopyFolder (subFolder, Path.Combine (destFolder, Path.GetFileName (subFolder))); 
 			}
 		}
 
