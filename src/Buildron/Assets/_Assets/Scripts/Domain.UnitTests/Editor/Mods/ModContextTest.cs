@@ -29,10 +29,12 @@ namespace Buildron.Domain.UnitTests.Mods
             var mod = MockRepository.GenerateMock<IMod>();
 			var assetsProxy = MockRepository.GenerateMock<IAssetsProxy> ();
             var provider = MockRepository.GenerateMock<IModsProvider>();
+			var gameObjectsPoolsProxy = MockRepository.GenerateMock<IGameObjectsPoolProxy> ();
             var gameObjectsProxy = MockRepository.GenerateMock<IGameObjectsProxy> ();
 			var uiProxy = MockRepository.GenerateMock<IUIProxy> ();
+            var fileSystemProxy = MockRepository.GenerateMock<IFileSystemProxy>();
 
-			var instance = new ModInstanceInfo (mod, new ModInfo("test"), provider, assetsProxy, gameObjectsProxy, uiProxy);
+			var instance = new ModInstanceInfo (mod, new ModInfo("test"), provider, assetsProxy, gameObjectsProxy, gameObjectsPoolsProxy, uiProxy, fileSystemProxy);
             var log = MockRepository.GenerateMock<ISHLogStrategy>();
 
             m_buildService = MockRepository.GenerateMock<IBuildService>();

@@ -123,6 +123,8 @@ namespace Buildron.Domain.Mods
 		/// <value>The game objects.</value>
 		IGameObjectsProxy GameObjects { get; }
 
+        IGameObjectsPoolProxy GameObjectsPool { get; }
+
 		/// <summary>
 		/// Gets the UI.
 		/// </summary>

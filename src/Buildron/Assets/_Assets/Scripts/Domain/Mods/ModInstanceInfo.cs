@@ -6,14 +6,24 @@ namespace Buildron.Domain.Mods
 	{
         private readonly IModsProvider m_provider;
 
-		public ModInstanceInfo (IMod mod, ModInfo info, IModsProvider provider, IAssetsProxy assets, IGameObjectsProxy gameObjects, IUIProxy ui)
+		public ModInstanceInfo (
+            IMod mod, 
+            ModInfo info, 
+            IModsProvider provider, 
+            IAssetsProxy assets, 
+            IGameObjectsProxy gameObjects, 
+            IGameObjectsPoolProxy gameObjectsPool,
+            IUIProxy ui, 
+            IFileSystemProxy fileSystem)
 		{
 			Mod = mod;
 			Info = info;
             m_provider = provider;
 			Assets = assets;
 			GameObjects = gameObjects;
+            GameObjectsPool = gameObjectsPool;
 			UI = ui;
+            FileSystem = fileSystem;
 		}
 
 		public IMod Mod { get; private set; }
@@ -21,6 +31,8 @@ namespace Buildron.Domain.Mods
 		public IAssetsProxy Assets { get; set; }
 		public IGameObjectsProxy GameObjects { get; set; }
 		public IUIProxy UI { get; set; }
+        public IFileSystemProxy FileSystem { get; set; }
+        public IGameObjectsPoolProxy GameObjectsPool { get;  set; }
 
         public void Destroy()
         {

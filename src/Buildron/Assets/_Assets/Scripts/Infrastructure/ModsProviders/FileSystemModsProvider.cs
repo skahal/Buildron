@@ -10,6 +10,7 @@ using Buildron.Infrastructure.AssetsProxies;
 using Skahal.Common;
 using Buildron.Infrastructure.GameObjectsProxies;
 using Buildron.Infrastructure.UIProxies;
+using Buildron.Infrastructure.FileSystemProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -73,20 +74,11 @@ namespace Buildron.Infrastructure.ModsProvider
             }
 
 			CopyFolder (modFolder, modInstanceFolder);
-//            Directory.CreateDirectory(modInstanceFolder);
-//            var filesToCopy = Directory.GetFiles(modFolder);
-//            
-//            foreach(var f in filesToCopy)
-//            {
-//                File.Copy(f, Path.Combine(modInstanceFolder, Path.GetFileName(f)));
-//            }
 
 			var modAssemblyPath = Path.Combine(modInstanceFolder, "{0}.dll".With(modFolderName));
 			var modTypeFullName = "{0}.Mod".With(modFolderName);
 			var modAssetBundlePath = Path.Combine(modInstanceFolder, modFolderName.ToLowerInvariant());
 
-
-            //var modAssembly = Assembly.LoadFile(modAssemblyPath);
             m_log.Debug("Creating ModsAppDomain with ApplicationBase '{0}'...", modInstanceFolder);
 
             var domainSetup = new AppDomainSetup();
@@ -137,7 +129,17 @@ namespace Buildron.Infrastructure.ModsProvider
 					m_log.Debug("{0} Assets loaded.", assetBundle.GetAllAssetNames().Length);
 				}
                 
-                var modInstance = new ModInstanceInfo(mod, modInfo, this, new AssetBundleAssetsProxy(assetBundle), new ModGameObjectsProxy(modInfo), m_uiProxy);
+				var gameObjectsProxy = new ModGameObjectsProxy (modInfo);
+                var modInstance = new ModInstanceInfo(
+                    mod, 
+                    modInfo, 
+                    this, 
+                    new AssetBundleAssetsProxy(assetBundle), 
+                    gameObjectsProxy,
+					new ModGameObjectsPoolProxy(modInfo, gameObjectsProxy),
+                    m_uiProxy,
+                    new ModFileSystemProxy(modInstanceFolder));
+
                 m_createdMods.Add(modInfo.Name, modAppDomain);
 
                 return modInstance;

@@ -6,18 +6,22 @@ using Skahal.Logging;
 using Buildron.Infrastructure.AssetsProxies;
 using Buildron.Infrastructure.GameObjectsProxies;
 using Buildron.Infrastructure.UIProxies;
+using Buildron.Infrastructure.FileSystemProxies;
+using System.IO;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
 	public class AppDomainModsProvider : IModsProvider
 	{
-		#region Fields
+        #region Fields
+        private string m_modsFolder;
 		private ISHLogStrategy m_log;
 		#endregion
 
 		#region Constructors
-		public AppDomainModsProvider (ISHLogStrategy log)
+		public AppDomainModsProvider (string modsFolder, ISHLogStrategy log)
 		{
+            m_modsFolder = modsFolder;
 			m_log = log;
 		}
 		#endregion
@@ -57,7 +61,17 @@ namespace Buildron.Infrastructure.ModsProvider
 				throw new InvalidOperationException ("Cannot create mod, there is no default constructor.");
 			}
 
-			return new ModInstanceInfo (mod, modInfo, this, new ResourcesFolderAssetsProxy(), new ModGameObjectsProxy(modInfo), new DefaultUIProxy());
+			var gameObjectsProxy = new ModGameObjectsProxy (modInfo);
+
+			return new ModInstanceInfo (
+                mod,
+                modInfo, 
+                this, 
+                new ResourcesFolderAssetsProxy(), 
+				gameObjectsProxy, 
+				new ModGameObjectsPoolProxy(modInfo, gameObjectsProxy),
+                new DefaultUIProxy(),
+                new ModFileSystemProxy(Path.Combine(m_modsFolder, modInfo.Name)));
 		}
 
         public void DestroyInstance(ModInstanceInfo modInstanceInfo)

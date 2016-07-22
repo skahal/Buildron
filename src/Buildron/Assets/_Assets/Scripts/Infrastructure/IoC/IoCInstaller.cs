@@ -22,6 +22,7 @@ using Skahal.Threading;
 using Buildron.Domain.Mods;
 using Buildron.Infrastructure.ModsProvider;
 using Buildron.Infrastructure.UIProxies;
+using System.IO;
 
 namespace Buildron.Infrastructure.IoC
 {
@@ -76,7 +77,7 @@ namespace Buildron.Infrastructure.IoC
 			var log = Container.Resolve<ISHLogStrategy> ();
 
 #if UNITY_EDITOR
-			var folder =  "../../build/Mods/";
+			var folder = Path.GetFullPath("../../build/Mods/");
 #else
             var folder =  UnityEngine.Application.dataPath.Substring(0, UnityEngine.Application.dataPath.LastIndexOf("/")) + "/mods/";
             folder = folder.Replace(@"\", "/");
@@ -85,7 +86,7 @@ namespace Buildron.Infrastructure.IoC
 				Font = DefaultFont
 			};
             var fileSystemModsProvider = new FileSystemModsProvider(folder, log, uiProxy);
-            var appDomainModsProvider = new AppDomainModsProvider (log);
+            var appDomainModsProvider = new AppDomainModsProvider (folder, log);
 			Container.Bind<IModsProvider[]> ().FromInstance (new IModsProvider[] { fileSystemModsProvider, appDomainModsProvider });
 		}
 

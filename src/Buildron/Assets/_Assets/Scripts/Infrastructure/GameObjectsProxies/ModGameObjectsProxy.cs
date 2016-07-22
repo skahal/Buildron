@@ -32,33 +32,34 @@ namespace Buildron.Infrastructure.GameObjectsProxies
         #endregion
 
         #region Methods
-        public TComponent Create<TComponent> (string name = null, Transform parent = null) where TComponent : Component
+		public TComponent Create<TComponent> (string name = null, Action<GameObject> gameObjecCreatedCallback = null) 
+			where TComponent : Component
         {
             var go = new GameObject(name ?? typeof(TComponent).Name);
-            SetParent(go, parent);
+			go.transform.parent = m_modRoot.transform;
 
+			if (gameObjecCreatedCallback != null) {
+				gameObjecCreatedCallback (go);
+			}
+    
             return go.AddComponent<TComponent>();
         }
 
-        private void SetParent(GameObject go, Transform parent)
-        {
-            if (parent == null)
-            {
-                go.transform.parent = m_modRoot.transform;
-            }
-            else
-            {
-                go.transform.parent = parent;
-            }
-        }
-
-        public GameObject Create(UnityEngine.Object prefab, Transform parent = null)
+        public GameObject Create(UnityEngine.Object prefab)
         {
 			var go = GameObject.Instantiate(prefab) as GameObject;
-            SetParent(go, parent);
+			go.transform.parent = m_modRoot.transform;
 
             return go;
         }
+
+		public GameObject Create(string name)
+		{
+			var go = new GameObject (name);
+			go.transform.parent = m_modRoot.transform;
+
+			return go;
+		}
         #endregion
     }
 }

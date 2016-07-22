@@ -48,7 +48,9 @@ namespace Buildron.Domain.Mods
 
 			Assets = new LogAssetsProxy (instance.Assets, Log);
 			GameObjects = instance.GameObjects;
-			UI = instance.UI;
+			GameObjectsPool = new LogGameObjectsPoolProxy (instance.GameObjectsPool, Log);
+            UI = instance.UI;
+            FileSystem = instance.FileSystem;
 
             m_buildService = buildService;
             m_ciServerService = ciServerService;
@@ -92,7 +94,11 @@ namespace Buildron.Domain.Mods
 
 		public IGameObjectsProxy GameObjects { get; private set; }
 
-		public IUIProxy UI { get; private set; }
+        public IGameObjectsPoolProxy GameObjectsPool { get; private set; }
+
+        public IUIProxy UI { get; private set; }
+
+        public IFileSystemProxy FileSystem { get; private set; }
         #endregion
 
         #region Methods     
