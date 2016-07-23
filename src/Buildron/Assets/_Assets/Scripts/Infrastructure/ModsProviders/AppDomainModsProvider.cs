@@ -8,6 +8,7 @@ using Buildron.Infrastructure.GameObjectsProxies;
 using Buildron.Infrastructure.UIProxies;
 using Buildron.Infrastructure.FileSystemProxies;
 using System.IO;
+using Buildron.Infrastructure.DataProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -31,8 +32,7 @@ namespace Buildron.Infrastructure.ModsProvider
 		{
 			var modInfos = new List<ModInfo> ();
 			m_log.Debug ("Looking for IMod implementations in AppDomain.CurrentDomain assemblies...");
-			var allTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (a => a.GetTypes ());
-			var buildronAssemblyModTypes = allTypes.Where (t => !t.IsAbstract && typeof(IMod).IsAssignableFrom (t)).ToArray ();
+			var buildronAssemblyModTypes = TypeHelper.GetImplementationsOf<IMod> ();
 		
 			foreach (var modType in buildronAssemblyModTypes) 
 			{
@@ -71,7 +71,8 @@ namespace Buildron.Infrastructure.ModsProvider
 				gameObjectsProxy, 
 				new ModGameObjectsPoolProxy(modInfo, gameObjectsProxy),
                 new DefaultUIProxy(),
-                new ModFileSystemProxy(Path.Combine(m_modsFolder, modInfo.Name)));
+                new ModFileSystemProxy(Path.Combine(m_modsFolder, modInfo.Name)),
+				new ModDataProxy(modInfo));
 		}
 
         public void DestroyInstance(ModInstanceInfo modInstanceInfo)

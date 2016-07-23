@@ -11,6 +11,7 @@ using Skahal.Common;
 using Buildron.Infrastructure.GameObjectsProxies;
 using Buildron.Infrastructure.UIProxies;
 using Buildron.Infrastructure.FileSystemProxies;
+using Buildron.Infrastructure.DataProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -94,8 +95,7 @@ namespace Buildron.Infrastructure.ModsProvider
 
             m_log.Debug("Loading assembly '{0}'...", modAssemblyPath);
             var modAssembly = proxy.GetAssembly(modAssemblyPath);
-            // AppDomain.Unload(domain);
-
+       
 
             m_log.Debug ("Assembly loaded. Looking for type '{0}' on mod assembly {1}...", modTypeFullName, modAssembly.FullName);
 			var modType = modAssembly.GetType (modTypeFullName, false, true);
@@ -138,7 +138,8 @@ namespace Buildron.Infrastructure.ModsProvider
                     gameObjectsProxy,
 					new ModGameObjectsPoolProxy(modInfo, gameObjectsProxy),
                     m_uiProxy,
-                    new ModFileSystemProxy(modInstanceFolder));
+                    new ModFileSystemProxy(modInstanceFolder),
+					new ModDataProxy(modInfo));
 
                 m_createdMods.Add(modInfo.Name, modAppDomain);
 
