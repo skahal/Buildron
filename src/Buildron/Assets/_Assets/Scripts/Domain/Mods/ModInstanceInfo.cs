@@ -14,7 +14,8 @@ namespace Buildron.Domain.Mods
             IGameObjectsProxy gameObjects, 
             IGameObjectsPoolProxy gameObjectsPool,
             IUIProxy ui, 
-            IFileSystemProxy fileSystem)
+            IFileSystemProxy fileSystem,
+			IDataProxy data)
 		{
 			Mod = mod;
 			Info = info;
@@ -24,6 +25,7 @@ namespace Buildron.Domain.Mods
             GameObjectsPool = gameObjectsPool;
 			UI = ui;
             FileSystem = fileSystem;
+			Data = data;
 		}
 
 		public IMod Mod { get; private set; }
@@ -33,6 +35,8 @@ namespace Buildron.Domain.Mods
 		public IUIProxy UI { get; set; }
         public IFileSystemProxy FileSystem { get; set; }
         public IGameObjectsPoolProxy GameObjectsPool { get;  set; }
+
+		public IDataProxy Data { get; set; }
 
         public void Destroy()
         {

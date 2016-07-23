@@ -132,6 +132,8 @@ namespace Buildron.Domain.Mods
 		IUIProxy UI { get; } 
 
         IFileSystemProxy FileSystem { get; }
+
+		IDataProxy Data { get; }
         #endregion
     }
 }
