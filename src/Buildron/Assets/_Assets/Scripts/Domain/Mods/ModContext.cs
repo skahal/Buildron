@@ -47,7 +47,7 @@ namespace Buildron.Domain.Mods
 			Log = new PrefixedLogStrategy(log, "MOD [{0}]: ".With(m_instance.Info.Name));
 
 			Assets = new LogAssetsProxy (instance.Assets, Log);
-			GameObjects = instance.GameObjects;
+			GameObjects = new LogGameObjectsProxy (instance.GameObjects, Log);
 			GameObjectsPool = new LogGameObjectsPoolProxy (instance.GameObjectsPool, Log);
             UI = instance.UI;
             FileSystem = instance.FileSystem;
