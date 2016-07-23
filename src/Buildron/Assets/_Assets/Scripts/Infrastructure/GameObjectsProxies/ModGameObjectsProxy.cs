@@ -2,6 +2,7 @@
 using Buildron.Domain.Mods;
 using UnityEngine;
 using Skahal.Common;
+using System.Linq;
 
 namespace Buildron.Infrastructure.GameObjectsProxies
 {
@@ -41,7 +42,7 @@ namespace Buildron.Infrastructure.GameObjectsProxies
 			if (gameObjecCreatedCallback != null) {
 				gameObjecCreatedCallback (go);
 			}
-    
+
             return go.AddComponent<TComponent>();
         }
 
@@ -59,6 +60,26 @@ namespace Buildron.Infrastructure.GameObjectsProxies
 			go.transform.parent = m_modRoot.transform;
 
 			return go;
+		}
+
+		public MonoBehaviour AddComponent (GameObject container, string componentTypeName)
+		{
+			var componentType = TypeHelper.GetType(componentTypeName);
+
+			if (componentType == null) {
+
+				throw new ArgumentException (
+					"Could not find a component type '{0}'. Is it exists on your mod code or on Buildron code?"
+					.With(componentTypeName));
+			}
+
+			return (MonoBehaviour) container.AddComponent (componentType);
+		}
+
+		public TComponent AddComponent<TComponent> (GameObject container)
+			where TComponent : Component
+		{
+			return container.AddComponent<TComponent>();
 		}
         #endregion
     }

@@ -14,7 +14,8 @@ namespace Buildron.Domain.Mods
         /// <param name="name">The game object name.</param>
         /// <param name="parent">The parent game object.</param>
         /// <typeparam name="TComponent">The main component of game object.</typeparam>
-		TComponent Create<TComponent> (string name = null, Action<GameObject> gameObjectCreatedCallback = null) where TComponent : Component;
+		TComponent Create<TComponent> (string name = null, Action<GameObject> gameObjectCreatedCallback = null)
+			where TComponent : Component;
 
         /// <summary>
         /// Creates the game object using the specified prefab.
@@ -24,6 +25,11 @@ namespace Buildron.Domain.Mods
         /// <returns>The game object instance.</returns>
 		GameObject Create(UnityEngine.Object prefab);    
 
-		GameObject Create(string name);  
+		GameObject Create(string name);
+
+		TComponent AddComponent<TComponent> (GameObject container)
+			where TComponent : Component;
+
+		MonoBehaviour AddComponent (GameObject container, string componentTypeName);
 	}
 }
