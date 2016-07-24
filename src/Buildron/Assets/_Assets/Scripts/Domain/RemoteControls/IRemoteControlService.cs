@@ -12,6 +12,8 @@ namespace Buildron.Domain.RemoteControls
 		/// </summary>
 		event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
 
+		event EventHandler<RemoteControlCommandReceivedEventArgs> RemoteControlCommandReceived;
+
 		/// <summary>
 		/// Gets a value indicating whether has remote control connected.
 		/// </summary>
@@ -37,5 +39,7 @@ namespace Buildron.Domain.RemoteControls
 		/// Gets the connected remote control.
 		/// </summary>
 	    IRemoteControl GetConnectedRemoteControl();
+
+		void ReceiveCommand(IRemoteControlCommand command);
     }
 }

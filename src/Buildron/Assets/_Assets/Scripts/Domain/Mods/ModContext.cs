@@ -30,6 +30,7 @@ namespace Buildron.Domain.Mods
 		public event EventHandler<UserRemovedEventArgs> UserRemoved;
 		public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 		public event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
+		public event EventHandler<RemoteControlCommandReceivedEventArgs> RemoteControlCommandReceived;
         #endregion
 
         #region Fields
@@ -138,6 +139,7 @@ namespace Buildron.Domain.Mods
         private void AttachToRemoteControlService()
         {
             m_remoteControlService.RemoteControlChanged += (s, e) => RemoteControlChanged.Raise(s, e);
+			m_remoteControlService.RemoteControlCommandReceived += (s, e) => RemoteControlCommandReceived.Raise (s, e);
         }
 
         private void AttachToUserService()

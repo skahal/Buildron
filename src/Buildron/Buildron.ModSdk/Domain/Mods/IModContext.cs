@@ -84,6 +84,8 @@ namespace Buildron.Domain.Mods
 		/// Occurs when remote control changed.
 		/// </summary>
 		event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
+
+		event EventHandler<RemoteControlCommandReceivedEventArgs> RemoteControlCommandReceived;
         #endregion
       
         #region Properties

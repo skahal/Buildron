@@ -126,7 +126,7 @@ namespace Buildron.Controllers
 				UserName = userName,
 				Password = password
 			};
-
+					
 			m_remoteControlService.ConnectRemoteControl (rc);
 			Messenger.Send ("OnRemoteControlConnected", rc);
 		}
@@ -134,9 +134,9 @@ namespace Buildron.Controllers
 		[RPC]
 		public void SendToServerTakeScreenshot ()
 		{
-			SHLog.Debug ("SendToServerTakeScreenshot");
-		
+			SHLog.Debug ("SendToServerTakeScreenshot");	
 			Messenger.Send ("OnScreenshotRequested");
+			m_remoteControlService.ReceiveCommand (new TakeScreenshotRemoteControlCommand ());
 		}
 
 		[RPC]
@@ -180,67 +180,59 @@ namespace Buildron.Controllers
 		[RPC]
 		public void SendToServerShowHistory ()
 		{
-			SHLog.Debug ("SendToServerShowHistory");
 			m_serverState.IsShowingHistory = true;
-			Messenger.Send ("OnShowHistoryRequested");
+			// TODO: when we port the RC to open source, we should programming some support do Mods register custom commands
+			// on RC.
+			m_remoteControlService.ReceiveCommand(new CustomRemoteControlCommand("ShowHistory"));
 		}
 
 		[RPC]
 		public void SendToServerShowBuilds ()
 		{
-			SHLog.Debug ("SendToServerShowBuilds");
 			m_serverState.IsShowingHistory = false;
-			Messenger.Send ("OnShowBuildsRequested");
+			m_remoteControlService.ReceiveCommand(new CustomRemoteControlCommand("ShowBuilds"));
 		}
 
-	
 		[RPC]
 		public void SendToServerZoomIn ()
 		{
-			SHLog.Debug ("SendToServerZoomIn");		
-			Messenger.Send ("OnZoomIn");
+			m_remoteControlService.ReceiveCommand (new MoveCameraRemoteControlCommand (Vector3.forward));
 		}
 
 		[RPC]
 		public void SendToServerZoomOut ()
 		{
-			SHLog.Debug ("SendToServerZoomOut");
-			Messenger.Send ("OnZoomOut");
+			m_remoteControlService.ReceiveCommand (new MoveCameraRemoteControlCommand (Vector3.back));
 		}
 
 		[RPC]
 		public void SendToServerGoLeft ()
 		{
-			SHLog.Debug ("SendToServerGoLeft");
-			Messenger.Send ("OnGoLeft");
+			m_remoteControlService.ReceiveCommand (new MoveCameraRemoteControlCommand (Vector3.left));
 		}
 
 		[RPC]
 		public void SendToServerGoRight ()
 		{
-			SHLog.Debug ("SendToServerGoRight");
-			Messenger.Send ("OnGoRight");
+			m_remoteControlService.ReceiveCommand (new MoveCameraRemoteControlCommand (Vector3.right));
 		}
 
 		[RPC]
 		public void SendToServerGoUp ()
 		{
-			SHLog.Debug ("SendToServerGoUp");
-			Messenger.Send ("OnGoUp");
+			m_remoteControlService.ReceiveCommand (new MoveCameraRemoteControlCommand (Vector3.up));
 		}
 
 		[RPC]
 		public void SendToServerGoDown ()
 		{
-			SHLog.Debug ("SendToServerGoDown");
-			Messenger.Send ("OnGoDown");
+			m_remoteControlService.ReceiveCommand (new MoveCameraRemoteControlCommand (Vector3.down));
 		}
 
 		[RPC]
 		public void SendToServerResetCamera ()
 		{
-			SHLog.Debug ("SendToServerResetCamera");
-			Messenger.Send ("OnResetCamera");
+			m_remoteControlService.ReceiveCommand (new ResetCameraRemoteControlCommand ());
 		}
 
 		[RPC]

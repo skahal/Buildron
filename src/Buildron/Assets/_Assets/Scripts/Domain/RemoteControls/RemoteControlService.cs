@@ -18,6 +18,8 @@ namespace Buildron.Domain.RemoteControls
 		/// Occurs when remote control changed.
 		/// </summary>
 		public event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
+
+		public event EventHandler<RemoteControlCommandReceivedEventArgs> RemoteControlCommandReceived;
 		#endregion
 
 		#region Fields
@@ -132,6 +134,18 @@ namespace Buildron.Domain.RemoteControls
 		public IRemoteControl GetConnectedRemoteControl ()
 		{
 			return m_connectedRC;
+		}
+
+		public void ReceiveCommand(IRemoteControlCommand command)
+		{
+			if (m_connectedRC == null) {
+				throw new InvalidOperationException (
+					"Impossible to receive a command from a remote control, when no remote control connected");
+			}
+
+			RemoteControlCommandReceived.Raise (
+				this, 
+				new RemoteControlCommandReceivedEventArgs (m_connectedRC, command));
 		}
 		#endregion
 	}
