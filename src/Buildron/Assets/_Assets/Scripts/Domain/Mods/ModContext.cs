@@ -50,6 +50,7 @@ namespace Buildron.Domain.Mods
 			GameObjects = new LogGameObjectsProxy (instance.GameObjects, Log);
 			GameObjectsPool = new LogGameObjectsPoolProxy (instance.GameObjectsPool, Log);
 			BuildGameObjects = instance.BuildGameObjects;
+			UserGameObjects = instance.UserGameObjects;
             UI = instance.UI;
             FileSystem = instance.FileSystem;
 			Data = new LogDataProxy(instance.Data, Log);
@@ -105,6 +106,8 @@ namespace Buildron.Domain.Mods
 		public IDataProxy Data { get; private set; }
 
 		public IBuildGameObjectsProxy BuildGameObjects { get; private set; }
+
+		public IUserGameObjectsProxy UserGameObjects { get; private set; }
         #endregion
 
         #region Methods     

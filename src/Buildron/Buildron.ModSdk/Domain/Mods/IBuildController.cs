@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Buildron.Controllers.Builds
+namespace Buildron.Domain.Mods
 {
 	public interface IBuildController : IGameObjectController
 	{

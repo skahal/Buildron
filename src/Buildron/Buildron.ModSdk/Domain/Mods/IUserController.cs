@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Buildron.Controllers.Users
+namespace Buildron.Domain.Mods
 {
 	public interface IUserController : IGameObjectController
 	{

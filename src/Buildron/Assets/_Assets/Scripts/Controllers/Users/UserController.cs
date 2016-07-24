@@ -4,9 +4,10 @@ using UnityEngine.UI;
 using Zenject;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
+using Buildron.Domain.Mods;
 
 [RequireComponent(typeof(UserAnimationController))]
-public class UserController : MonoBehaviour, IInitializable
+public class UserController : MonoBehaviour, IInitializable, IUserController
 {
     #region Fields
     [Inject]
@@ -53,6 +54,18 @@ public class UserController : MonoBehaviour, IInitializable
 			};
         }
     }
+
+	public Rigidbody Rigidbody { get; private set; }
+
+	public Collider CenterCollider  { get; private set; }
+
+	public Collider TopCollider { get; private set; }
+
+	public Collider LeftCollider  { get; private set; }
+
+	public Collider RightCollider { get; private set; }
+
+	public Collider BottomCollider  { get; private set; }
     #endregion
 
     #region Life cycle
@@ -72,6 +85,14 @@ public class UserController : MonoBehaviour, IInitializable
     {
         m_animationController = gameObject.GetComponent<UserAnimationController>();
         m_body = transform.FindChild("rootJoint").gameObject;
+
+		CenterCollider = transform.FindChild("Edges/Center").GetComponent<Collider>();
+		TopCollider = transform.FindChild("Edges/Top").GetComponent<Collider>();
+		RightCollider = transform.FindChild("Edges/Right").GetComponent<Collider>();
+		BottomCollider = transform.FindChild("Edges/Bottom").GetComponent<Collider>();
+		LeftCollider = transform.FindChild("Edges/Left").GetComponent<Collider>();
+		Rigidbody =  transform.FindChild("Edges").GetComponent<Rigidbody>();
+
         MarkAsVisible();
         Messenger.Register(gameObject,
             "OnCameraZoomIn",
