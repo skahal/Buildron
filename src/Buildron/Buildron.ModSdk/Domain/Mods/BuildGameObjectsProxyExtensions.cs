@@ -8,58 +8,36 @@ public static class BuildGameObjectsProxyExtensions
 {
 	public static bool AreVisiblesFromLeft (this IBuildController[] builds)
 	{
-		return builds.All (b => b.LeftEdge.IsVisibleFrom (Camera.main));
+		return builds.All (b => b.LeftCollider.IsVisibleFrom (Camera.main));
 	}
 
 	public static bool AreVisiblesFromRight (this IBuildController[] builds)
 	{
-		return builds.All (b => b.RightEdge.IsVisibleFrom (Camera.main));
+		return builds.All (b => b.RightCollider.IsVisibleFrom (Camera.main));
 	}
 
 	public static bool AreVisiblesFromHorizontal (this IBuildController[] builds)
 	{
 		var camera = Camera.main;
 
-		return builds.All (b => b.LeftEdge.IsVisibleFrom (camera) && b.RightEdge.IsVisibleFrom (camera));
+		return builds.All (b => b.LeftCollider.IsVisibleFrom (camera) && b.RightCollider.IsVisibleFrom (camera));
 	}
 
 	public static bool AreVisiblesFromTop (this IBuildController[] builds)
 	{
-		return builds.All (b => b.TopEdge.IsVisibleFrom (Camera.main));
+		return builds.All (b => b.TopCollider.IsVisibleFrom (Camera.main));
 	}
 
 	public static bool AreVisiblesFromBottom (this IBuildController[] builds)
 	{
-		return builds.All (b => b.BottomEdge.IsVisibleFrom (Camera.main));
+		return builds.All (b => b.BottomCollider.IsVisibleFrom (Camera.main));
 	}
 
 	public static bool AreVisiblesFromVertical (this IBuildController[] builds)
 	{
 		var camera = Camera.main;
 
-		return builds.All (b => b.TopEdge.IsVisibleFrom (camera) && b.BottomEdge.IsVisibleFrom (camera));
-	}
-
-	public static bool HasNotVisiblesFromTop (this IBuildController[] builds)
-	{
-		var camera = Camera.main;
-
-		return builds.All (b => 
-			!b.TopEdge.IsVisibleFrom (camera)
-		&& (b.LeftEdge.IsVisibleFrom (camera)
-		|| b.RightEdge.IsVisibleFrom (camera)
-		|| b.BottomEdge.IsVisibleFrom (camera)));
-	}
-
-	public static bool HasNotVisiblesFromSides (this IBuildController[] builds)
-	{
-		var camera = Camera.main;
-
-		return builds.All (b => 
-			b.TopEdge.IsVisibleFrom (camera)
-		&& (!b.LeftEdge.IsVisibleFrom (camera)
-		|| !b.RightEdge.IsVisibleFrom (camera)
-		|| !b.BottomEdge.IsVisibleFrom (camera)));
+		return builds.All (b => b.TopCollider.IsVisibleFrom (camera) && b.BottomCollider.IsVisibleFrom (camera));
 	}
 
 	public static IBuildController[] Visible (this IBuildController[] builds)
