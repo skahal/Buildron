@@ -134,6 +134,8 @@ namespace Buildron.Domain.Mods
         IFileSystemProxy FileSystem { get; }
 
 		IDataProxy Data { get; }
+
+		IBuildGameObjectsProxy BuildGameObjects { get; }
         #endregion
     }
 }

@@ -12,6 +12,7 @@ using Buildron.Infrastructure.GameObjectsProxies;
 using Buildron.Infrastructure.UIProxies;
 using Buildron.Infrastructure.FileSystemProxies;
 using Buildron.Infrastructure.DataProxies;
+using Buildron.Infrastructure.BuildGameObjectsProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -139,7 +140,8 @@ namespace Buildron.Infrastructure.ModsProvider
 					new ModGameObjectsPoolProxy(modInfo, gameObjectsProxy),
                     m_uiProxy,
                     new ModFileSystemProxy(modInstanceFolder),
-					new ModDataProxy(modInfo));
+					new ModDataProxy(modInfo),
+					new ModBuildGameObjectsProxy());
 
                 m_createdMods.Add(modInfo.Name, modAppDomain);
 

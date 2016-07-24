@@ -40,7 +40,7 @@ public class TestBuildsProvider : IBuildsProvider
 			});
 		};
 		
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 5; i++) {
 			addBuild ("iOS - Classic", "Ships N'Battles");
 			addBuild ("iOS - HD", "Ships N'Battles");
 			addBuild ("Android", "Ships N'Battles");

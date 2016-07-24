@@ -34,8 +34,9 @@ namespace Buildron.Domain.UnitTests.Mods
 			var uiProxy = MockRepository.GenerateMock<IUIProxy> ();
             var fileSystemProxy = MockRepository.GenerateMock<IFileSystemProxy>();
 			var dataProxy = MockRepository.GenerateMock<IDataProxy>();
+			var buildGameObjectsProxy = MockRepository.GenerateMock<IBuildGameObjectsProxy>();
 
-			var instance = new ModInstanceInfo (mod, new ModInfo("test"), provider, assetsProxy, gameObjectsProxy, gameObjectsPoolsProxy, uiProxy, fileSystemProxy, dataProxy);
+			var instance = new ModInstanceInfo (mod, new ModInfo("test"), provider, assetsProxy, gameObjectsProxy, gameObjectsPoolsProxy, uiProxy, fileSystemProxy, dataProxy, buildGameObjectsProxy);
             var log = MockRepository.GenerateMock<ISHLogStrategy>();
 
             m_buildService = MockRepository.GenerateMock<IBuildService>();

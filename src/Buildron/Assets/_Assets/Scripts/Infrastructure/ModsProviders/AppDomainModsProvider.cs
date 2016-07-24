@@ -9,6 +9,7 @@ using Buildron.Infrastructure.UIProxies;
 using Buildron.Infrastructure.FileSystemProxies;
 using System.IO;
 using Buildron.Infrastructure.DataProxies;
+using Buildron.Infrastructure.BuildGameObjectsProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -72,7 +73,8 @@ namespace Buildron.Infrastructure.ModsProvider
 				new ModGameObjectsPoolProxy(modInfo, gameObjectsProxy),
                 new DefaultUIProxy(),
                 new ModFileSystemProxy(Path.Combine(m_modsFolder, modInfo.Name)),
-				new ModDataProxy(modInfo));
+				new ModDataProxy(modInfo),
+				new ModBuildGameObjectsProxy());
 		}
 
         public void DestroyInstance(ModInstanceInfo modInstanceInfo)
