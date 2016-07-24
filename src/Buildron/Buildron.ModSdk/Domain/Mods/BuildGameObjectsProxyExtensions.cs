@@ -8,12 +8,30 @@ public static class BuildGameObjectsProxyExtensions
 {
 	public static bool AreVisiblesFromLeft (this IBuildController[] builds)
 	{
-		return builds.All (b => b.LeftCollider.IsVisibleFrom (Camera.main));
+		var camera = Camera.main;
+
+		return builds.All (b => b.LeftCollider.IsVisibleFrom (camera));
+	}
+
+	public static int CountVisiblesFromLeft (this IBuildController[] builds)
+	{
+		var camera = Camera.main;
+
+		return builds.Count (b => b.LeftCollider.IsVisibleFrom (camera));
 	}
 
 	public static bool AreVisiblesFromRight (this IBuildController[] builds)
 	{
+		var camera = Camera.main;
+
 		return builds.All (b => b.RightCollider.IsVisibleFrom (Camera.main));
+	}
+
+	public static int CountVisiblesFromRight (this IBuildController[] builds)
+	{
+		var camera = Camera.main;
+
+		return builds.Count (b => b.RightCollider.IsVisibleFrom (camera));
 	}
 
 	public static bool AreVisiblesFromHorizontal (this IBuildController[] builds)
@@ -25,12 +43,30 @@ public static class BuildGameObjectsProxyExtensions
 
 	public static bool AreVisiblesFromTop (this IBuildController[] builds)
 	{
-		return builds.All (b => b.TopCollider.IsVisibleFrom (Camera.main));
+		var camera = Camera.main;
+
+		return builds.All (b => b.TopCollider.IsVisibleFrom (camera));
+	}
+
+	public static int CountVisiblesFromTop (this IBuildController[] builds)
+	{
+		var camera = Camera.main;
+
+		return builds.Count (b => b.TopCollider.IsVisibleFrom (camera));
 	}
 
 	public static bool AreVisiblesFromBottom (this IBuildController[] builds)
 	{
-		return builds.All (b => b.BottomCollider.IsVisibleFrom (Camera.main));
+		var camera = Camera.main;
+
+		return builds.All (b => b.BottomCollider.IsVisibleFrom (camera));
+	}
+
+	public static int CountVisiblesFromBottom (this IBuildController[] builds)
+	{
+		var camera = Camera.main;
+
+		return builds.Count (b => b.BottomCollider.IsVisibleFrom (camera));
 	}
 
 	public static bool AreVisiblesFromVertical (this IBuildController[] builds)
