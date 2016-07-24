@@ -13,5 +13,7 @@ namespace Buildron.Domain.Mods
 		/// </summary>
 		/// <value>The font.</value>
 		Font Font { get; set; }
+
+		void SetStatusText (string text, float secondsTimeout = 0);
 	}
 }
