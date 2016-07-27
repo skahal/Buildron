@@ -15,11 +15,15 @@ namespace Buildron.Domain.Mods
 		}
 			
 		#region IDataProxy implementation
+		public bool HasValue (string key)
+		{
+			return m_underlying.HasValue (key);
+		}
 
-		public void SaveValue<TValue> (string key, TValue value)
+		public void SetValue<TValue> (string key, TValue value)
 		{
 			m_log.Debug ("Saving key '{0}' with value '{1}'...", key, value);
-			m_underlying.SaveValue<TValue> (key, value);
+			m_underlying.SetValue<TValue> (key, value);
 		}
 
 		public TValue GetValue<TValue> (string key)

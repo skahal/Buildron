@@ -29,17 +29,16 @@ public class MainSceneController : MonoBehaviour, IInitializable
     #endregion
 
     #region Properties
-
     public float DeployBuildSeconds = 0.5f;
     public float MaxTimeWithoutUpdate = 120f;
     public Vector3 FirstColumnDeployPosition = new Vector3(-2.5f, 10, 0);
     public Vector3 SecondColumnDeployPosition = new Vector3(2.5f, 10, 0);
     public Vector3 HistoryColumnDeployPosition = new Vector3(0, 10, 20);
     public Text LastUpdateLabel;
+    public Text BuildsCountLabel;
     public Text LogMessageLabel;
     public Text ServerIPLabel;
     public InputField Title;
-
     #endregion
 
     #region Methods
@@ -104,12 +103,19 @@ public class MainSceneController : MonoBehaviour, IInitializable
     {
         SetLogMessage("Contacting {0} server. Please, wait...", m_buildService.ServerName);
 
-        m_buildService.BuildFound += delegate (object sender, BuildFoundEventArgs e)
+        m_buildService.BuildFound += delegate 
         {
             if (m_buildService.Builds.Count == 1)
             {
                 SetLogMessage("");
             }
+
+            UpdateBuildsCountLabel();
+        };
+
+        m_buildService.BuildRemoved += delegate
+        {
+            UpdateBuildsCountLabel();
         };
 
         m_buildService.BuildsRefreshed += delegate
@@ -133,8 +139,7 @@ public class MainSceneController : MonoBehaviour, IInitializable
                 }
             }
         };
-    }
-
+    }    
     #endregion
 
     #region Updates
@@ -194,6 +199,12 @@ public class MainSceneController : MonoBehaviour, IInitializable
             }
         }
     }
+
+    private void UpdateBuildsCountLabel()
+    {
+        BuildsCountLabel.text = string.Format ("Builds\n{0}", m_buildService.Builds.Count);
+    }
+
     #endregion
 
     #region Helpers

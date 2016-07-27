@@ -140,6 +140,10 @@ namespace Buildron.Domain.Mods
 		IBuildGameObjectsProxy BuildGameObjects { get; }
 
 		IUserGameObjectsProxy UserGameObjects { get; }
+
+        ICameraProxy Camera { get; }
+
+        IPreferenceProxy Preference { get; }
         #endregion
     }
 }

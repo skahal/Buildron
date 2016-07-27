@@ -52,22 +52,34 @@ namespace Buildron.Domain.Mods
 			m_log.Debug ("Mods providers available: {0}", String.Join(", ", m_modsProviders.Select(m => m.GetType().Name).ToArray()));
 
 			foreach (var modProvider in m_modsProviders) {
-				m_log.Debug ("Using mod provider {0}", modProvider.GetType ().Name);
-				var modInfos = modProvider.GetModInfos ().ToArray ();
-				m_log.Debug ("{0} mods found by {1}: {2}", modInfos.Length, modProvider.GetType ().Name, String.Join(", ", modInfos.Select(m=> m.Name).ToArray()));
-		
-				foreach (var modInfo in modInfos) {
-					try {
-						if(ValidateMod(modInfo)) {
-							m_log.Debug ("Creating instance of {0}...", modInfo.Name);
+                try
+                {
+                    m_log.Debug("Using mod provider {0}", modProvider.GetType().Name);
+                    var modInfos = modProvider.GetModInfos().ToArray();
+                    m_log.Debug("{0} mods found by {1}: {2}", modInfos.Length, modProvider.GetType().Name, String.Join(", ", modInfos.Select(m => m.Name).ToArray()));
 
-							var instanceInfo = modProvider.CreateInstance (modInfo);
-							InitializeMod (instanceInfo);
-						}
-					} catch (Exception ex) {
-						m_log.Error ("{0}: {1}\n{2}", ex.GetType ().Name, ex.Message, ex.StackTrace);
-					}
-				}
+                    foreach (var modInfo in modInfos)
+                    {
+                        try
+                        {
+                            if (ValidateMod(modInfo))
+                            {
+                                m_log.Debug("Creating instance of {0}...", modInfo.Name);
+
+                                var instanceInfo = modProvider.CreateInstance(modInfo);
+                                InitializeMod(instanceInfo);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            m_log.Error("{0}: {1}\n{2}", ex.GetType().Name, ex.Message, ex.StackTrace);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    m_log.Error("{0}: {1}\n{2}", ex.GetType().Name, ex.Message, ex.StackTrace);
+                }
 			}
 		
 			m_log.Debug ("Initialization finished.");

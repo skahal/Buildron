@@ -11,6 +11,9 @@ using System.IO;
 using Buildron.Infrastructure.DataProxies;
 using Buildron.Infrastructure.BuildGameObjectsProxies;
 using Buildron.Infrastructure.UserGameObjectsProxies;
+using Buildron.Infrastructure.CameraProxies;
+using UnityEngine;
+using Buildron.Infrastructure.PreferenceProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -19,10 +22,11 @@ namespace Buildron.Infrastructure.ModsProvider
         #region Fields
         private string m_modsFolder;
 		private ISHLogStrategy m_log;
-		#endregion
+        private ICameraProxy m_cameraProxy = new ModCameraProxy(Camera.main);
+        #endregion
 
-		#region Constructors
-		public AppDomainModsProvider (string modsFolder, ISHLogStrategy log)
+        #region Constructors
+        public AppDomainModsProvider (string modsFolder, ISHLogStrategy log)
 		{
             m_modsFolder = modsFolder;
 			m_log = log;
@@ -64,8 +68,8 @@ namespace Buildron.Infrastructure.ModsProvider
 			}
 
 			var gameObjectsProxy = new ModGameObjectsProxy (modInfo);
-
-			return new ModInstanceInfo (
+            
+            return new ModInstanceInfo (
                 mod,
                 modInfo, 
                 this, 
@@ -76,7 +80,9 @@ namespace Buildron.Infrastructure.ModsProvider
                 new ModFileSystemProxy(Path.Combine(m_modsFolder, modInfo.Name)),
 				new ModDataProxy(modInfo),
 				new ModBuildGameObjectsProxy(),
-				new ModUserGameObjectsProxy());
+				new ModUserGameObjectsProxy(),
+				m_cameraProxy,
+                new ModPreferenceProxy(modInfo));
 		}
 
         public void DestroyInstance(ModInstanceInfo modInstanceInfo)

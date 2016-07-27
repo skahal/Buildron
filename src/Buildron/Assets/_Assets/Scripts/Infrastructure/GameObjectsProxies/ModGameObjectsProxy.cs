@@ -48,6 +48,7 @@ namespace Buildron.Infrastructure.GameObjectsProxies
 
         public GameObject Create(UnityEngine.Object prefab)
         {
+            Throw.AnyNull( new { prefab });
 			var go = GameObject.Instantiate(prefab) as GameObject;
 			go.transform.parent = m_modRoot.transform;
 
@@ -64,7 +65,8 @@ namespace Buildron.Infrastructure.GameObjectsProxies
 
 		public MonoBehaviour AddComponent (GameObject container, string componentTypeName)
 		{
-			var componentType = TypeHelper.GetType(componentTypeName);
+            Throw.AnyNull(new { container, componentTypeName });
+            var componentType = TypeHelper.GetType(componentTypeName);
 
 			if (componentType == null) {
 
@@ -79,7 +81,8 @@ namespace Buildron.Infrastructure.GameObjectsProxies
 		public TComponent AddComponent<TComponent> (GameObject container)
 			where TComponent : Component
 		{
-			return container.AddComponent<TComponent>();
+            Throw.AnyNull(new { container });
+            return container.AddComponent<TComponent>();
 		}
         #endregion
     }

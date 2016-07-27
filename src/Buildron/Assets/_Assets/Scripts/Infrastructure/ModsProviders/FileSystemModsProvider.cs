@@ -14,6 +14,8 @@ using Buildron.Infrastructure.FileSystemProxies;
 using Buildron.Infrastructure.DataProxies;
 using Buildron.Infrastructure.BuildGameObjectsProxies;
 using Buildron.Infrastructure.UserGameObjectsProxies;
+using Buildron.Infrastructure.CameraProxies;
+using Buildron.Infrastructure.PreferenceProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -24,9 +26,10 @@ namespace Buildron.Infrastructure.ModsProvider
 		private readonly ISHLogStrategy m_log;
 		private readonly IUIProxy m_uiProxy;
         private Dictionary<string, AppDomain> m_createdMods = new Dictionary<string, AppDomain>();
-		#endregion
+        private ICameraProxy m_cameraProxy = new ModCameraProxy(Camera.main);
+        #endregion
 
-		public FileSystemModsProvider (string rootFolder, ISHLogStrategy log, IUIProxy uiProxy)
+        public FileSystemModsProvider (string rootFolder, ISHLogStrategy log, IUIProxy uiProxy)
 		{
 			Throw.AnyNull (new { rootFolder, log });
 
@@ -40,20 +43,29 @@ namespace Buildron.Infrastructure.ModsProvider
 		{
 			m_log.Debug ("Getting mods informations from folder {0}...", m_rootFolder);
 			var modInfos = new List<ModInfo>();
-				
-			var modsFolders = Directory.GetDirectories (m_rootFolder);
-			m_log.Debug ("{0} mods folders", modsFolders.Length);
 
-			foreach (var modFolder in modsFolders) {
-				var modFolderName = Path.GetFileName (modFolder);
+            if (Directory.Exists(m_rootFolder))
+            {
+                var modsFolders = Directory.GetDirectories(m_rootFolder);
+                m_log.Debug("{0} mods folders", modsFolders.Length);
 
-				if (modFolderName.EndsWith (".disabled", StringComparison.OrdinalIgnoreCase)) {
-					m_log.Debug (modFolderName);
-					continue;
-				}
+                foreach (var modFolder in modsFolders)
+                {
+                    var modFolderName = Path.GetFileName(modFolder);
 
-				modInfos.Add (new ModInfo(modFolderName));
-			}
+                    if (modFolderName.EndsWith(".disabled", StringComparison.OrdinalIgnoreCase))
+                    {
+                        m_log.Debug(modFolderName);
+                        continue;
+                    }
+
+                    modInfos.Add(new ModInfo(modFolderName));
+                }
+            }
+            else
+            {
+                m_log.Warning("Mods folder '{0}' not found.", m_rootFolder);
+            }
 
 			return modInfos;
 		}
@@ -131,7 +143,8 @@ namespace Buildron.Infrastructure.ModsProvider
 					m_log.Debug("{0} Assets loaded.", assetBundle.GetAllAssetNames().Length);
 				}
                 
-				var gameObjectsProxy = new ModGameObjectsProxy (modInfo);
+				var gameObjectsProxy = new ModGameObjectsProxy (modInfo);                
+
                 var modInstance = new ModInstanceInfo(
                     mod, 
                     modInfo, 
@@ -143,7 +156,9 @@ namespace Buildron.Infrastructure.ModsProvider
                     new ModFileSystemProxy(modInstanceFolder),
 					new ModDataProxy(modInfo),
 					new ModBuildGameObjectsProxy(),
-					new ModUserGameObjectsProxy());
+					new ModUserGameObjectsProxy(),
+					m_cameraProxy,
+                    new ModPreferenceProxy(modInfo));
 
                 m_createdMods.Add(modInfo.Name, modAppDomain);
 
@@ -191,10 +206,10 @@ namespace Buildron.Infrastructure.ModsProvider
                 {
                     return Assembly.LoadFile(assemblyPath);
                 }
-                catch (Exception)
+                catch(ReflectionTypeLoadException ex)
                 {
-                    return null;
-                    // throw new InvalidOperationException(ex);
+                    ex.Log("Proxy.GetAssembly");
+                    throw;
                 }
             }
         }

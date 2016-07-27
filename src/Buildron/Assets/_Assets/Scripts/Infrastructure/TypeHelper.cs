@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Skahal.Logging;
 
 namespace Buildron.Infrastructure
 {
@@ -9,8 +12,29 @@ namespace Buildron.Infrastructure
 
 		static TypeHelper()
 		{
-			s_allTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (a => a.GetTypes ()).ToArray ();
-		}
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var types = new List<Type>();
+
+            foreach (var a in assemblies)
+            {
+                try
+                {
+                    types.AddRange(a.GetTypes());
+                }
+                catch(ReflectionTypeLoadException ex)
+                {                    
+                    ex.Log("Error getting types from assembly: {0}".With(a.FullName));
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    SHLog.Error("Error getting types from assembly: {0}. Exception {1}: {2}", a.FullName, ex.GetType().Name, ex.Message);
+                    throw;
+                }
+            }
+
+            s_allTypes = types.ToArray();
+        }
 
 		public static Type[] GetAllTypes()
 		{

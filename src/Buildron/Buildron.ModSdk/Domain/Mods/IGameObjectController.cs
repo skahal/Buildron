@@ -1,9 +1,10 @@
 ﻿using System;
+using Skahal.Common;
 using UnityEngine;
 
 namespace Buildron.Domain.Mods
 {
-	public interface IGameObjectController
+	public interface IGameObjectController : IEventSubscriber
 	{
 		GameObject gameObject { get; }
 		Rigidbody Rigidbody { get; }

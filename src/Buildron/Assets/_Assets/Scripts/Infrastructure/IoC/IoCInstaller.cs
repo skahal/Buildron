@@ -23,6 +23,7 @@ using Buildron.Domain.Mods;
 using Buildron.Infrastructure.ModsProvider;
 using Buildron.Infrastructure.UIProxies;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Buildron.Infrastructure.IoC
 {
@@ -85,9 +86,14 @@ namespace Buildron.Infrastructure.IoC
 			var uiProxy = new DefaultUIProxy {
 				Font = DefaultFont
 			};
-            var fileSystemModsProvider = new FileSystemModsProvider(folder, log, uiProxy);
-            var appDomainModsProvider = new AppDomainModsProvider (folder, log);
-			Container.Bind<IModsProvider[]> ().FromInstance (new IModsProvider[] { fileSystemModsProvider, appDomainModsProvider });
+
+            var modsProviders = new List<IModsProvider>();
+            modsProviders.Add(new FileSystemModsProvider(folder, log, uiProxy));
+
+#if UNITY_EDITOR
+            modsProviders.Add(new AppDomainModsProvider (folder, log));
+#endif
+            Container.Bind<IModsProvider[]> ().FromInstance (modsProviders.ToArray());
 		}
 
 		void InstallRepositories ()

@@ -1,4 +1,5 @@
 ﻿using System;
+using Skahal.Common;
 using Skahal.Logging;
 
 namespace Buildron.Domain.Mods
@@ -25,8 +26,21 @@ namespace Buildron.Domain.Mods
 
 		public UnityEngine.GameObject Create (UnityEngine.Object prefab)
 		{
-			m_log.Debug ("Creating game object using the prefab '{0}'...", prefab.name);
-			return m_underlying.Create (prefab);
+            Throw.AnyNull(new { prefab });
+            m_log.Debug ("Creating game object using the prefab '{0}'...", prefab.name);
+
+            try
+            {
+                var go = m_underlying.Create(prefab);
+                m_log.Debug("Prefab '{0}' created.", prefab.name);
+
+                return go;
+            }
+            catch(Exception ex)
+            {
+                m_log.Error("Error creating prefab '{0}': {1}.{2}", prefab.name, ex.Message, ex.StackTrace);
+                throw;
+            }
 		}
 
 		public UnityEngine.GameObject Create (string name)
@@ -37,14 +51,18 @@ namespace Buildron.Domain.Mods
 
 		public UnityEngine.MonoBehaviour AddComponent (UnityEngine.GameObject container, string componentTypeName)
 		{
-			m_log.Debug ("Adding component of type with name '{0}' to game object '{1}'...", componentTypeName, container.name);
+            Throw.AnyNull(new { container });
+
+            m_log.Debug ("Adding component of type with name '{0}' to game object '{1}'...", componentTypeName, container.name);
 			return m_underlying.AddComponent (container, componentTypeName);
 		}
 
 		public TComponent AddComponent<TComponent> (UnityEngine.GameObject container)
 			where TComponent : UnityEngine.Component
 		{
-			m_log.Debug ("Adding component of type '{0}' to game object '{1}'...", typeof(TComponent).Name, container.name);
+            Throw.AnyNull(new { container });
+
+            m_log.Debug ("Adding component of type '{0}' to game object '{1}'...", typeof(TComponent).Name, container.name);
 			return m_underlying.AddComponent<TComponent>(container);
 		}
 

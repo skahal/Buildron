@@ -15,14 +15,18 @@ namespace Buildron.Infrastructure.DataProxies
 		}
 
 		#region IDataProxy implementation
+		public bool HasValue (string key)
+		{
+			return PlayerPrefs.HasKey (GetModKey (key));
+		}
 
-		public void SaveValue<TValue> (string key, TValue value)
+		public virtual void SetValue<TValue> (string key, TValue value)
 		{
 			var serialized = Serialize(value);
 			PlayerPrefs.SetString (GetModKey (key), serialized);
 		}
 
-		public TValue GetValue<TValue> (string key)
+		public virtual TValue GetValue<TValue> (string key)
 		{
 			var modKey = GetModKey (key);
 
@@ -35,9 +39,9 @@ namespace Buildron.Infrastructure.DataProxies
 			return default(TValue);
 		}
 
-		public void RemoveValue<TValue>(string key)
+		public virtual void RemoveValue<TValue>(string key)
 		{
-			PlayerPrefs.DeleteKey (key);
+			PlayerPrefs.DeleteKey (GetModKey(key));
 		}
 
 		string GetModKey (string key)

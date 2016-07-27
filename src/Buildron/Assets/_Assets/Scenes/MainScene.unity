@@ -1913,6 +1913,7 @@ MonoBehaviour:
   SecondColumnDeployPosition: {x: 6.5, y: 20, z: 1.5}
   HistoryColumnDeployPosition: {x: 0, y: 10, z: 20}
   LastUpdateLabel: {fileID: 1959310056}
+  BuildsCountLabel: {fileID: 1790997895}
   LogMessageLabel: {fileID: 1952588444}
   ServerIPLabel: {fileID: 1451383050}
   Title: {fileID: 191014593}

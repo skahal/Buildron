@@ -103,8 +103,10 @@ namespace Buildron.Domain.CIServers
 			m_buildsProvider.UserAuthenticationCompleted += (sender, e) => 
 			{
 				if (e.Success) {
-					Initialized = true;
-					CIServerConnected.Raise(this, new CIServerConnectedEventArgs(ciServer));
+					if(!Initialized) {
+						Initialized = true;
+						CIServerConnected.Raise(this, new CIServerConnectedEventArgs(ciServer));
+					}
 
 					ciServer.Status = CIServerStatus.Up;
 					CIServerStatusChanged.Raise (this, new CIServerStatusChangedEventArgs (ciServer));
