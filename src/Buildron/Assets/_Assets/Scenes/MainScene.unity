@@ -144,7 +144,6 @@ GameObject:
   - 92: {fileID: 94104662}
   - 124: {fileID: 94104663}
   - 81: {fileID: 94104661}
-  - 114: {fileID: 94104664}
   - 114: {fileID: 94104665}
   - 114: {fileID: 94104667}
   - 114: {fileID: 94104668}
@@ -225,29 +224,6 @@ Behaviour:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 94104658}
   m_Enabled: 1
---- !u!114 &94104664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 94104658}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f58f8520c7c334dba9b673400825bd0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxBuildsBeforeMove: 2
-  DistanceFromFocusBuild: {x: 1, y: 0, z: -9.2}
-  DistanceFromOriginalPosition: {x: 0, y: 0, z: 0}
-  DistanceFromHistory: {x: 0, y: 0, z: -11}
-  BuildHeight: 0.7
-  BuildWidth: 3
-  DiffYMoveEachVisibleBuild: 0.7
-  DiffZMoveEachVisibleBuild: 1.02
-  AdjustPositionInterval: 0.02
-  VelocityToShowTop: 0.1
-  VelocityToShowSides: 0.1
-  MinY: 0
 --- !u!114 &94104665
 MonoBehaviour:
   m_ObjectHideFlags: 0

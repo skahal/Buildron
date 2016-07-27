@@ -26,7 +26,6 @@ namespace Buildron.Infrastructure.ModsProvider
 		private readonly ISHLogStrategy m_log;
 		private readonly IUIProxy m_uiProxy;
         private Dictionary<string, AppDomain> m_createdMods = new Dictionary<string, AppDomain>();
-        private ICameraProxy m_cameraProxy = new ModCameraProxy(Camera.main);
         #endregion
 
         public FileSystemModsProvider (string rootFolder, ISHLogStrategy log, IUIProxy uiProxy)
@@ -157,7 +156,7 @@ namespace Buildron.Infrastructure.ModsProvider
 					new ModDataProxy(modInfo),
 					new ModBuildGameObjectsProxy(),
 					new ModUserGameObjectsProxy(),
-					m_cameraProxy,
+					new ModCameraProxy(modInfo, Camera.main),
                     new ModPreferenceProxy(modInfo));
 
                 m_createdMods.Add(modInfo.Name, modAppDomain);

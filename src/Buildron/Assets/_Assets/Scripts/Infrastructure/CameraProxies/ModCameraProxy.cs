@@ -9,14 +9,22 @@ namespace Buildron.Infrastructure.CameraProxies
 {
     public class ModCameraProxy : ICameraProxy
     {
-        private Camera m_camera;
-        private List<CameraControllerInfo> m_infos = new List<CameraControllerInfo>();
-        private List<CameraControllerInfo> m_disabledInfos = new List<CameraControllerInfo>();
+        private static List<CameraControllerInfo> s_infos = new List<CameraControllerInfo>();
+        private static List<CameraControllerInfo> s_disabledInfos = new List<CameraControllerInfo>();
+		private ModInfo m_modInfo;
 
-        public ModCameraProxy(Camera camera)
+        public ModCameraProxy(ModInfo modInfo, Camera camera)
         {
-            m_camera = camera;
+			m_modInfo = modInfo;
+			MainCamera = camera;
         }
+
+		public Camera MainCamera { get; private set; }
+
+		public static void Reset() {
+			s_infos = new List<CameraControllerInfo>();
+			s_disabledInfos = new List<CameraControllerInfo>();	
+		}
 
         public TController RegisterController<TController>(CameraControllerKind kind, bool exclusive)
                where TController : MonoBehaviour
@@ -27,10 +35,10 @@ namespace Buildron.Infrastructure.CameraProxies
 
             DisableControllers(info);          
 
-            var controller = info.Controller as TController ?? m_camera.gameObject.AddComponent<TController>();
-            controller.enabled = true;
+			var controller = info.Controller as TController ?? CreateController<TController> (m_modInfo);
+			controller.gameObject.SetActive(true);
             info.Controller = controller;                
-            m_infos.Add(info);
+            s_infos.Add(info);
 
             return controller;
 
@@ -46,22 +54,31 @@ namespace Buildron.Infrastructure.CameraProxies
                 return;
             }
 
-            info.Controller.enabled = false;
-            m_infos.Remove(info);
-            m_disabledInfos.Add(info);
+			info.Controller.gameObject.SetActive(false);
+            s_infos.Remove(info);
+            s_disabledInfos.Add(info);
 
-            if (m_infos.Count > 0)
+            if (s_infos.Count > 0)
             {
-                m_infos.Last().Controller.enabled = true;
+				s_infos.Last().Controller.gameObject.SetActive(true);
             }
         }
+
+		TController CreateController<TController> (ModInfo info)
+			where TController : MonoBehaviour
+		{
+			var go = new GameObject ("{0}_{1}".With(info.Name, typeof(TController).Name));
+			go.transform.parent = MainCamera.gameObject.transform;
+			return go.AddComponent<TController>();
+		}
+
 
         private CameraControllerInfo GetInfo<TController>() 
             where TController : MonoBehaviour
         {
             var controllerType = typeof(TController);
 
-            return m_infos.FirstOrDefault(c => c.Controller.GetType() == controllerType);
+            return s_infos.FirstOrDefault(c => c.Controller.GetType() == controllerType);
         }
 
         private CameraControllerInfo GetDisabledInfo<TController>()
@@ -69,27 +86,27 @@ namespace Buildron.Infrastructure.CameraProxies
         {
             var controllerType = typeof(TController);
 
-            var info = m_disabledInfos.FirstOrDefault(c => c.Controller.GetType() == controllerType);
+            var info = s_disabledInfos.FirstOrDefault(c => c.Controller.GetType() == controllerType);
 
             if(info == null)
             {
                 return GetInfo<TController>();
             }
 
-            m_disabledInfos.Remove(info);
+            s_disabledInfos.Remove(info);
 
             return info;
         }
 
         private void DisableControllers(CameraControllerInfo info)
         {
-            foreach(var c in m_infos)
+            foreach(var c in s_infos)
             {
                 if (info.Exclusive || c.Exclusive)
                 {
                     if ((info.Kind & c.Kind) != 0)
                     {
-                        c.Controller.enabled = false;
+						c.Controller.gameObject.SetActive(false);
                     }
                 }                
             }

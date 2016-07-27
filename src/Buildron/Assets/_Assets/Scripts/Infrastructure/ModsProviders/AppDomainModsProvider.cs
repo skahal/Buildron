@@ -22,7 +22,6 @@ namespace Buildron.Infrastructure.ModsProvider
         #region Fields
         private string m_modsFolder;
 		private ISHLogStrategy m_log;
-        private ICameraProxy m_cameraProxy = new ModCameraProxy(Camera.main);
         #endregion
 
         #region Constructors
@@ -81,7 +80,7 @@ namespace Buildron.Infrastructure.ModsProvider
 				new ModDataProxy(modInfo),
 				new ModBuildGameObjectsProxy(),
 				new ModUserGameObjectsProxy(),
-				m_cameraProxy,
+				new ModCameraProxy(modInfo, Camera.main),
                 new ModPreferenceProxy(modInfo));
 		}
 
