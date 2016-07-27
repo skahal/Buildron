@@ -1,5 +1,6 @@
 ﻿using System;
 using Skahal.Logging;
+using UnityEngine;
 
 namespace Buildron.Domain.Mods
 {
@@ -15,6 +16,7 @@ namespace Buildron.Domain.Mods
 		}
 
 		#region ICameraProxy implementation
+		public Camera MainCamera { get { return m_underlying.MainCamera; } }
 
 		public TController RegisterController<TController> (CameraControllerKind kind, bool exclusive) where TController : UnityEngine.MonoBehaviour
 		{

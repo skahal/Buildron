@@ -18,6 +18,8 @@ namespace Buildron.Domain.Mods
 
     public interface ICameraProxy
     {
+		Camera MainCamera { get; }
+
 		TController RegisterController<TController>(CameraControllerKind kind, bool exclusive)
                 where TController : MonoBehaviour;
 
