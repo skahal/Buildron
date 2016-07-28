@@ -10,6 +10,7 @@ using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Servers;
+using Skahal.Threading;
 
 namespace Buildron.Controllers
 {
@@ -49,14 +50,6 @@ namespace Buildron.Controllers
 				gameObject, 
 				"OnScreenshotTaken");
 
-			m_buildService.BuildFound += (sender, e) => {
-				OnVisibleBuildsCount (m_buildService.Builds.Count);
-			};
-
-			m_buildService.BuildRemoved += (sender, e) => {
-				OnVisibleBuildsCount (m_buildService.Builds.Count);
-			};
-	
 			SHLog.Warning ("Network server initialize: {0}", error);
 		}
 
@@ -75,6 +68,14 @@ namespace Buildron.Controllers
 				}
 			};
 
+			m_buildService.BuildFound += (sender, e) => {
+				OnVisibleBuildsCount (m_buildService.Builds.Count);
+			};
+
+			m_buildService.BuildRemoved += (sender, e) => {
+				OnVisibleBuildsCount (m_buildService.Builds.Count);
+			};
+
 			SendFilterLocally ();
 
 			SHLog.Warning ("ServerMessagesListener initialized");
@@ -84,9 +85,15 @@ namespace Buildron.Controllers
 		{
 			SHLog.Debug ("Remote control connected.");	
 		
+			// TODO: remove when migrate RC to open source.
+			m_serverState.HasHistory = GameObject.FindGameObjectsWithTag("History").Length > 0;
+			m_serverState.IsShowingHistory = false;
+			m_serverService.SaveState (m_serverState);
+
+			//
 			SendToRCCurrentServerState ();
 
-			OnVisibleBuildsCount (m_buildService.Builds.Count;
+			OnVisibleBuildsCount (m_buildService.Builds.Count);
 		}
 
 		private void OnPlayerDisconnected ()
@@ -312,7 +319,7 @@ namespace Buildron.Controllers
 
 		private void SendToRCCurrentServerState ()
 		{
-			SendToRCServerState (SHSerializer.SerializeToBytes (m_serverService.GetState()));
+			SendToRCServerState (SHSerializer.SerializeToBytes (m_serverState));
 		}
 
 		[RPC]
