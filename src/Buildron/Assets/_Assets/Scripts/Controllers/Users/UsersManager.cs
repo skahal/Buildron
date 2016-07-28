@@ -46,21 +46,18 @@ public class UsersManager : MonoBehaviour
 		m_currentSpawnPosition = FirstSpawnPosition;
 	}
 
-	private void CreateUserGameObject (Build build)
-	{
-		if (build.TriggeredBy == null) {
-			build.TriggeredByChanged += delegate {
-				CreateUserGameObject (build);
-			};
-			
-		} else {
-			CreateUserGameObject (build);
-		}
-	}
-
 	void CreateUserGameObject (IBuild build)
 	{
-		var go = UserController.GetGameObject (build.TriggeredBy);
+        if (build.TriggeredBy == null)
+        {
+            build.TriggeredByChanged += delegate {
+                CreateUserGameObject(build);
+            };
+
+            return;
+        }
+
+        var go = UserController.GetGameObject (build.TriggeredBy);
 		
 		if (go != null) {
 			go.GetComponent<UserController> ().Data = build.TriggeredBy;
