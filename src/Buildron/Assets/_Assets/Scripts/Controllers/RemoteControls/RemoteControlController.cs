@@ -26,6 +26,9 @@ namespace Buildron.Controllers
 		private IUserService m_userService;
 
 		[Inject]
+		private IBuildService m_buildService;
+
+		[Inject]
 		private EasterEggService m_easterEggService;
 
 		[Inject]
@@ -44,10 +47,15 @@ namespace Buildron.Controllers
 	
 			Messenger.Register (
 				gameObject, 
-				"OnBuildHidden",
-				"OnBuildVisible",
-				"OnScreenshotTaken",
-				"OnBuildHistoryCreated");
+				"OnScreenshotTaken");
+
+			m_buildService.BuildFound += (sender, e) => {
+				OnVisibleBuildsCount (m_buildService.Builds.Count);
+			};
+
+			m_buildService.BuildRemoved += (sender, e) => {
+				OnVisibleBuildsCount (m_buildService.Builds.Count);
+			};
 	
 			SHLog.Warning ("Network server initialize: {0}", error);
 		}
@@ -78,8 +86,7 @@ namespace Buildron.Controllers
 		
 			SendToRCCurrentServerState ();
 
-			// TODO: see this after move builds to BuildMod
-			// OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
+			OnVisibleBuildsCount (m_buildService.Builds.Count;
 		}
 
 		private void OnPlayerDisconnected ()
@@ -89,30 +96,10 @@ namespace Buildron.Controllers
 			Messenger.Send ("OnRemoteControlDisconnected");	
 		}
 
-		private void OnBuildHidden ()
-		{
-			// TODO: see this after move builds to BuildMod
-			// OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
-	
-		}
-
-		private void OnBuildVisible ()
-		{
-			// TODO: see this after move builds to BuildMod
-			// OnVisibleBuildsCount (m_buildGOService.CountVisibles ());
-		}
-
 		private void OnScreenshotTaken (Texture2D texture)
 		{
 			SendToRCScreenshot (texture.width, texture.height, texture.EncodeToPNG ());
 		}
-
-		private void OnBuildHistoryCreated ()
-		{
-			m_serverState.HasHistory = true;
-			SendToRCCurrentServerState ();
-		}
-
 		#endregion
 
 		#region Messages from remote control
