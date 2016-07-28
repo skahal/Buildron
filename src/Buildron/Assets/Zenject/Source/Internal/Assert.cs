@@ -15,7 +15,6 @@ namespace ModestTree
 #if UNITY_EDITOR
                 return true;
 #else
-                // TODO: Compile out asserts for actual builds
                 return false;
 #endif
             }

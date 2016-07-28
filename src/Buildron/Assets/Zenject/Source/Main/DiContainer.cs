@@ -146,7 +146,6 @@ namespace Zenject
             {
 #if ZEN_MULTITHREADING
                 // When multithreading is supported we can't use a static field to track the lookup
-                // TODO: We could look at the inject context though
                 return false;
 #else
                 return true;

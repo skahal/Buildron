@@ -3620,7 +3620,7 @@
             <param name="args">The args.</param>
         </member>
         <member name="M:Rhino.Mocks.RhinoMocksExtensions.AssertExactlySingleExpectaton``1(Rhino.Mocks.MockRepository,``0)">
-            <summary>TODO: Make this better!  It currently breaks down when mocking classes or
+            <summary>Make this better!  It currently breaks down when mocking classes or
             ABC's that call other virtual methods which are getting intercepted too.  I wish
             we could just walk Expression{Action{Action{T}} to assert only a single
             method is being made.

@@ -90,13 +90,11 @@ public class MainSceneController : MonoBehaviour, IInitializable
 
     private void ExecuteFocusedBuildCommand(Action<IRemoteControl, string> command)
     {
-		// TODO: see this after move builds to BuildMod
-//        var visibles = m_buildGOService.GetVisibles();
-//
-//        if (visibles.Count == 1)
-//        {
-//            command(m_remoteControlService.GetConnectedRemoteControl(), visibles[0].GetComponent<BuildController>().Model.Id);
-//        }
+
+		if (m_buildService.Builds.Count == 1)
+        {
+			command(m_remoteControlService.GetConnectedRemoteControl(), m_buildService.Builds[0].Id);
+        }
     }
 
     private void InitializeBuildService()
