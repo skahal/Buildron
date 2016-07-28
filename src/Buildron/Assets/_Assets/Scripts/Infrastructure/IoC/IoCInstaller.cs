@@ -24,6 +24,7 @@ using Buildron.Infrastructure.ModsProvider;
 using Buildron.Infrastructure.UIProxies;
 using System.IO;
 using System.Collections.Generic;
+using Buildron.Infrastructure.BuildGameObjectsProxies;
 
 namespace Buildron.Infrastructure.IoC
 {
@@ -74,6 +75,7 @@ namespace Buildron.Infrastructure.IoC
             Container.Bind<IBuildService>().To<BuildService>().AsSingle();
 			Container.Bind<IServerService>().To<ServerService>().AsSingle();
 			Container.Bind<IModLoader>().To<ModLoader>().AsSingle();
+            Container.Bind<IBuildGameObjectsProxy>().To<ModBuildGameObjectsProxy>().AsSingle();
 
 			var log = Container.Resolve<ISHLogStrategy> ();
 

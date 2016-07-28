@@ -8,8 +8,8 @@ namespace Buildron.Infrastructure.BuildGameObjectsProxies
 {
 	public class ModBuildGameObjectsProxy : IBuildGameObjectsProxy
 	{
-		#region IBuildGameObjectsProxy implementation
-		public IBuildController[] GetAll ()
+        #region IBuildGameObjectsProxy implementation
+        public IBuildController[] GetAll ()
 		{
 			return GameObject.FindGameObjectsWithTag ("Build")
 				.Select (b => b.GetComponent<IBuildController> ())
