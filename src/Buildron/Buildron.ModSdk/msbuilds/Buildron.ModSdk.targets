@@ -2,7 +2,7 @@
       <Target Name="AfterBuild">
 	      <ItemGroup> 
 			<FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\$(MSBuildProjectName).dll" />
-			<FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\Skahal.Unity.Scripts.dll" />
+         	<FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\Skahal.Unity.Scripts.dll" />
 			<FilesToCopy Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\Skahal.Unity.Scripts.Externals.dll" />
 	      </ItemGroup>
       
@@ -14,9 +14,5 @@
           <Copy
               SourceFiles="@(FilesToCopy)"
               DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\Buildron-Classic-Mods\src\Solution\references" />
-
-              <Copy
-              SourceFiles="@(FilesToCopy)"
-              DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\Buildron-Classic-Mods\src\Buildron.ClassicMods.BuildMod\Assets\Scripts\references" />
     </Target>
 </Project>
