@@ -83,24 +83,6 @@ namespace Buildron.Domain.Users
 		
 		#region Methods
 		/// <summary>
-		/// Determines whether this instance has failed build.
-		/// </summary>
-		/// <returns><c>true</c> if this instance has failed build; otherwise, <c>false</c>.</returns>
-		public bool HasFailedBuild ()
-		{
-			return Builds.Count (b => b.Status == BuildStatus.Failed || b.Status == BuildStatus.Error) > 0;
-		}
-
-		/// <summary>
-		/// Determines whether this instance has running build.
-		/// </summary>
-		/// <returns><c>true</c> if this instance has running build; otherwise, <c>false</c>.</returns>
-		public bool HasRunningBuild ()
-		{
-			return Builds.Count (b => b.Status >= BuildStatus.Running) > 0;
-		}
-
-		/// <summary>
 		/// Determines whether the specified <see cref="Buildron.Domain.Users.User"/> is equal to the current <see cref="Buildron.Domain.Users.User"/>.
 		/// </summary>
 		/// <param name="other">The <see cref="Buildron.Domain.Users.User"/> to compare with the current <see cref="Buildron.Domain.Users.User"/>.</param>

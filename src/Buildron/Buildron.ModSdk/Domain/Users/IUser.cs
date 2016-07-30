@@ -73,19 +73,5 @@ namespace Buildron.Domain.Users
 		/// <value>The photo.</value>
 		Texture2D Photo { get; set; }
 		#endregion
-		
-		#region Methods
-		/// <summary>
-		/// Determines whether this instance has failed build.
-		/// </summary>
-		/// <returns><c>true</c> if this instance has failed build; otherwise, <c>false</c>.</returns>
-		bool HasFailedBuild ();
-
-		/// <summary>
-		/// Determines whether this instance has running build.
-		/// </summary>
-		/// <returns><c>true</c> if this instance has running build; otherwise, <c>false</c>.</returns>
-		bool HasRunningBuild ();
-	    #endregion
     }
 }
