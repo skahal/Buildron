@@ -143,7 +143,7 @@ namespace Buildron.Domain.Mods
 
         ICameraProxy Camera { get; }
 
-        IPreferenceProxy Preference { get; }
+        IPreferencesProxy Preferences { get; }
         #endregion
     }
 }

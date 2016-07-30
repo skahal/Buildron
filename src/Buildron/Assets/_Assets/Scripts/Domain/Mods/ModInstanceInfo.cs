@@ -19,7 +19,7 @@ namespace Buildron.Domain.Mods
 			IBuildGameObjectsProxy buildGameObjects,
 			IUserGameObjectsProxy userGameObjects,
             ICameraProxy camera,
-            IPreferenceProxy preference)
+            IPreferencesProxy preferences)
 		{
 			Mod = mod;
 			Info = info;
@@ -33,7 +33,7 @@ namespace Buildron.Domain.Mods
 			BuildGameObjects = buildGameObjects;
 			UserGameObjects = userGameObjects;
             Camera = camera;
-            Preference = preference;
+            Preferences = preferences;
 		}
 
 		public IMod Mod { get; private set; }
@@ -49,7 +49,7 @@ namespace Buildron.Domain.Mods
 		public IUserGameObjectsProxy UserGameObjects { get; private set; }
 
         public ICameraProxy Camera { get; private set; }
-        public IPreferenceProxy Preference { get; private set; }
+        public IPreferencesProxy Preferences { get; private set; }
 
         public void Destroy()
         {

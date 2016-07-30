@@ -5,16 +5,16 @@ using System.Text;
 using Buildron.Domain.Mods;
 using Buildron.Infrastructure.DataProxies;
 
-namespace Buildron.Infrastructure.PreferenceProxies
+namespace Buildron.Infrastructure.PreferencesProxies
 {
-    public class ModPreferenceProxy : ModDataProxy, IPreferenceProxy
+    public class ModPreferencesProxy : ModDataProxy, IPreferencesProxy
     {
         #region Fields
         private Preference[] m_preferences = new Preference[0];
         #endregion
 
         #region Constructors
-        public ModPreferenceProxy(ModInfo modInfo)
+        public ModPreferencesProxy(ModInfo modInfo)
             : base(modInfo)
         {
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Buildron.Domain.Mods;
 using Buildron.Infrastructure.CameraProxies;
-using Buildron.Infrastructure.PreferenceProxies;
+using Buildron.Infrastructure.PreferencesProxies;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -18,7 +18,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void Register_Preferences_Registered()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);
+            var target = new ModPreferencesProxy(info);
             var preferences = new Preference[]
             {
                 new Preference("P1", "Preference one", PreferenceKind.String, "one"),
@@ -34,7 +34,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void GetValue_NotRegisteredPreference_Exception()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);
+            var target = new ModPreferencesProxy(info);
             var preferences = new Preference[]
             {
                 new Preference("P1", "Preference one", PreferenceKind.String, "one"),
@@ -49,7 +49,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void GetValue_RegisteredPreferenceDefaultInvalidKind_Exception()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);
+            var target = new ModPreferencesProxy(info);
             var preferences = new Preference[]
             {
 				new Preference("P1", "Preference one", PreferenceKind.Int, 1),
@@ -64,7 +64,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void GetValue_RegisteredPreferenceBool_Value()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);
+            var target = new ModPreferencesProxy(info);
             var preferences = new Preference[]
             {
                 new Preference("P1", "Preference one", PreferenceKind.Bool, true),
@@ -81,7 +81,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void GetValue_RegisteredPreferenceFloat_Value()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);            
+            var target = new ModPreferencesProxy(info);            
             var preferences = new Preference[]
             {
                 new Preference("P1", "Preference one", PreferenceKind.Float, 1.1f),
@@ -99,7 +99,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void GetValue_RegisteredPreferenceInt_Value()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);
+            var target = new ModPreferencesProxy(info);
             var preferences = new Preference[]
             {
                 new Preference("P1", "Preference one", PreferenceKind.Int, 1),
@@ -117,7 +117,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void GetValue_RegisteredPreferenceString_Value()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);
+            var target = new ModPreferencesProxy(info);
             var preferences = new Preference[]
             {
                 new Preference("P1", "Preference one", PreferenceKind.String, "test1"),
@@ -134,7 +134,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void SetValue_NotRegisteredPreference_Exception()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);
+            var target = new ModPreferencesProxy(info);
             var preferences = new Preference[]
             {
                 new Preference("P1", "Preference one", PreferenceKind.String, "one"),
@@ -148,7 +148,7 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
         public void RemoveValue_NotRegisteredPreference_Exception()
         {
             var info = new ModInfo("test");
-            var target = new ModPreferenceProxy(info);
+            var target = new ModPreferencesProxy(info);
             var preferences = new Preference[]
             {
                 new Preference("P1", "Preference one", PreferenceKind.String, "one"),

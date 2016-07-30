@@ -56,7 +56,7 @@ namespace Buildron.Domain.Mods
             FileSystem = instance.FileSystem;
 			Data = new LogDataProxy(instance.Data, Log);
 			Camera = new LogCameraProxy (instance.Camera, Log);
-            Preference = instance.Preference;
+			Preferences = new LogPreferencesProxy(instance.Preferences, Log);
 
             m_buildService = buildService;
             m_ciServerService = ciServerService;
@@ -114,7 +114,7 @@ namespace Buildron.Domain.Mods
 
         public ICameraProxy Camera { get; private set; }
 
-        public IPreferenceProxy Preference { get; private set; }
+        public IPreferencesProxy Preferences { get; private set; }
         #endregion
 
         #region Methods     

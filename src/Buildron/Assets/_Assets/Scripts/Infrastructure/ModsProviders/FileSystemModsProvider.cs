@@ -15,7 +15,7 @@ using Buildron.Infrastructure.DataProxies;
 using Buildron.Infrastructure.BuildGameObjectsProxies;
 using Buildron.Infrastructure.UserGameObjectsProxies;
 using Buildron.Infrastructure.CameraProxies;
-using Buildron.Infrastructure.PreferenceProxies;
+using Buildron.Infrastructure.PreferencesProxies;
 
 namespace Buildron.Infrastructure.ModsProvider
 {
@@ -157,7 +157,7 @@ namespace Buildron.Infrastructure.ModsProvider
 					new ModBuildGameObjectsProxy(),
 					new ModUserGameObjectsProxy(),
 					new ModCameraProxy(modInfo, Camera.main),
-                    new ModPreferenceProxy(modInfo));
+                    new ModPreferencesProxy(modInfo));
 
                 m_createdMods.Add(modInfo.Name, modAppDomain);
 
