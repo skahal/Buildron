@@ -16,3 +16,5 @@
 * In the root namespace add a class called Mod that implements IMod inteface.
 
 
+* If your mod has assets, then  you need to create an Unity project too. Open Unity3d and create a new project with the same name you give to the c# class library project.
+* Change your msbuild to copy your .dlls to your  Assets/references folder.
