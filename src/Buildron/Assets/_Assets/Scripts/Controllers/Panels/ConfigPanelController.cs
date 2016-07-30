@@ -72,6 +72,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	public Text CIServerStatusLabel;
 
 	// Options.
+	public Button ModsButton;
 	public Text ModsLabel;
 	public Text RefreshSecondsLabel;
 	public Slider RefreshSecondsSlider;
@@ -129,7 +130,9 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
 	void Start()
 	{
-		ModsLabel.text = "{0} mods".With (m_modLoader.LoadedMods.Count);
+		var modsCount = m_modLoader.LoadedMods.Count;
+		ModsLabel.text = "{0} mods".With (modsCount);
+		ModsButton.enabled = modsCount > 0;
 	}
 
 	private bool HasAutoStartArgument ()

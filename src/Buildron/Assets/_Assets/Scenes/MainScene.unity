@@ -5686,6 +5686,7 @@ MonoBehaviour:
   CIServerPasswordInputField: {fileID: 842430332}
   CIServerAuthenticationTipLabel: {fileID: 1645382654}
   CIServerStatusLabel: {fileID: 1050998262}
+  ModsButton: {fileID: 1345834124}
   ModsLabel: {fileID: 1677719401}
   RefreshSecondsLabel: {fileID: 2119841623}
   RefreshSecondsSlider: {fileID: 1072847986}
