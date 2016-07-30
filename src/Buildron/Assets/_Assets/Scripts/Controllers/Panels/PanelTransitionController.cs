@@ -12,6 +12,7 @@ public class PanelTransitionController : MonoBehaviour
 	public GameObject AboutPanel;
 	public GameObject ConfigPanel;
 	public GameObject MainPanel;
+	public GameObject ModPanel;
 
 	private void Start ()
 	{
@@ -36,10 +37,17 @@ public class PanelTransitionController : MonoBehaviour
 		MainPanel.SetActive (true);
 	}
 
+	public void ShowModPanel()
+	{
+		HideAll ();
+		ModPanel.SetActive (true);
+	}
+
 	private void HideAll()
 	{
 		AboutPanel.SetActive (false);
 		ConfigPanel.SetActive (false);
 		MainPanel.SetActive (false);
+		ModPanel.SetActive (false);
 	}
 }

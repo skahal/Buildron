@@ -15,6 +15,7 @@ using UnityEngine.UI;
 using Zenject;
 using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Servers;
+using Buildron.Domain.Mods;
 
 /// <summary>
 /// Controller for configuration panel.
@@ -45,6 +46,9 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
 	[Inject]
 	private IServerService m_serverService;
+
+	[Inject]
+	private IModLoader m_modLoader;
 	#endregion
 
 	#region Editor properties
@@ -68,6 +72,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	public Text CIServerStatusLabel;
 
 	// Options.
+	public Text ModsLabel;
 	public Text RefreshSecondsLabel;
 	public Slider RefreshSecondsSlider;
 
@@ -120,6 +125,11 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 		m_userService.UserAuthenticationCompleted += HandleUserAuthenticationCompleted;
 		
 		InitializeVersion ();
+	}
+
+	void Start()
+	{
+		ModsLabel.text = "{0} mods".With (m_modLoader.LoadedMods.Count);
 	}
 
 	private bool HasAutoStartArgument ()

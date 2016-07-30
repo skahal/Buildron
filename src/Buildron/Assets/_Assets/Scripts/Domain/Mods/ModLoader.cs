@@ -21,7 +21,6 @@ namespace Buildron.Domain.Mods
 		private readonly ICIServerService m_ciServerService;
 		private readonly IRemoteControlService m_remoteControlService;
 		private readonly IUserService m_userService;
-		private List<ModInstanceInfo> m_loadedMods = new List<ModInstanceInfo>();
 		#endregion
 
 		#region Constructors
@@ -35,6 +34,7 @@ namespace Buildron.Domain.Mods
 		{
 			Throw.AnyNull (new { log, modsProviders, buildService, ciServerService, remoteControlService, userService });
 
+			LoadedMods = new List<ModInstanceInfo>();
 			m_originalLog = log;
 			m_log = new PrefixedLogStrategy (log, "[MOD-LOADER] ");
 			m_modsProviders = modsProviders;
@@ -43,6 +43,10 @@ namespace Buildron.Domain.Mods
 			m_remoteControlService = remoteControlService;
 			m_userService = userService;
 		}
+		#endregion
+
+		#region Properties
+		public IList<ModInstanceInfo> LoadedMods { get; private set; }
 		#endregion
 
 		#region Methods
@@ -87,20 +91,20 @@ namespace Buildron.Domain.Mods
 
         public void UnloadMods()
         {
-            foreach (var mod in m_loadedMods)
+            foreach (var mod in LoadedMods)
             {
                 m_log.Debug("Destroying mod '{0}'...", mod.Info.Name);
                 mod.Destroy();   
             }
 
-            m_loadedMods.Clear();
+            LoadedMods.Clear();
             m_log.Debug("All mods unloaded.");
         }
 
         private void InitializeMod(ModInstanceInfo instance)
         {
 			m_log.Debug ("Creating mod context...");
-            m_loadedMods.Add(instance);
+            LoadedMods.Add(instance);
 
             var context = new ModContext (instance, m_originalLog, m_buildService, m_ciServerService, m_remoteControlService, m_userService);
 
@@ -122,7 +126,7 @@ namespace Buildron.Domain.Mods
                 throw new InvalidOperationException("Mod should have a name.");
             }
 
-			if (m_loadedMods.Any(m => m.Info.Name.Equals(info.Name, StringComparison.OrdinalIgnoreCase)))
+			if (LoadedMods.Any(m => m.Info.Name.Equals(info.Name, StringComparison.OrdinalIgnoreCase)))
             {
 				m_log.Warning("There is another mod already loaded with the name '{0}'.", info.Name);
 				return false;

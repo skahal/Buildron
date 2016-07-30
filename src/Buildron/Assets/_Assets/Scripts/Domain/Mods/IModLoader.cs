@@ -12,6 +12,7 @@ namespace Buildron.Domain.Mods
 {
     public interface IModLoader
     {
+		IList<ModInstanceInfo> LoadedMods { get; }
 		void Initialize ();
         void UnloadMods();
     }
