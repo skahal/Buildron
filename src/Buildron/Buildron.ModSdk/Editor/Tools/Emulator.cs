@@ -8,5 +8,9 @@ public class Emulator
 	{
 		var go = new GameObject ("Emulator");
 		go.AddComponent<EmulatorModContext> ();
+
+		var userConfig = new GameObject ("UserConfig");
+		userConfig.transform.parent = go.transform;
+		userConfig.AddComponent<EmulatorUserConfig> ();
     }
 }

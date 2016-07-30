@@ -18,6 +18,9 @@ public class EmulatorUser : IUser
 		var id = (++s_usersCount).ToString ();
 		UserName = "User {0}".With (id);
 		Kind = UserKind.Human;
+
+		Photo = EmulatorUserConfig.Instance.GetRandomUserPhoto ();
+		PhotoUpdated.Raise (this);
 	}
 	#endregion
 
