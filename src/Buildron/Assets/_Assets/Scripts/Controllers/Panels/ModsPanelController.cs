@@ -72,7 +72,7 @@ public class ModsPanelController : MonoBehaviour
 
 		if(preferences.Length == 0) {
 			var p = new Preference("NoPreferences", "No preferences");	
-			var label = CreateUIElement<Text> (PreferenceTextTemplate, p, index);
+			var label = CreateUIElement<Text> (PreferenceTextTemplate, p, 0);
 			label.text = p.Title;
 		}
 		else {

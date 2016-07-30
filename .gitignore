@@ -29,3 +29,5 @@ build
 src/Buildron/Buildron.ModSdk/bin/Debug
 src/Buildron/Buildron.ModSdk/obj/Debug
 src/Buildron/Buildron.ModSdk/packages
+src/Buildron/Buildron.ModSdk/Editor/obj/Debug
+src/Buildron/Buildron.ModSdk/Editor/bin/Debug

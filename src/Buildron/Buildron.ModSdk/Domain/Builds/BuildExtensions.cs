@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using Buildron.Domain.Users;
+using System.Collections.Generic;
 
 namespace Buildron.Domain.Builds
 {
@@ -50,5 +53,21 @@ namespace Buildron.Domain.Builds
 		{
 			return build.Status >= BuildStatus.Error && build.Status <= BuildStatus.Canceled;
 		}
+
+		/// <summary>
+		/// Gets the most relevant build for user.
+		/// </summary>
+		/// <param name="builds">The builds</param>
+		/// <param name="user">User.</param>
+		/// <returns>The most relevant build for user.</returns>
+		public static IBuild GetMostRelevantBuildForUser (this IEnumerable<IBuild> builds, IUser user)
+		{
+			var comparer = new BuildMostRelevantStatusComparer();
+			var userBuilds = builds
+				.Where(b => b.TriggeredBy != null && b.TriggeredBy == user)
+				.OrderBy(b => b, comparer);
+
+			return userBuilds.FirstOrDefault();
+		}	
 	}
 }
