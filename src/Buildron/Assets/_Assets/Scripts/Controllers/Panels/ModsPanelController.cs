@@ -102,7 +102,7 @@ public class ModsPanelController : MonoBehaviour
 			var floatControl = CreateUIElement<InputField> (PreferenceFloatTemplate, preference, index);
 			floatControl.text = preferences.GetValue<float> (preference.Name).ToString (CultureInfo.InvariantCulture);
 			floatControl.onValueChanged .AddListener ((v) => {
-				preferences.SetValue<float>(preference.Name, System.Convert.ToSingle(v, CultureInfo.InvariantCulture));
+				preferences.SetValue<float>(preference.Name, string.IsNullOrEmpty(v) ? 0f : System.Convert.ToSingle(v, CultureInfo.InvariantCulture));
 			});
 			break;
 
@@ -110,7 +110,7 @@ public class ModsPanelController : MonoBehaviour
 			var intControl = CreateUIElement<InputField> (PreferenceFloatTemplate, preference, index);
 			intControl.text = preferences.GetValue<int> (preference.Name).ToString (CultureInfo.InvariantCulture);
 			intControl.onValueChanged .AddListener ((v) => {
-				preferences.SetValue<int>(preference.Name, System.Convert.ToInt32(v, CultureInfo.InvariantCulture));
+				preferences.SetValue<int>(preference.Name, string.IsNullOrEmpty(v) ? 0 : System.Convert.ToInt32(v, CultureInfo.InvariantCulture));
 			});
 			break;
 
