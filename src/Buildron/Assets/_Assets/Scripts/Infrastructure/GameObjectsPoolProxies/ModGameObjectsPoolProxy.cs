@@ -35,7 +35,6 @@ namespace Buildron.Infrastructure.GameObjectsProxies
         #region Methods
 		public void CreatePool (string poolName, Func<GameObject> gameObjectFactory)
 		{
-			//var pool = m_goProxy.Create<ModGameObjectPool> (GetModPoolName(poolName), s_poolsManager.transform);
 			SHPoolsManager.AddPool <ModGameObjectPool> ((pool) => {
 				pool.Name = GetModPoolName (poolName);
 				pool.Size = 0;

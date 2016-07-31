@@ -13,6 +13,7 @@ namespace Buildron.Infrastructure.BuildGameObjectsProxies
 		{
 			return GameObject.FindGameObjectsWithTag ("Build")
 				.Select (b => b.GetComponent<IBuildController> ())
+				.Where (b => b != null)
 				.ToArray ();
 		}
 		#endregion

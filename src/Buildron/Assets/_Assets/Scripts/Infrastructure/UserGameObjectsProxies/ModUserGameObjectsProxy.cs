@@ -11,6 +11,7 @@ namespace Buildron.Infrastructure.UserGameObjectsProxies
 		{
 			return GameObject.FindGameObjectsWithTag ("User")
 				.Select (b => b.GetComponent<IUserController> ())
+				.Where(b => b != null)
 				.ToArray ();
 		}
 	}
