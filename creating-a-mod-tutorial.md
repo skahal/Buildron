@@ -21,3 +21,9 @@
 * * Version control mode, select "Visible Meta Files"
 * * Assert serialization mode, select "Force Text"
 * Change your msbuild to copy your .dlls to your  Assets/references folder.
+* Remember to mark your assets with an asset bundle with same name of your mod project.
+
+
+
+* Tags
+* * There two special tags used on Buildron and mods: "Build" ans "User". If you use them on your mod you should define the both as the first tags on your tag manager. The first should be "Build" and the second should be "User". This is necessary because Unity use the tags index on tag manager to search the game objects.
