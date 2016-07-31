@@ -4,6 +4,10 @@ namespace Buildron.Domain.RemoteControls
 {
 	public class FilterBuildsRemoteControlCommand : IRemoteControlCommand
 	{
+		public FilterBuildsRemoteControlCommand ()
+		{
+		}
+
 		public FilterBuildsRemoteControlCommand (string keyWord)
 		{
 			KeyWord = keyWord;
