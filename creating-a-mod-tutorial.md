@@ -21,6 +21,9 @@
 * * Version control mode, select "Visible Meta Files"
 * * Assert serialization mode, select "Force Text"
 * Change your msbuild to copy your .dlls to your  Assets/references folder.
+* * Now, every time you compile your C# class library the needed assemblies will be copy to your Unity project assets folder and you will can use them in your assets, like prefabs and whatever. So, just compile this first time to seet the assemblies inside your Unity project.
+* There is only one .dll you should copy manually to inside your folder Assets/Scripts/references, this is Buildron.ModSdk.Editor. This is needed because in this assemblies there tools that you use only on Unity Editor and can be reference by your mod.
+* First of all, you need to create the emulator, access the menu Buildron / Create emulator.
 * Remember to mark your assets with an asset bundle with same name of your mod project.
 
 
