@@ -20,7 +20,14 @@ namespace Buildron.Domain.Mods
 		public void CreatePool (string poolName, Func<UnityEngine.GameObject> gameObjectFactory)
 		{
 			m_log.Debug ("Creation pool '{0}'...", poolName);
-			m_underlying.CreatePool (poolName, gameObjectFactory);
+
+			try {
+				m_underlying.CreatePool (poolName, gameObjectFactory);
+			}
+			catch(Exception ex) {
+				m_log.Error ("Error creating pool: {0}. {1}", ex.Message, ex.StackTrace);
+				throw;
+			}
 			m_log.Debug ("Pool '{0}' created.", poolName);
 		}
 
