@@ -123,21 +123,18 @@ namespace Buildron.Infrastructure.IoC
 				nonHumanUserAvatarProviders
 			}, Container.Resolve<ISHLogStrategy> ());
 			Container.Bind<IUserService> ().FromInstance (userService);
-
-            Container.BindFactory<UserController, UserController.Factory>()
-            .FromPrefabResource("UserPrefab")
-            .UnderGameObjectGroup("Users");
 		}
 			
 		void InstallMisc ()
 		{
+			// TODO: move to a EasterEggMod
 			Container.BindController<MatrixEasterEggController> ();
-			Container.BindController<KickEasterEggController> ();
+//			Container.BindController<KickEasterEggController> ();
 
 			var easterEggService = new EasterEggService (
 				new IEasterEggProvider[] { 
 					Container.Resolve<MatrixEasterEggController> (),
-					Container.Resolve<KickEasterEggController> ()
+					//Container.Resolve<KickEasterEggController> ()
 				}, 
 				Container.Resolve<ISHLogStrategy> ());
 			Container.Bind<EasterEggService> ().FromInstance (easterEggService).AsSingle ();
