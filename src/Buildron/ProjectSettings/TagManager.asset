@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Build
   - User
-  - History
   layers:
   - Default
   - TransparentFX
