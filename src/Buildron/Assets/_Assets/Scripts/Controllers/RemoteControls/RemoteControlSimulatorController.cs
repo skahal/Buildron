@@ -59,11 +59,6 @@ public class RemoteControlSimulatorController : MonoBehaviour, IInitializable
 		m_listener.ShowQueuedBuilds (!m_serverState.BuildFilter.QueuedEnabled);
 	}
 	
-	public void SendMatrixEasterEgg ()
-	{
-		m_listener.ShowBuildsWithName ("/matrix");
-	}
-	
 	public void SendZoomIn ()
 	{
 		m_listener.SendToServerZoomIn();

@@ -1783,7 +1783,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 12
+  m_RootOrder: 10
 --- !u!114 &389856569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1948,7 +1948,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 486385116}
   - 114: {fileID: 486385117}
-  - 114: {fileID: 486385118}
   m_Layer: 0
   m_Name: PoolsManager
   m_TagString: Untagged
@@ -1980,24 +1979,6 @@ MonoBehaviour:
   m_Script: {fileID: 270000476, guid: 6f618ced3538b4c6b89b98197ad170b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &486385118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 486385115}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1497475963, guid: 6f618ced3538b4c6b89b98197ad170b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Ball
-  Size: 0
-  IsSizeFixed: 0
-  AutoDisableTime: 0
-  RaiseOnGameObjectEnabledInPoolMessage: 0
-  RaiseOnGameObjectDisabledInPoolMessage: 0
-  PrefabName: BallPrefab
 --- !u!1 &487489794
 GameObject:
   m_ObjectHideFlags: 0
@@ -2218,7 +2199,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 9
+  m_RootOrder: 7
 --- !u!114 &507186968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2542,7 +2523,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 7
+  m_RootOrder: 5
 --- !u!114 &534106569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3932,7 +3913,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 13
+  m_RootOrder: 11
 --- !u!114 &880404988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4277,9 +4258,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 721717054}
-  - {fileID: 2122320315}
   - {fileID: 1243236417}
-  - {fileID: 938019226}
   - {fileID: 1614484301}
   - {fileID: 2059051158}
   - {fileID: 1419537929}
@@ -4327,77 +4306,6 @@ RectTransform:
   m_AnchoredPosition: {x: 1, y: -12}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &938019225
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 938019226}
-  m_Layer: 0
-  m_Name: EasterEggs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &938019226
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 938019225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children:
-  - {fileID: 948753767}
-  - {fileID: 2114082282}
-  m_Father: {fileID: 922341253}
-  m_RootOrder: 3
---- !u!1 &948753766
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 948753767}
-  - 114: {fileID: 948753768}
-  m_Layer: 0
-  m_Name: MatrixEasterEggController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &948753767
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 948753766}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 938019226}
-  m_RootOrder: 0
---- !u!114 &948753768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 948753766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2feb0cbb396824f918b63d53609fd51d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetCamera: {fileID: 94104660}
 --- !u!1 &962243354
 GameObject:
   m_ObjectHideFlags: 0
@@ -5665,7 +5573,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!114 &1243236418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7022,7 +6930,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 6
+  m_RootOrder: 4
 --- !u!114 &1419537930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8186,7 +8094,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 4
+  m_RootOrder: 2
 --- !u!114 &1614484302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8754,7 +8662,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 11
+  m_RootOrder: 9
 --- !u!114 &1679690081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9535,7 +9443,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 10
+  m_RootOrder: 8
 --- !u!114 &1791937923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9989,7 +9897,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 8
+  m_RootOrder: 6
 --- !u!114 &1865541976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10872,7 +10780,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 922341253}
-  m_RootOrder: 5
+  m_RootOrder: 3
 --- !u!114 &2059051159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11243,46 +11151,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &2114082281
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 2114082282}
-  - 114: {fileID: 2114082283}
-  m_Layer: 0
-  m_Name: KickEasterEggController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2114082282
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2114082281}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 938019226}
-  m_RootOrder: 1
---- !u!114 &2114082283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2114082281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5fbc17b29f814315be8e10f1c41a73b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2119841621
 GameObject:
   m_ObjectHideFlags: 0
@@ -11357,47 +11225,3 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2119841621}
---- !u!1 &2122320314
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 2122320315}
-  - 114: {fileID: 2122320316}
-  m_Layer: 0
-  m_Name: BuildUsersManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2122320315
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2122320314}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 922341253}
-  m_RootOrder: 1
---- !u!114 &2122320316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2122320314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56595c963a00541abb372561d9519f15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FirstSpawnPosition: {x: -8, y: -3, z: -10}
-  DistanceBetweenUsers: {x: 2, y: 0, z: 0}
-  NumberUserPerRows: 5
-  DistanceBetweenUsersRows: {x: 0, y: 0, z: 2}

@@ -1,5 +1,4 @@
 using Buildron.Domain;
-using Buildron.Domain.EasterEggs;
 using Buildron.Domain.Sorting;
 using Skahal.Common;
 using Skahal.Logging;
@@ -28,9 +27,6 @@ namespace Buildron.Controllers
 
 		[Inject]
 		private IBuildService m_buildService;
-
-		[Inject]
-		private EasterEggService m_easterEggService;
 
 		[Inject]
 		private IRemoteControlService m_remoteControlService;

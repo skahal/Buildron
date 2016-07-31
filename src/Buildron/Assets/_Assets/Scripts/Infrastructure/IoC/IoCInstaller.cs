@@ -9,7 +9,6 @@ using Buildron.Infrastructure.Repositories;
 using Buildron.Domain.Versions;
 using Buildron.Infrastructure.Clients;
 using Buildron.Domain.Notifications;
-using Buildron.Domain.EasterEggs;
 using Skahal.Infrastructure.Framework.Repositories;
 using Skahal.Infrastructure.Repositories;
 using Buildron.Domain.Builds;
@@ -127,18 +126,6 @@ namespace Buildron.Infrastructure.IoC
 			
 		void InstallMisc ()
 		{
-			// TODO: move to a EasterEggMod
-			Container.BindController<MatrixEasterEggController> ();
-//			Container.BindController<KickEasterEggController> ();
-
-			var easterEggService = new EasterEggService (
-				new IEasterEggProvider[] { 
-					Container.Resolve<MatrixEasterEggController> (),
-					//Container.Resolve<KickEasterEggController> ()
-				}, 
-				Container.Resolve<ISHLogStrategy> ());
-			Container.Bind<EasterEggService> ().FromInstance (easterEggService).AsSingle ();
-
 			var backEndClient = new BackEndClient ();
 			Container.Bind<INotificationClient> ().FromInstance (backEndClient);
 			Container.Bind<IVersionClient> ().FromInstance (backEndClient);
