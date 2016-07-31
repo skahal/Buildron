@@ -8,6 +8,9 @@
 		</ItemGroup>
 		<Message Text="### Copying $(MSBuildProjectName) files ..." Importance="high" />
 		<Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\..\Buildron-Classic-Mods\src\Buildron.ClassicMods.BuildMod\Assets\Scripts\references" />
-		<Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\..\Buildron-Classic-Mods\src\Buildron.ClassicMods.UserMod\Assets\Scripts\references" />
+		
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\..\Buildron-Classic-Mods\src\Buildron.ClassicMods.UserMod\Assets\Scripts\references" />
+        
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\..\Buildron-Classic-Mods\src\Buildron.ClassicMods.EasterEggMod\Assets\Scripts\references" />
 	</Target>
 </Project>

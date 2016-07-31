@@ -43,6 +43,7 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 	public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 
 	public event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
+
     public event EventHandler<RemoteControlCommandReceivedEventArgs> RemoteControlCommandReceived;
     #endregion
 
