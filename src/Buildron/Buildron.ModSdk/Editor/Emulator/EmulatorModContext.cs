@@ -12,6 +12,8 @@ using Buildron.Infrastructure.GameObjectsProxies;
 using Skahal.Common;
 using System.Linq;
 using Buildron.Infrastructure.BuildGameObjectsProxies;
+using Buildron.Infrastructure.CameraProxies;
+using Buildron.Infrastructure.UserGameObjectsProxies;
 
 public class EmulatorModContext : MonoBehaviour, IModContext {
 
@@ -48,6 +50,8 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
     #endregion
 
     #region Properties
+	public static EmulatorModContext Instance { get; private set; }
+
     public IList<IBuild> Builds { get; private set; }
 
 	public IList<IUser> Users { get; private set; }
@@ -70,19 +74,9 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 
 	public IBuildGameObjectsProxy BuildGameObjects { get; private set; }
 
-    public IUserGameObjectsProxy UserGameObjects
-    {
-        get
-        {
-            throw new NotImplementedException();
-        }
-    }
+	public IUserGameObjectsProxy UserGameObjects { get; private set; }
 
-	public ICameraProxy Camera {
-		get {
-			throw new NotImplementedException ();
-		}
-	}
+	public ICameraProxy Camera { get; private set; }
 
 	public IPreferencesProxy Preferences { get; private set; }
     #endregion
@@ -90,53 +84,63 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
     #region Methods
     private void Start()
 	{
+		var modInterfaceType = typeof(IMod);
+		var modType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => !t.IsAbstract && modInterfaceType.IsAssignableFrom(t));
+
+		if (modType == null)
+		{
+			throw new InvalidOperationException("IMod interface implementation not found");
+		}
+
+		var modInfo = new ModInfo (modType.Name);
+		Camera = new ModCameraProxy (modInfo, null);
+
+
+		Instance = this;
 		Builds = new List<IBuild> ();
 		Users = new List<IUser> ();
 		CIServer = EmulatorCIServer.Instance;
 		Log = new SHDebugLogStrategy ();
 		Assets = new ResourcesFolderAssetsProxy ();
 		GameObjects = new ModGameObjectsProxy ();
-		GameObjectsPool = new EmulatorGameObjectsPoolProxy ();
+		GameObjectsPool = new ModGameObjectsPoolProxy (modInfo, GameObjects);
 		FileSystem = new EmulatorFileSystemProxy ();
 		Preferences = new EmulatorPreferencesProxy();
 		BuildGameObjects = new ModBuildGameObjectsProxy ();
-
-        var modInterfaceType = typeof(IMod);
-		var modType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => !t.IsAbstract && modInterfaceType.IsAssignableFrom(t));
-
-        if (modType == null)
-        {
-            throw new InvalidOperationException("IMod interface implementation not found");
-        }
-
+		UserGameObjects = new ModUserGameObjectsProxy ();
+	
 		var mod = Activator.CreateInstance (modType) as IMod;
 		mod.Initialize (this);
 	}
 
-	private void OnGUI()
+	public void RaiseCIServerConnected ()
 	{
-		if(GUILayout.Button("CIServerConnected"))
-		{
-			CIServerConnected.Raise (this, new CIServerConnectedEventArgs (CIServer));
-		}
+		Log.Debug ("CIServerConnected");
+		CIServerConnected.Raise (this, new CIServerConnectedEventArgs (CIServer));
+	}
 
-		if(GUILayout.Button("BuildFound"))
-		{
-			var build = new EmulatorBuild ();
-			Builds.Add (build);
-			Log.Debug ("BuildFound: {0}; {1}", build.Id, build.Status);
-			BuildFound.Raise (this, new BuildFoundEventArgs (build));
-		}
+	public void RaiseBuildFound (EmulatorBuild build)
+	{
+		Builds.Add (build);
+		Log.Debug ("BuildFound: {0}; {1}", build.Id, build.Status);
+		BuildFound.Raise (this, new BuildFoundEventArgs (build));
+	}
 
-        if (GUILayout.Button("BuildRemoved"))
-        {
-			if (Builds.Count > 0) {
-				var build = Builds [0];
-				Builds.RemoveAt (0);
-				Log.Debug ("BuildRemoved: {0}; {1}", build.Id, build.Status);
-				BuildRemoved.Raise (this, new BuildRemovedEventArgs (build));
-			}
-        }
-    }
+	public void RaiseBuildRemoved (int buildIndex)
+	{
+		if (buildIndex < Builds.Count) {
+			var build = Builds [buildIndex];
+
+			Builds.Remove (build);
+			Log.Debug ("BuildRemoved: {0}; {1}", build.Id, build.Status);
+			BuildRemoved.Raise (this, new BuildRemovedEventArgs (build));
+		}
+	}
+
+	public void RaiseRemoteControlCommandReceived (IRemoteControlCommand cmd)
+	{
+		var rc = new EmulatorRemoteControl ();
+		RemoteControlCommandReceived.Raise (this, new RemoteControlCommandReceivedEventArgs (rc, cmd));
+	}
 	#endregion
 }

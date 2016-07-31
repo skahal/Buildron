@@ -13,10 +13,13 @@ public class EmulatorUser : IUser
 	#region Constructors
 	public EmulatorUser()
 	{
+	}
+
+	public EmulatorUser(string userName) {
 		Builds = new List<IBuild> ();
 
 		var id = (++s_usersCount).ToString ();
-		UserName = "User {0}".With (id);
+		UserName = String.IsNullOrEmpty (userName) ? "User {0}".With (id) : userName;
 		Kind = UserKind.Human;
 
 		Photo = EmulatorUserConfig.Instance.GetRandomUserPhoto ();
