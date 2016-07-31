@@ -59,9 +59,12 @@ public class ModBuilderWindow : EditorWindow
 			}
 
 			Log("Done.");
+			ShowStatus("Mod successful built.");
 		}
 		catch(Exception ex) {
 			Log ("Error: {0}", ex.Message);
+			Log ("Aborted.");
+			ShowStatus("Error building mod: {0}".With(ex.Message));
 		}
 	}
 
@@ -89,9 +92,7 @@ public class ModBuilderWindow : EditorWindow
 			.FirstOrDefault (f => !f.EndsWith("Assets.manifest"));
 
 		if (assetFile == null) {
-			Log ("No assets manifest file found. Did you remember to mark your assets with asset bundle with same name of your mod project?");
-			Log ("Aborted.");
-			return;
+			throw new InvalidOperationException ("No assets manifest file found. Did you remember to mark your assets with asset bundle with same name of your mod project?");
 		}
 
 		var modName = Path.GetFileNameWithoutExtension(assetFile);
@@ -151,6 +152,7 @@ public class ModBuilderWindow : EditorWindow
 		m_buildToLinux = EditorGUILayout.Toggle ("Linux", m_buildToLinux);
 
 		m_modsFolder = EditorGUILayout.TextField ("Mods folder", m_modsFolder);
+		CreateHelpBox ("The mods folder used by Buildron");
 	
 		if (GUILayout.Button ("Build")) {
 			SavePrefs ();
