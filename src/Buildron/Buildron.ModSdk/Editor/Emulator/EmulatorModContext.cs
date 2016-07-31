@@ -91,16 +91,16 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		{
 			throw new InvalidOperationException("IMod interface implementation not found");
 		}
-
+		Log = new SHDebugLogStrategy ();
 		var modInfo = new ModInfo (modType.Name);
-		Camera = new ModCameraProxy (modInfo, null);
 
+		Camera = new ModCameraProxy (modInfo, UnityEngine.Camera.main);
 
 		Instance = this;
 		Builds = new List<IBuild> ();
 		Users = new List<IUser> ();
 		CIServer = EmulatorCIServer.Instance;
-		Log = new SHDebugLogStrategy ();
+
 		Assets = new ResourcesFolderAssetsProxy ();
 		GameObjects = new ModGameObjectsProxy ();
 		GameObjectsPool = new ModGameObjectsPoolProxy (modInfo, GameObjects);
@@ -108,6 +108,7 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		Preferences = new EmulatorPreferencesProxy();
 		BuildGameObjects = new ModBuildGameObjectsProxy ();
 		UserGameObjects = new ModUserGameObjectsProxy ();
+
 	
 		var mod = Activator.CreateInstance (modType) as IMod;
 		mod.Initialize (this);
@@ -131,7 +132,7 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		if (buildIndex < Builds.Count) {
 			var build = Builds [buildIndex];
 
-			Builds.Remove (build);
+			Builds.RemoveAt (buildIndex);
 			Log.Debug ("BuildRemoved: {0}; {1}", build.Id, build.Status);
 			BuildRemoved.Raise (this, new BuildRemovedEventArgs (build));
 		}

@@ -11,7 +11,8 @@ public class EmulatorUser : IUser
 	#endregion
 
 	#region Constructors
-	public EmulatorUser()
+	public EmulatorUser ()
+		: this (string.Empty)
 	{
 	}
 
