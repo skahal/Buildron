@@ -264,14 +264,11 @@ namespace Buildron.Controllers
 		[RPC]
 		public void ShowBuildsWithName (string partialName)
 		{
-			if (m_easterEggService.IsEasterEggMessage (partialName))
-			{
-				m_easterEggService.ReceiveEasterEgg (partialName);
-			} else
+			if(m_remoteControlService.ReceiveCommand (new FilterBuildsRemoteControlCommand (partialName)))
 			{
 				SHLog.Debug ("ShowBuildsWithName:" + partialName);
 				m_serverState.BuildFilter.KeyWord = partialName;
-				SendFilterLocally ();	
+				SendFilterLocally ();
 			}
 		}
 

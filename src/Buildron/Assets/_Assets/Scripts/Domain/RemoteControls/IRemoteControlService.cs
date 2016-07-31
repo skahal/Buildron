@@ -40,6 +40,6 @@ namespace Buildron.Domain.RemoteControls
 		/// </summary>
 	    IRemoteControl GetConnectedRemoteControl();
 
-		void ReceiveCommand(IRemoteControlCommand command);
+		bool ReceiveCommand(IRemoteControlCommand command);
     }
 }

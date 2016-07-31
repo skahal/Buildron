@@ -136,16 +136,17 @@ namespace Buildron.Domain.RemoteControls
 			return m_connectedRC;
 		}
 
-		public void ReceiveCommand(IRemoteControlCommand command)
+		public bool ReceiveCommand(IRemoteControlCommand command)
 		{
 			if (m_connectedRC == null) {
 				throw new InvalidOperationException (
 					"Impossible to receive a command from a remote control, when no remote control connected");
 			}
 
-			RemoteControlCommandReceived.Raise (
-				this, 
-				new RemoteControlCommandReceivedEventArgs (m_connectedRC, command));
+			var args = new RemoteControlCommandReceivedEventArgs (m_connectedRC, command);
+			RemoteControlCommandReceived.Raise (this, args);
+
+			return !args.Cancel;
 		}
 		#endregion
 	}

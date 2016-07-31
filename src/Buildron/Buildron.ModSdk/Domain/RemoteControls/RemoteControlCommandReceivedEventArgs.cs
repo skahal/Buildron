@@ -23,6 +23,7 @@ namespace Buildron.Domain.RemoteControls
 		#region Properties        
 		public IRemoteControl RemoteControl { get; private set; }
 		public IRemoteControlCommand Command { get; private set; }
+		public bool Cancel { get; set; }
 		#endregion
 	}
 }

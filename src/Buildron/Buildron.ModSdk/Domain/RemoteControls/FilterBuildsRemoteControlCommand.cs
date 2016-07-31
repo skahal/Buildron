@@ -4,6 +4,11 @@ namespace Buildron.Domain.RemoteControls
 {
 	public class FilterBuildsRemoteControlCommand : IRemoteControlCommand
 	{
+		public FilterBuildsRemoteControlCommand (string keyWord)
+		{
+			KeyWord = keyWord;
+		}
+
 		public FilterBuildsRemoteControlCommand (
 			bool? successEnabled,
 			bool? runningEnabled,
@@ -20,6 +25,7 @@ namespace Buildron.Domain.RemoteControls
 		public bool? RunningEnabled { get; private set; }
 		public bool? FailedEnabled { get; private set; }
 		public bool? QueuedEnabled { get; private set; }
+		public string KeyWord { get; set; }
 	}
 }
 
