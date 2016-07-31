@@ -55,7 +55,7 @@ public class SortingController : MonoBehaviour
                     () =>
                     {
                         var areAllSleeping = m_buildsGO.GetAll().AreAllSleeping();
-                        m_log.Warning(
+                        m_log.Debug(
                             "Waiting all builds physics sleep. Are all sleeping: {0}",
                             areAllSleeping);
 
