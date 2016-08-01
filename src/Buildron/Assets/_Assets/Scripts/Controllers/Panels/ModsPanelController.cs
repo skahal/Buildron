@@ -17,6 +17,8 @@ public class ModsPanelController : MonoBehaviour
 	private IModLoader m_modLoader;
 
 	private List<GameObject> m_modUIGameObjects = new List<GameObject>();
+
+	private Vector3 m_firstControlPosition;
 	#endregion
 
 	#region Properties
@@ -27,7 +29,6 @@ public class ModsPanelController : MonoBehaviour
 	public GameObject PreferenceStringTemplate;
 	public GameObject PreferenceIntTemplate;
 	public GameObject PreferenceFloatTemplate;
-	public Vector2 FirstControlPosition = new Vector2 (100, 0);
 	public float DistanceBetweenControls = 30;
 	#endregion
 
@@ -39,6 +40,10 @@ public class ModsPanelController : MonoBehaviour
 		PreferenceStringTemplate.SetActive(false);
 		PreferenceIntTemplate.SetActive(false);
 		PreferenceFloatTemplate.SetActive(false);
+
+		m_firstControlPosition = ModsDropdown.gameObject.transform.position;
+		m_firstControlPosition.x = 100;
+		m_firstControlPosition.y -= 200;
 
 		foreach (var mod in m_modLoader.LoadedMods) {
 			ModsDropdown.options.Add (new Dropdown.OptionData (mod.Info.Name));
@@ -129,7 +134,7 @@ public class ModsPanelController : MonoBehaviour
 	{
 		var obj = Object.Instantiate(template);
 		obj.transform.SetParent(transform, true);
-		obj.transform.position = FirstControlPosition + new Vector2 (0, index * -DistanceBetweenControls);
+		obj.transform.position = m_firstControlPosition + new Vector3 (0, index * -DistanceBetweenControls, 0);
 		var control = obj.GetComponentInChildren<TScript>();
 		control.enabled = true;
 		control.name = preference.Name;
