@@ -8,11 +8,12 @@
 * Opent the .csproj file in a text editor and add the line bellow after this line:
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\msbuilds\Buildron.ClassicMods.targets" />
+* Open the Package Manager Console and run: install-package Buildron.ModSdk
 * In the project references, add the reference to:
-	* UnityEngine.dll
-	* Buildron.Sdk.dll
-	* Skahal.Unity.Scripts.dll
-	* Skahal.Unity.Scripts.Externals.dll
+	* UnityEngine.dll (see here where is located your UnityEngine.dll)
+	-----* Buildron.Sdk.dll
+	-----* Skahal.Unity.Scripts.dll
+	-----* Skahal.Unity.Scripts.Externals.dll
 * In the root namespace add a class called Mod that implements IMod inteface.
 
 
@@ -29,4 +30,4 @@
 
 
 * Tags
-* * There two special tags used on Buildron and mods: "Build" ans "User". If you use them on your mod you should define the both as the first tags on your tag manager. The first should be "Build" and the second should be "User". This is necessary because Unity use the tags index on tag manager to search the game objects.
+* * There two special tags used on Buildron and mods: "Build" ans "User". If you use them on your mod you should define the both as the first tags on your tag manager. The first should be "Build" and the second should be "User". This is necessary because Unity use the tags index on tag manager to search the game objec (ts.
