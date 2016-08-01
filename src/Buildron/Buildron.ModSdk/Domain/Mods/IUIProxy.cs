@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Buildron.Domain.Mods
 {
@@ -14,6 +13,12 @@ namespace Buildron.Domain.Mods
 		/// <value>The font.</value>
 		Font Font { get; set; }
 
+		/// <summary>
+		/// Sets the status text of Buildron UI.
+		/// </summary>
+		/// <returns>The status text.</returns>
+		/// <param name="text">The text.</param>
+		/// <param name="secondsTimeout">The seconds timeout to text be removed. Default is zero(0).</param>
 		void SetStatusText (string text, float secondsTimeout = 0);
 	}
 }

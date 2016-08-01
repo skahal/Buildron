@@ -9,27 +9,45 @@ namespace Buildron.Domain.Mods
 	public interface IGameObjectsProxy
 	{
         /// <summary>
-        /// Create the game object.
+        /// Create a new game object with the specified component.
         /// </summary>
         /// <param name="name">The game object name.</param>
-        /// <param name="parent">The parent game object.</param>
-        /// <typeparam name="TComponent">The main component of game object.</typeparam>
+        /// <param name="gameObjectCreatedCallback">This callback will be caller right after the game object creation and before the AddComponent method..</param>
+        /// <typeparam name="TComponent">The 1st type parameter.</typeparam>
 		TComponent Create<TComponent> (string name = null, Action<GameObject> gameObjectCreatedCallback = null)
 			where TComponent : Component;
 
         /// <summary>
-        /// Creates the game object using the specified prefab.
+        /// Create a new game object using the specified prefab.
         /// </summary>
         /// <param name="prefab">The prefab.</param>
-        /// <param name="parent">The parent game object.</param>
-        /// <returns>The game object instance.</returns>
+       /// <returns>The game object instance.</returns>
 		GameObject Create(UnityEngine.Object prefab);    
 
+		/// <summary>
+		/// Create a new game object with the specified name.
+		/// </summary>
+		/// <param name="name">The game object name.</param>
 		GameObject Create(string name);
 
-		TComponent AddComponent<TComponent> (GameObject container)
+		/// <summary>
+		/// Adds the component to the specified game object.
+		/// </summary>
+		/// <returns>The component.</returns>
+		/// <param name="gameObject">The game object.</param>
+		/// <typeparam name="TComponent">The 1st type parameter.</typeparam>
+		TComponent AddComponent<TComponent> (GameObject gameObject)
 			where TComponent : Component;
 
-		MonoBehaviour AddComponent (GameObject container, string componentTypeName);
+		/// <summary>
+		/// Adds the component to the specified game object.
+		/// </summary>
+		/// <remarks>
+		/// This method is useful when you want to add a component to your mod game object, but the type of component is not available in your code, like camera effects that are available on Buildron runtime.
+		/// </remarks>
+		/// <returns>The component.</returns>
+		/// <param name="gameObject">The game object.</param>
+		/// <param name="componentTypeName">The component type name.</param>
+		MonoBehaviour AddComponent (GameObject gameObject, string componentTypeName);
 	}
 }

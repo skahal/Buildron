@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Buildron.Domain.RemoteControls
+﻿namespace Buildron.Domain.RemoteControls
 {
+	/// <summary>
+	/// Take screenshot remote control command.
+	/// </summary>
 	public class TakeScreenshotRemoteControlCommand : IRemoteControlCommand
 	{
-		public TakeScreenshotRemoteControlCommand ()
-		{
-		}
 	}
 }

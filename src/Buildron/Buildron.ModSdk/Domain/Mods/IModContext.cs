@@ -16,32 +16,32 @@ namespace Buildron.Domain.Mods
 	{    
 		#region Events
 		/// <summary>
-		/// Occurs when build found.
+		/// Occurs when a build is found.
 		/// </summary>
 		event EventHandler<BuildFoundEventArgs> BuildFound;
 
 		/// <summary>
-		/// Occurs when build removed.
+		/// Occurs when a build is removed.
 		/// </summary>
 		event EventHandler<BuildRemovedEventArgs> BuildRemoved;
 
 		/// <summary>
-		/// Occurs when build updated.
+		/// Occurs when a build is updated.
 		/// </summary>
 		event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
 
 		/// <summary>
-		/// Occurs when build status changed.
+		/// Occurs when a build status changed.
 		/// </summary>
 		event EventHandler<BuildStatusChangedEventArgs> BuildStatusChanged;
 
 		/// <summary>
-		/// Occurs when build triggered by changed.
+		/// Occurs when build's triggered by changed.
 		/// </summary>
 		event EventHandler<BuildTriggeredByChangedEventArgs> BuildTriggeredByChanged;
 
 		/// <summary>
-		/// Occurs when builds refreshed.
+		/// Occurs when builds are refreshed.
 		/// </summary>
 		event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed; 
 
@@ -56,35 +56,38 @@ namespace Buildron.Domain.Mods
 		event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
 
 		/// <summary>
-		/// Occurs when user found.
+		/// Occurs when an user is found.
 		/// </summary>
 		event EventHandler<UserFoundEventArgs> UserFound;
 
 		/// <summary>
-		/// Occurs when user updated.
+		/// Occurs when an user is updated.
 		/// </summary>
 		event EventHandler<UserUpdatedEventArgs> UserUpdated;
 
 		/// <summary>
-		/// Occurs when user triggered build.
+		/// Occurs when an user triggered build.
 		/// </summary>
 		event EventHandler<UserTriggeredBuildEventArgs> UserTriggeredBuild;
 
 		/// <summary>
-		/// Occurs when user removed.
+		/// Occurs when an user is removed.
 		/// </summary>
 		event EventHandler<UserRemovedEventArgs> UserRemoved;
 
 		/// <summary>
-		/// Occurs when user authentication completed.
+		/// Occurs when an user authentication is completed.
 		/// </summary>
 		event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 
 		/// <summary>
-		/// Occurs when remote control changed.
+		/// Occurs when a remote control changed.
 		/// </summary>
 		event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
 
+		/// <summary>
+		/// Occurs when a remote control command is received.
+		/// </summary>
 		event EventHandler<RemoteControlCommandReceivedEventArgs> RemoteControlCommandReceived;
         #endregion
       
@@ -125,6 +128,10 @@ namespace Buildron.Domain.Mods
 		/// <value>The game objects.</value>
 		IGameObjectsProxy GameObjects { get; }
 
+		/// <summary>
+		/// Gets the game objects pool.
+		/// </summary>
+		/// <value>The game objects pool.</value>
         IGameObjectsPoolProxy GameObjectsPool { get; }
 
 		/// <summary>
@@ -133,16 +140,40 @@ namespace Buildron.Domain.Mods
 		/// <value>The U.</value>
 		IUIProxy UI { get; } 
 
+		/// <summary>
+		/// Gets the file system.
+		/// </summary>
+		/// <value>The file system.</value>
         IFileSystemProxy FileSystem { get; }
 
+		/// <summary>
+		/// Gets the data.
+		/// </summary>
+		/// <value>The data.</value>
 		IDataProxy Data { get; }
 
+		/// <summary>
+		/// Gets the build game objects.
+		/// </summary>
+		/// <value>The build game objects.</value>
 		IBuildGameObjectsProxy BuildGameObjects { get; }
 
+		/// <summary>
+		/// Gets the user game objects.
+		/// </summary>
+		/// <value>The user game objects.</value>
 		IUserGameObjectsProxy UserGameObjects { get; }
 
+		/// <summary>
+		/// Gets the camera.
+		/// </summary>
+		/// <value>The camera.</value>
         ICameraProxy Camera { get; }
 
+		/// <summary>
+		/// Gets the preferences.
+		/// </summary>
+		/// <value>The preferences.</value>
 		IPreferencesProxy Preferences { get; }
         #endregion
     }

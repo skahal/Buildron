@@ -10,8 +10,9 @@ namespace Buildron.Domain.RemoteControls
 	{
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Buildron.ModSdk.RemoteControlMessageReceivedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="RemoteControlCommandReceivedEventArgs"/> class.
 		/// </summary>
+		/// <param name="remoteControl">The remote control.</param>
 		/// <param name="command">The remote control command.</param>
 		public RemoteControlCommandReceivedEventArgs(IRemoteControl remoteControl, IRemoteControlCommand command)
 		{
@@ -21,8 +22,21 @@ namespace Buildron.Domain.RemoteControls
 		#endregion
 
 		#region Properties        
+		/// <summary>
+		/// Gets the remote control.
+		/// </summary>
+		/// <value>The remote control.</value>
 		public IRemoteControl RemoteControl { get; private set; }
+
+		/// <summary>
+		/// Gets the command.
+		/// </summary>
+		/// <value>The command.</value>
 		public IRemoteControlCommand Command { get; private set; }
+
+		/// <summary>
+		/// Gets or sets a value that indicate whether the command should be canceled.
+		/// </summary>
 		public bool Cancel { get; set; }
 		#endregion
 	}

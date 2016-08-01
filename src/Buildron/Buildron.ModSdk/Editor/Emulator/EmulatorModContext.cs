@@ -1,83 +1,191 @@
-﻿using UnityEngine;
-using Buildron.Domain.Mods;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
-using Buildron.Domain.Users;
-using System.Collections.Generic;
+using Buildron.Domain.Mods;
 using Buildron.Domain.RemoteControls;
-using Skahal.Logging;
+using Buildron.Domain.Users;
 using Buildron.Infrastructure.AssetsProxies;
-using Buildron.Infrastructure.GameObjectsProxies;
-using Skahal.Common;
-using System.Linq;
 using Buildron.Infrastructure.BuildGameObjectsProxies;
 using Buildron.Infrastructure.CameraProxies;
+using Buildron.Infrastructure.GameObjectsProxies;
 using Buildron.Infrastructure.UserGameObjectsProxies;
+using Skahal.Common;
+using Skahal.Logging;
+using UnityEngine;
 
+/// <summary>
+/// Emulator mod context.
+/// </summary>
 public class EmulatorModContext : MonoBehaviour, IModContext {
 
 	#region Events
+	/// <summary>
+	/// Occurs when a build is found.
+	/// </summary>
 	public event EventHandler<BuildFoundEventArgs> BuildFound;
 
+	/// <summary>
+	/// Occurs when a build is removed.
+	/// </summary>
 	public event EventHandler<BuildRemovedEventArgs> BuildRemoved;
 
+	/// <summary>
+	/// Occurs when a build is updated.
+	/// </summary>
 	public event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
 
+	/// <summary>
+	/// Occurs when build status changed.
+	/// </summary>
 	public event EventHandler<BuildStatusChangedEventArgs> BuildStatusChanged;
 
+	/// <summary>
+	/// Occurs when build's triggered by changed.
+	/// </summary>
 	public event EventHandler<BuildTriggeredByChangedEventArgs> BuildTriggeredByChanged;
 
+	/// <summary>
+	/// Occurs when builds are refreshed.
+	/// </summary>
 	public event EventHandler<BuildsRefreshedEventArgs> BuildsRefreshed;
 
+	/// <summary>
+	/// Occurs when CI server is connected.
+	/// </summary>
 	public event EventHandler<CIServerConnectedEventArgs> CIServerConnected;
 
+	/// <summary>
+	/// Occurs when CI server status changed.
+	/// </summary>
 	public event EventHandler<CIServerStatusChangedEventArgs> CIServerStatusChanged;
 
+	/// <summary>
+	/// Occurs when an user is found.
+	/// </summary>
 	public event EventHandler<UserFoundEventArgs> UserFound;
 
+	/// <summary>
+	/// Occurs when an user is updated.
+	/// </summary>
 	public event EventHandler<UserUpdatedEventArgs> UserUpdated;
 
+	/// <summary>
+	/// Occurs when an user triggered build.
+	/// </summary>
 	public event EventHandler<UserTriggeredBuildEventArgs> UserTriggeredBuild;
 
+	/// <summary>
+	/// Occurs when an user is removed.
+	/// </summary>
 	public event EventHandler<UserRemovedEventArgs> UserRemoved;
 
+	/// <summary>
+	/// Occurs when an user authentication is completed.
+	/// </summary>
 	public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 
+	/// <summary>
+	/// Occurs when a remote control changed.
+	/// </summary>
 	public event EventHandler<RemoteControlChangedEventArgs> RemoteControlChanged;
 
-    public event EventHandler<RemoteControlCommandReceivedEventArgs> RemoteControlCommandReceived;
+	/// <summary>
+	/// Occurs when a remote control command is received.
+	/// </summary>
+	public event EventHandler<RemoteControlCommandReceivedEventArgs> RemoteControlCommandReceived;
     #endregion
 
     #region Properties
+	/// <summary>
+	/// Gets the instance.
+	/// </summary>
+	/// <value>The instance.</value>
 	public static EmulatorModContext Instance { get; private set; }
 
+	/// <summary>
+	/// Gets the builds.
+	/// </summary>
+	/// <value>The builds.</value>
     public IList<IBuild> Builds { get; private set; }
 
+	/// <summary>
+	/// Gets the users.
+	/// </summary>
+	/// <value>The users.</value>
 	public IList<IUser> Users { get; private set; }
 
+	/// <summary>
+	/// Gets the CIS erver.
+	/// </summary>
+	/// <value>The CIS erver.</value>
 	public ICIServer CIServer { get; private set; }
 
+	/// <summary>
+	/// Gets the log.
+	/// </summary>
+	/// <value>The log.</value>
 	public ISHLogStrategy Log { get; private set; }
 
+	/// <summary>
+	/// Gets the assets.
+	/// </summary>
+	/// <value>The assets.</value>
 	public IAssetsProxy Assets  { get; private set; }
 
+	/// <summary>
+	/// Gets the game objects.
+	/// </summary>
+	/// <value>The game objects.</value>
 	public IGameObjectsProxy GameObjects { get; private set; }
 
+	/// <summary>
+	/// Gets the game objects pool.
+	/// </summary>
+	/// <value>The game objects pool.</value>
 	public IGameObjectsPoolProxy GameObjectsPool { get; private set; }
 
+	/// <summary>
+	/// Gets the user interface.
+	/// </summary>
+	/// <value>The user interface.</value>
 	public IUIProxy UI { get; private set; } 
 
+	/// <summary>
+	/// Gets the file system.
+	/// </summary>
+	/// <value>The file system.</value>
 	public IFileSystemProxy FileSystem { get; private set; }
 
+	/// <summary>
+	/// Gets the data.
+	/// </summary>
+	/// <value>The data.</value>
 	public IDataProxy Data { get; private set; }
 
+	/// <summary>
+	/// Gets the build game objects.
+	/// </summary>
+	/// <value>The build game objects.</value>
 	public IBuildGameObjectsProxy BuildGameObjects { get; private set; }
 
+	/// <summary>
+	/// Gets the user game objects.
+	/// </summary>
+	/// <value>The user game objects.</value>
 	public IUserGameObjectsProxy UserGameObjects { get; private set; }
 
+	/// <summary>
+	/// Gets the camera.
+	/// </summary>
+	/// <value>The camera.</value>
 	public ICameraProxy Camera { get; private set; }
 
+	/// <summary>
+	/// Gets the preferences.
+	/// </summary>
+	/// <value>The preferences.</value>
 	public IPreferencesProxy Preferences { get; private set; }
     #endregion
 
@@ -120,11 +228,23 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		CIServerConnected.Raise (this, new CIServerConnectedEventArgs (CIServer));
 	}
 
+	public void RaiseCIServerStatusChanged()
+	{
+		Log.Debug("CIServerStatusChanged");
+		CIServerStatusChanged.Raise(this, new CIServerStatusChangedEventArgs(CIServer));
+	}
+
 	public void RaiseBuildFound (EmulatorBuild build)
 	{
 		Builds.Add (build);
-		Log.Debug ("BuildFound: {0}; {1}", build.Id, build.Status);
+		Log.Debug ("BuildFound: {0}: {1}", build.Id, build.Status);
 		BuildFound.Raise (this, new BuildFoundEventArgs (build));
+	}
+
+	public void RaiseBuildUpdated(EmulatorBuild build)
+	{		
+		Log.Debug("BuildUpdated: {0}: {1}", build.Id, build.Status);
+		BuildUpdated.Raise(this, new BuildUpdatedEventArgs(build));
 	}
 
 	public void RaiseBuildRemoved (int buildIndex)
@@ -133,13 +253,69 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 			var build = Builds [buildIndex];
 
 			Builds.RemoveAt (buildIndex);
-			Log.Debug ("BuildRemoved: {0}; {1}", build.Id, build.Status);
+			Log.Debug ("BuildRemoved: {0}: {1}", build.Id, build.Status);
 			BuildRemoved.Raise (this, new BuildRemovedEventArgs (build));
 		}
 	}
 
+	public void RaiseBuildStatusChanged(EmulatorBuild build)
+	{
+		Log.Debug("BuildStatusChanged: {0}: {1}", build.Id, build.Status);
+		BuildStatusChanged.Raise(this, new BuildStatusChangedEventArgs(build, build.Status));
+	}
+
+	public void RaiseBuildTriggeredByChanged(EmulatorBuild build, EmulatorUser user)
+	{
+		Log.Debug("BuildTriggeredByChanged: {0}: {1}", build.Id, user.UserName);
+		BuildTriggeredByChanged.Raise(this, new BuildTriggeredByChangedEventArgs(build, user));
+	}
+
+	public void RaiseBuildsRefreshed(IList<IBuild> buildsStatusChanged, IList<IBuild> buildsFound, IList<IBuild> buildsRemoved)
+	{
+		Log.Debug("BuildsRefreshed: {0}, {1}, {2}", buildsStatusChanged.Count, buildsFound.Count, buildsRemoved.Count);
+		BuildsRefreshed.Raise(this, new BuildsRefreshedEventArgs(buildsStatusChanged, buildsFound, buildsRemoved));
+	}
+
+	public void RaiseUserFound(EmulatorUser user)
+	{
+		Log.Debug("RaiseUserFound: {0}", user.UserName);
+		UserFound.Raise(this, new UserFoundEventArgs(user));
+	}
+
+	public void RaiseUserUpdated(EmulatorUser user)
+	{
+		Log.Debug("UserUpdated: {0}", user.UserName);
+		UserUpdated.Raise(this, new UserUpdatedEventArgs(user));
+	}
+
+	public void RaiseUserRemoved(EmulatorUser user)
+	{
+		Log.Debug("UserRemoved: {0}", user.UserName);
+		UserRemoved.Raise(this, new UserRemovedEventArgs(user));
+	}
+
+	public void RaiseUserAuthenticationCompleted(IAuthUser user, bool success)
+	{
+		Log.Debug("UserAuthenticationCompleted: {0}:{1}", user.UserName, success);
+		UserAuthenticationCompleted.Raise(this, new UserAuthenticationCompletedEventArgs(user, success));
+	}
+
+	public void RaiseUserTriggeredBuild(EmulatorUser user, EmulatorBuild build)
+	{
+		Log.Debug("UserTriggeredBuild: {0}:{1}", user.UserName, build.Id);
+		UserTriggeredBuild.Raise(this, new UserTriggeredBuildEventArgs(user, build));
+	}
+
+	public void RaiseRemoteControlChanged(IRemoteControlCommand cmd)
+	{
+		Log.Debug("RemoteControlChanged");
+		var rc = new EmulatorRemoteControl();
+		RemoteControlChanged.Raise(this, new RemoteControlChangedEventArgs(rc));
+	}
+
 	public void RaiseRemoteControlCommandReceived (IRemoteControlCommand cmd)
 	{
+		Log.Debug("RemoteControlCommandReceived: {0}", cmd);
 		var rc = new EmulatorRemoteControl ();
 		RemoteControlCommandReceived.Raise (this, new RemoteControlCommandReceivedEventArgs (rc, cmd));
 	}

@@ -31,3 +31,7 @@ src/Buildron/Buildron.ModSdk/obj/Debug
 src/Buildron/Buildron.ModSdk/packages
 src/Buildron/Buildron.ModSdk/Editor/obj/Debug
 src/Buildron/Buildron.ModSdk/Editor/bin/Debug
+src/Buildron/Buildron.ModSdk/bin/Release
+src/Buildron/Buildron.ModSdk/Editor/bin/Release
+src/Buildron/Buildron.ModSdk/Editor/obj/Release
+src/Buildron/Buildron.ModSdk/obj/Release
