@@ -10,7 +10,7 @@ using Skahal.Logging;
 using System;
 using System.Linq;
 
-public class ModBuilderWindow : EditorWindow
+public class ModBuilder : EditorWindow
 {
 	#region Fields
 	private bool m_buildToWin;
@@ -18,12 +18,12 @@ public class ModBuilderWindow : EditorWindow
 	private bool m_buildToLinux;
 	private string m_modsFolder;
 
-	private StringBuilder m_log = new StringBuilder ();
+	private static StringBuilder m_log = new StringBuilder ();
 	private Vector2 m_logScroll;
 	#endregion
 
 	#region Constructors
-	public ModBuilderWindow()
+	public ModBuilder()
 	{
 		titleContent.text = "Build mod";
 		autoRepaintOnSceneChange = true;
@@ -35,8 +35,6 @@ public class ModBuilderWindow : EditorWindow
 	#region Build
 	private void Build ()
 	{
-//		var deployRootFolder = "/Users/giacomelli/Dropbox/Skahal/Apps/Buildron/build/Mods/";
-//		var deployRootFolder = @"C:\Dropbox\Skahal\Apps\Buildron\build\Mods";
 		m_log = new StringBuilder();
 
 		try 
@@ -45,17 +43,17 @@ public class ModBuilderWindow : EditorWindow
 
 			if (m_buildToWin) {
 				Log ("Building for Windows...");
-				BuildMods (m_modsFolder, BuildTarget.StandaloneWindows);
+				BuildMod (m_modsFolder, BuildTarget.StandaloneWindows);
 			}
 
 			if (m_buildToOsx) {
 				Log ("Building for OSX...");
-				BuildMods (m_modsFolder, BuildTarget.StandaloneOSXIntel);
+				BuildMod (m_modsFolder, BuildTarget.StandaloneOSXIntel);
 			}
 
 			if (m_buildToLinux) {
 				Log ("Building for Linux...");
-				BuildMods (m_modsFolder, BuildTarget.StandaloneLinux);
+				BuildMod (m_modsFolder, BuildTarget.StandaloneLinux);
 			}
 
 			Log("Done.");
@@ -68,9 +66,18 @@ public class ModBuilderWindow : EditorWindow
 		}
 	}
 
-	private void BuildMods(string deployRootFolder, BuildTarget buildTarget)
+	public static void BuildFromCommandLine()
 	{
-		var assetsDeployFolder = Path.Combine(deployRootFolder, "Assets");
+		var args = Environment.GetCommandLineArgs ();
+		var deployRootFolder = args [args.Length - 2];
+		var buildTarget = (BuildTarget) Enum.Parse (typeof(BuildTarget), args [args.Length - 1]);
+
+		BuildMod (deployRootFolder, buildTarget);
+	}
+
+	private static void BuildMod(string deployRootFolder, BuildTarget buildTarget)
+	{
+		var assetsDeployFolder = Path.Combine(deployRootFolder, Guid.NewGuid().ToString());
 
 		if (!Directory.Exists(assetsDeployFolder))
 		{
@@ -84,12 +91,13 @@ public class ModBuilderWindow : EditorWindow
 		MoveAssetsToModsFolders(deployRootFolder, assetsDeployFolder);
 	}
 
-	private void MoveAssetsToModsFolders(string deployRootFolder, string assetsDeployFolder)
+	private static void MoveAssetsToModsFolders(string deployRootFolder, string assetsDeployFolder)
 	{
 		Log("Moving assets to mod folder");
+		var folderName = Path.GetFileName (assetsDeployFolder);
 		var assetFile = Directory
 			.GetFiles (assetsDeployFolder, "*.manifest")
-			.FirstOrDefault (f => !f.EndsWith("Assets.manifest"));
+			.FirstOrDefault (f => !f.EndsWith("{0}.manifest".With(folderName)));
 
 		if (assetFile == null) {
 			throw new InvalidOperationException ("No assets manifest file found. Did you remember to mark your assets with asset bundle with same name of your mod project?");
@@ -114,7 +122,7 @@ public class ModBuilderWindow : EditorWindow
 		Directory.Delete(assetsDeployFolder, true);
 	}
 
-	private void MoveAssemblies(string modName, string deployRootFolder)
+	private static void MoveAssemblies(string modName, string deployRootFolder)
 	{
 		var referencesFolder = Path.Combine(Application.dataPath, "Scripts");
 		referencesFolder = Path.Combine(referencesFolder, "references");
@@ -138,7 +146,7 @@ public class ModBuilderWindow : EditorWindow
 	[MenuItem ("Buildron/Build mod")]
 	private static void Init ()
 	{	
-		var instance = GetWindow<ModBuilderWindow> ();
+		var instance = GetWindow<ModBuilder> ();
 		instance.ShowPopup ();
 	}
 
@@ -240,11 +248,11 @@ public class ModBuilderWindow : EditorWindow
 		SetString("modsFolder", m_modsFolder);
 	}	
 
-	private void Log(string msg, params object[] args)
+	private static void Log(string msg, params object[] args)
 	{
 		var formattedMsg = msg.With (args);
 		m_log.AppendLine (formattedMsg);
-		Repaint ();
+		//Repaint ();
 	}
 	#endregion
 }
