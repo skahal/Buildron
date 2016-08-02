@@ -30,4 +30,4 @@
 
 
 * Tags
-* * There two special tags used on Buildron and mods: "Build" ans "User". If you use them on your mod you should define the both as the first tags on your tag manager. The first should be "Build" and the second should be "User". This is necessary because Unity use the tags index on tag manager to search the game objec (ts.
+* * There two special tags used on Buildron and mods: "Build" and "User". If you use them on your mod you should define the both as the first tags on your tag manager. The first should be "Build" and the second should be "User". This is necessary because Unity use the tags index on tag manager to search the game objects.
