@@ -1,0 +1,3 @@
+echo Building Buildron...
+/Applications/Unity/Unity.app/Contents/MacOS/Unity -projectPath $PWD/../src/Buildron -quit -batchmode -buildOSXPlayer $PWD/../build/Buildron.app
+echo Done.
