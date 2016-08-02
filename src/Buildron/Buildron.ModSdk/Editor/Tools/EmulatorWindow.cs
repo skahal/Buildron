@@ -10,10 +10,12 @@ using Skahal.Logging;
 using System;
 using System.Linq;
 using Buildron.Domain.RemoteControls;
+using Buildron.Domain.Builds;
 
 public class EmulatorWindow : EditorWindow
 {
 	#region Fields
+	private BuildStatus m_buildStatus = BuildStatus.Success;
 	private FilterBuildsRemoteControlCommand m_filterCmd = new FilterBuildsRemoteControlCommand(String.Empty);
 	#endregion
 
@@ -67,11 +69,22 @@ public class EmulatorWindow : EditorWindow
 				EmulatorModContext.Instance.RaiseCIServerConnected ();
 			}
 
+			EditorGUILayout.Separator ();
 			if (GUILayout.Button ("BuildFound")) {
 				var build = new EmulatorBuild ();
+				build.Status = m_buildStatus;
 				EmulatorModContext.Instance.RaiseBuildFound (build);
 			}
 
+			if (GUILayout.Button ("BuildStatusChanged")) {
+				var build = new EmulatorBuild ();
+				build.Status = m_buildStatus;
+				EmulatorModContext.Instance.RaiseBuildStatusChanged (build);
+			}
+
+			CreateControl("Build status", () =>  m_buildStatus = (BuildStatus) EditorGUILayout.EnumPopup (m_buildStatus));
+
+			EditorGUILayout.Separator ();
 			if (GUILayout.Button ("BuildRemoved")) {
 				EmulatorModContext.Instance.RaiseBuildRemoved (0);
 			}
@@ -81,14 +94,18 @@ public class EmulatorWindow : EditorWindow
 				EmulatorModContext.Instance.RaiseRemoteControlCommandReceived (m_filterCmd);
 			}
 
-			EditorGUILayout.BeginHorizontal ();
-			GUILayout.Label ("KeyWord: ");
-			m_filterCmd.KeyWord = GUILayout.TextField (m_filterCmd.KeyWord);
-			EditorGUILayout.EndHorizontal ();
-		
+			CreateControl ("KeyWord", () =>  m_filterCmd.KeyWord = GUILayout.TextField (m_filterCmd.KeyWord));
 		} else {
 			CreateHelpBox ("Emulator is activate on play mode.");
 		}
+	}
+
+	private void CreateControl(string label, Action createControl)
+	{
+		EditorGUILayout.BeginHorizontal ();
+		GUILayout.Label ("{0}: ".With(label));
+		createControl ();
+		EditorGUILayout.EndHorizontal ();
 	}
 
 	private void CreateHelpBox (string helpText, string url = null)
