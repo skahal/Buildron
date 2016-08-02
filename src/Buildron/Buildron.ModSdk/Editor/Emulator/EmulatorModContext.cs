@@ -188,6 +188,8 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 	/// </summary>
 	/// <value>The preferences.</value>
 	public IPreferencesProxy Preferences { get; private set; }
+
+	public IRemoteControlProxy RemoteControl { get; private set; }
     #endregion
 
     #region Methods

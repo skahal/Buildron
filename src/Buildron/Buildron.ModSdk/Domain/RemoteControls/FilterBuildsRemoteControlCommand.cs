@@ -40,32 +40,32 @@
 			FailedEnabled = failedEnabled;
 			QueuedEnabled = queuedEnabled;
 		}
-		#endregion
+        #endregion
 
-		#region Properties
-		/// <summary>
-		/// Gets the success enabled.
-		/// </summary>
-		/// <value>The success enabled.</value>
-		public bool? SuccessEnabled { get; private set; }
+        #region Properties
+        /// <summary>
+        /// Gets or sets the success enabled.
+        /// </summary>
+        /// <value>The success enabled.</value>
+        public bool? SuccessEnabled { get; set; }
 
-		/// <summary>
-		/// Gets the running enabled.
-		/// </summary>
-		/// <value>The running enabled.</value>
-		public bool? RunningEnabled { get; private set; }
+        /// <summary>
+        /// Gets or sets the running enabled.
+        /// </summary>
+        /// <value>The running enabled.</value>
+        public bool? RunningEnabled { get; set; }
 
-		/// <summary>
-		/// Gets the failed enabled.
-		/// </summary>
-		/// <value>The failed enabled.</value>
-		public bool? FailedEnabled { get; private set; }
+        /// <summary>
+        /// Gets or sets the failed enabled.
+        /// </summary>
+        /// <value>The failed enabled.</value>
+        public bool? FailedEnabled { get; set; }
 
 		/// <summary>
 		/// Gets the queued enabled.
 		/// </summary>
 		/// <value>The queued enabled.</value>
-		public bool? QueuedEnabled { get; private set; }
+		public bool? QueuedEnabled { get; set; }
 
 		/// <summary>
 		/// Gets or sets the key word.

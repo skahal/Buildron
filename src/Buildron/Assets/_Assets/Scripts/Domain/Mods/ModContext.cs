@@ -4,6 +4,7 @@ using Buildron.Domain.Builds;
 using Buildron.Domain.CIServers;
 using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Users;
+using Buildron.Infrastructure.RemoteControlProxies;
 using Skahal.Common;
 using Skahal.Logging;
 
@@ -57,6 +58,7 @@ namespace Buildron.Domain.Mods
 			Data = new LogDataProxy(instance.Data, Log);
 			Camera = new LogCameraProxy (instance.Camera, Log);
 			Preferences = new LogPreferencesProxy(instance.Preferences, Log);
+            RemoteControl = new ModRemoteControlProxy(remoteControlService);
 
             m_buildService = buildService;
             m_ciServerService = ciServerService;
@@ -115,6 +117,8 @@ namespace Buildron.Domain.Mods
         public ICameraProxy Camera { get; private set; }
 
         public IPreferencesProxy Preferences { get; private set; }
+
+        public IRemoteControlProxy RemoteControl { get; private set; }
         #endregion
 
         #region Methods     
@@ -124,37 +128,37 @@ namespace Buildron.Domain.Mods
             {
                 var build = e.Build;
 
-				build.StatusChanged += (s2, e2) => BuildStatusChanged.Raise(s2, e2);
-				build.TriggeredByChanged += (s2, e2) => BuildTriggeredByChanged.Raise(s2, e2);
+				build.StatusChanged += (s2, e2) => BuildStatusChanged.RaiseSafe(s2, e2, Log);
+				build.TriggeredByChanged += (s2, e2) => BuildTriggeredByChanged.RaiseSafe(s2, e2, Log);
 
-                BuildFound.Raise(s, e);
+                BuildFound.RaiseSafe(s, e, Log);
             };
 
-            m_buildService.BuildRemoved += (s, e) => BuildRemoved.Raise(s, e);
+            m_buildService.BuildRemoved += (s, e) => BuildRemoved.RaiseSafe(s, e, Log);
             
-            m_buildService.BuildsRefreshed += (s, e) => BuildsRefreshed.Raise(s, e);
-            m_buildService.BuildUpdated += (s, e) => BuildUpdated.Raise(s, e);
+            m_buildService.BuildsRefreshed += (s, e) => BuildsRefreshed.RaiseSafe(s, e, Log);
+            m_buildService.BuildUpdated += (s, e) => BuildUpdated.RaiseSafe(s, e, Log);
         }
 
         private void AttachToCIServerService()
         {
-			m_ciServerService.CIServerConnected += (s, e) => CIServerConnected.Raise (s, e);
-            m_ciServerService.CIServerStatusChanged += (s, e) => CIServerStatusChanged.Raise(s, e);
+			m_ciServerService.CIServerConnected += (s, e) => CIServerConnected.RaiseSafe(s, e, Log);
+            m_ciServerService.CIServerStatusChanged += (s, e) => CIServerStatusChanged.RaiseSafe(s, e, Log);
         }
 
         private void AttachToRemoteControlService()
         {
-            m_remoteControlService.RemoteControlChanged += (s, e) => RemoteControlChanged.Raise(s, e);
-			m_remoteControlService.RemoteControlCommandReceived += (s, e) => RemoteControlCommandReceived.Raise (s, e);
+            m_remoteControlService.RemoteControlChanged += (s, e) => RemoteControlChanged.RaiseSafe(s, e, Log);
+			m_remoteControlService.RemoteControlCommandReceived += (s, e) => RemoteControlCommandReceived.RaiseSafe(s, e, Log);
         }
 
         private void AttachToUserService()
         {
-            m_userService.UserAuthenticationCompleted += (s, e) => UserAuthenticationCompleted.Raise(s, e);
-            m_userService.UserFound += (s, e) => UserFound.Raise(s, e);
-            m_userService.UserRemoved += (s, e) => UserRemoved.Raise(s, e);
-            m_userService.UserTriggeredBuild += (s, e) => UserTriggeredBuild.Raise(s, e);
-            m_userService.UserUpdated += (s, e) => UserUpdated.Raise(s, e);
+            m_userService.UserAuthenticationCompleted += (s, e) => UserAuthenticationCompleted.RaiseSafe(s, e, Log);
+            m_userService.UserFound += (s, e) => UserFound.RaiseSafe(s, e, Log);
+            m_userService.UserRemoved += (s, e) => UserRemoved.RaiseSafe(s, e, Log);
+            m_userService.UserTriggeredBuild += (s, e) => UserTriggeredBuild.RaiseSafe(s, e, Log);
+            m_userService.UserUpdated += (s, e) => UserUpdated.RaiseSafe(s, e, Log);
         }
         #endregion
     }

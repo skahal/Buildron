@@ -4,6 +4,7 @@ using UnityEngine;
 using Skahal.Logging;
 using System.Reflection;
 using System.Linq;
+using Skahal.Common;
 
 namespace Buildron.Infrastructure.AssetsProxies
 {
@@ -13,6 +14,8 @@ namespace Buildron.Infrastructure.AssetsProxies
 
 		public AssetBundleAssetsProxy(AssetBundle assetBundle)
 		{
+            Throw.AnyNull(new { assetBundle });
+
 			m_assetBundle = assetBundle;
 		}
 
