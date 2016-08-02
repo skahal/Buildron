@@ -261,8 +261,16 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		}
 	}
 
-	public void RaiseBuildStatusChanged(EmulatorBuild build)
+	public void RaiseBuildStatusChanged(BuildStatus status)
 	{
+		if (Builds.Count == 0) {
+			RaiseBuildFound (new EmulatorBuild () {
+				Status = BuildStatus.Unknown
+			});
+		}
+
+		var build = Builds [Builds.Count - 1];
+		build.Status = status;
 		Log.Debug("BuildStatusChanged: {0}: {1}", build.Id, build.Status);
 		BuildStatusChanged.Raise(this, new BuildStatusChangedEventArgs(build, build.Status));
 	}

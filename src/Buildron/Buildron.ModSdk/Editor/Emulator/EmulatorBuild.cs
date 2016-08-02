@@ -7,6 +7,7 @@ public class EmulatorBuild : IBuild
 {
 	#region Fields
 	private static int s_buildsCount;
+	private BuildStatus m_status;
 	#endregion
 
 	#region Constructors
@@ -18,7 +19,7 @@ public class EmulatorBuild : IBuild
 		};
 		Date = DateTime.Now;
 
-		Status = SHRandomHelper.NextEnum<BuildStatus> ();
+		m_status = SHRandomHelper.NextEnum<BuildStatus> ();
 		LastRanStep = new EmulatorBuildStep {
 			StepType = SHRandomHelper.NextEnum<BuildStepType> ()
 		};
@@ -53,7 +54,19 @@ public class EmulatorBuild : IBuild
 
 	public int Sequence  { get; set; }
 
-	public BuildStatus Status  { get; set; }
+	public BuildStatus Status  
+	{
+		get {
+			return m_status;
+		}
+
+		set {
+			PreviousStatus = m_status;
+
+			m_status = value;
+			StatusChanged.Raise(this, new BuildStatusChangedEventArgs(this, PreviousStatus));
+		}
+	}
 
 	public IUser TriggeredBy  { get; set; }
 
