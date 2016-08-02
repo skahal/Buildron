@@ -14,5 +14,9 @@
           <Copy
               SourceFiles="@(FilesToCopy)"
               DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\Buildron-Classic-Mods\src\Solution\references" />
+              
+              <Copy
+                  SourceFiles="@(FilesToCopy)"
+                  DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\Buildron-Mod-Samples\src\Code\references" />
     </Target>
 </Project>

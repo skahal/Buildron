@@ -14,5 +14,7 @@
         <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\..\Buildron-Classic-Mods\src\Buildron.ClassicMods.EasterEggMod\Assets\Scripts\references" />
         
         <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\..\Buildron-Classic-Mods\src\Buildron.ClassicMods.EnvironmentMod\Assets\Scripts\references" />
+        
+                <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\..\Buildron-Mod-Samples\src\Unity\ToastyMod\Assets\Scripts\references" />
 	</Target>
 </Project>
