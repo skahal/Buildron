@@ -14,6 +14,7 @@ using Buildron.Infrastructure.UserGameObjectsProxies;
 using Skahal.Common;
 using Skahal.Logging;
 using UnityEngine;
+using Buildron.Infrastructure.PreferencesProxies;
 
 /// <summary>
 /// Emulator mod context.
@@ -213,7 +214,7 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		GameObjects = new ModGameObjectsProxy ();
 		GameObjectsPool = new ModGameObjectsPoolProxy (modInfo, GameObjects);
 		FileSystem = new EmulatorFileSystemProxy ();
-		Preferences = new EmulatorPreferencesProxy();
+		Preferences = new ModPreferencesProxy(modInfo);
 		BuildGameObjects = new ModBuildGameObjectsProxy ();
 		UserGameObjects = new ModUserGameObjectsProxy ();
 
