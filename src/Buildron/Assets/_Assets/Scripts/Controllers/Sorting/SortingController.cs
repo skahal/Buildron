@@ -79,7 +79,7 @@ public class SortingController : MonoBehaviour
 	{
         var sorting = args.SortingAlgorithm;
         var comparer = BuildComparerFactory.Create(args.SortBy);
-        var builds = m_buildsGO.GetAll().GetVisiblesOrderByPosition()
+		var builds = m_buildsGO.GetAll().Visible().GetVisiblesOrderByPosition()
             .Select(go => ((IBuildController)go).Model)
             .ToList();
 
