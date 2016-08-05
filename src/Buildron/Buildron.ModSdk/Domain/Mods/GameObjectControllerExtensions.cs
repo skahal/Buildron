@@ -130,7 +130,9 @@ public static class GameObjectControllerExtensions
 	{
 		var camera = Camera.main;
 
-		return controllers.Where (b => b.CenterCollider != null && b.CenterCollider.IsVisibleFrom(camera)).ToArray ();
+		return controllers.Where (b => 
+			b.CenterCollider != null 
+			&& b.CenterCollider.IsVisibleFrom(camera)).ToArray ();
 	}
 
 	/// <summary>
