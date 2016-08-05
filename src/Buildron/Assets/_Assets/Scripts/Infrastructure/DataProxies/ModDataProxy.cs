@@ -33,7 +33,9 @@ namespace Buildron.Infrastructure.DataProxies
 			if (PlayerPrefs.HasKey (modKey)) {
 				var value = PlayerPrefs.GetString(modKey);
 
-				return (TValue)Deserialize<TValue> (value);
+				if (!String.IsNullOrEmpty(value)) {
+					return (TValue)Deserialize<TValue> (value);
+				}
 			}
 
 			return default(TValue);
@@ -51,6 +53,10 @@ namespace Buildron.Infrastructure.DataProxies
 
 		string Serialize (object value)
 		{
+			if (value == null) {
+				return null;
+			}
+
 			var valueType = value.GetType ();
 
 			if (valueType == typeof(Vector3)) {
