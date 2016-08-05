@@ -133,13 +133,17 @@ namespace Buildron.Infrastructure.ModsProvider
 			}
 			else 
 			{
-				AssetBundle assetBundle = null;
+				IAssetsProxy assetsProxy;
 
-				if (File.Exists(modAssetBundlePath)) {
-					m_log.Debug("Loading mod asset bundle from {0}...", modAssetBundlePath);
-					assetBundle = AssetBundle.LoadFromFile(modAssetBundlePath);
 
-					m_log.Debug("{0} Assets loaded.", assetBundle.GetAllAssetNames().Length);
+				if (File.Exists (modAssetBundlePath)) {
+					m_log.Debug ("Loading mod asset bundle from {0}...", modAssetBundlePath);
+					var assetBundle = AssetBundle.LoadFromFile (modAssetBundlePath);
+
+					m_log.Debug ("{0} Assets loaded.", assetBundle.GetAllAssetNames ().Length);
+					assetsProxy = new AssetBundleAssetsProxy (assetBundle);
+				} else {
+					assetsProxy = new EmptyAssetsProxy (m_log);
 				}
                 
 				var gameObjectsProxy = new ModGameObjectsProxy (modInfo);                
@@ -148,7 +152,7 @@ namespace Buildron.Infrastructure.ModsProvider
                     mod, 
                     modInfo, 
                     this, 
-                    new AssetBundleAssetsProxy(assetBundle), 
+					assetsProxy, 
                     gameObjectsProxy,
 					new ModGameObjectsPoolProxy(modInfo, gameObjectsProxy),
                     m_uiProxy,
