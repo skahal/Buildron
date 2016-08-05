@@ -131,8 +131,7 @@ namespace Buildron.Infrastructure.IoC
 			Container.Bind<IVersionClient> ().FromInstance (backEndClient);
 			Container.Bind<NotificationService> ().To<NotificationService> ().AsSingle ();
 
-			var listener = Container.BindController<RemoteControlController> (true);	
-			Container.Bind<IRemoteControlMessagesListener> ().FromInstance (listener);
+			Container.BindController<RemoteControlController> (true);	
 			Container.BindController<NotificationController>();
 			Container.BindController<ConfigPanelController> ();
 	        Container.BindController<MainSceneController>();
