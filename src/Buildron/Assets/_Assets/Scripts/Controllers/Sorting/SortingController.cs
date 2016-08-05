@@ -51,14 +51,12 @@ public class SortingController : MonoBehaviour
             1f, // This 1 second give the time to build physics activate when became visible because a filter sent from RC.
             () =>
             {
+				m_log.Debug("Waiting all builds physics sleep...");
+				
                 SHCoroutine.WaitFor(
                     () =>
                     {
                         var areAllSleeping = m_buildsGO.GetAll().AreAllSleeping();
-                        m_log.Debug(
-                            "Waiting all builds physics sleep. Are all sleeping: {0}",
-                            areAllSleeping);
-
                         return areAllSleeping;
                     },
                     () =>
