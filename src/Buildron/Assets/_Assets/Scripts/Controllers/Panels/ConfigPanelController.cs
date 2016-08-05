@@ -42,7 +42,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	private ICIServerService m_ciServerService;
 
 	[Inject]
-	private IRemoteControlMessagesListener m_rcListener;
+	private IRemoteControlService m_remoteControlService;
 
 	[Inject]
 	private IServerService m_serverService;
@@ -77,12 +77,6 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	public Text RefreshSecondsLabel;
 	public Slider RefreshSecondsSlider;
 
-	public Text BuildsTotemsLabel;
-	public Slider BuildsTotemsSlider;
-
-	public Toggle FxSounsToggle;
-	public Toggle HistoryTotemToggle;
-
 	public Text InstallationNumberLabel;
 	public Button UpdateButton;
 	public Text UpdateButtonLabel;
@@ -109,12 +103,6 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 
 		RefreshSecondsSlider.value = m_ciServer.RefreshSeconds;
 		UpdateRefreshSecondsLabel ();
-
-		BuildsTotemsSlider.value = m_ciServer.BuildsTotemsNumber;
-		UpdateBuildTotemsLabel ();
-
-		FxSounsToggle.isOn = m_ciServer.FxSoundsEnabled;
-		HistoryTotemToggle.isOn = m_ciServer.HistoryTotemEnabled;
 
 		UpdateBuildsProvider ();
 
@@ -258,11 +246,6 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 		RefreshSecondsLabel.text = String.Format ("Refresh seconds: {0}", RefreshSecondsSlider.value);
 	}
 
-	public void UpdateBuildTotemsLabel ()
-	{
-		BuildsTotemsLabel.text = String.Format ("Build totems: {0}", BuildsTotemsSlider.value);
-	}
-
 	#endregion
 
 	#region Panel commands
@@ -274,11 +257,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 		m_ciServer.UserName = CIServerUserNameInputField.text;
 		m_ciServer.Password = CIServerPasswordInputField.text;
 		m_ciServer.RefreshSeconds = Convert.ToInt32 (RefreshSecondsSlider.value);
-
-		m_ciServer.FxSoundsEnabled = FxSounsToggle.isOn;
-		m_ciServer.HistoryTotemEnabled = HistoryTotemToggle.isOn;
-		m_ciServer.BuildsTotemsNumber = Convert.ToInt32 (BuildsTotemsSlider.value);
-		
+			
 		m_ciServerService.SaveCIServer (m_ciServer);
 		
 		UpdateBuildsProvider ();
@@ -292,7 +271,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			}
 
 			// Inject the FilterBuildsProvider.
-			m_buildsProvider = new FilterBuildsProvider (m_buildsProvider, m_rcListener, m_serverService);			
+			m_buildsProvider = new FilterBuildsProvider (m_buildsProvider, m_remoteControlService, m_serverService);			
 			m_userService.Initialize (m_buildsProvider);
 
 			CIServerStatusLabel.text = string.Format ("Trying to connect to {0}...", m_buildsProvider.Name);
