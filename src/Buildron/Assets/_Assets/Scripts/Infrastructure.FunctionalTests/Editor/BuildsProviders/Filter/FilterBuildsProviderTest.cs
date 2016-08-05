@@ -29,7 +29,7 @@ namespace Buildron.Infrastructure.FunctionalTests.BuildsProviders.Filter
 			underlying.Expect (b => b.RunBuild (user1, build1));
 			underlying.Expect (b => b.StopBuild (user1, build2));
 
-			var rcListener = MockRepository.GenerateMock<IRemoteControlMessagesListener> ();
+			var rcListener = MockRepository.GenerateMock<IRemoteControlService> ();
 			var serverService = MockRepository.GenerateMock<IServerService> ();
 			serverService.Expect (s => s.GetState ()).Return (new ServerState {
 				BuildFilter = new BuildFilter
@@ -73,7 +73,7 @@ namespace Buildron.Infrastructure.FunctionalTests.BuildsProviders.Filter
 		{
 			var filter = new BuildFilter ();
 			var underlying = MockRepository.GenerateMock<IBuildsProvider> ();
-			var rcListener = MockRepository.GenerateMock<IRemoteControlMessagesListener> ();
+			var rcListener = MockRepository.GenerateMock<IRemoteControlService> ();
 			var serverService = MockRepository.GenerateMock<IServerService> ();
 			serverService.Expect (s => s.GetState ()).Return (new ServerState {
 				BuildFilter = filter

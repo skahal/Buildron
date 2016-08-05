@@ -17,7 +17,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 	{
 		#region Fields
 		private IBuildsProvider m_underlyingBuildsProvider;
-		private IRemoteControlMessagesListener m_rcListener;
+		private IRemoteControlService m_remoteControlService;
 		private IServerService m_serverService;
 		private Dictionary<string, IBuild> m_buildsCache = new Dictionary<string, IBuild> ();
 		#endregion
@@ -55,11 +55,11 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 		/// <see cref="Buildron.Infrastructure.BuildsProviders.Filter.FilterBuildsProvider"/> class.
 		/// </summary>
 		/// <param name="underlyingBuildsProvider">Underlying builds provider.</param>
-		/// <param name="rcListener">Rc listener.</param>
+		/// <param name="remoteControlService">Remote control service.</param>
 		/// <param name="serverService">Server service.</param>
 		public FilterBuildsProvider (
 			IBuildsProvider underlyingBuildsProvider, 
-			IRemoteControlMessagesListener rcListener,
+			IRemoteControlService remoteControlService,
 			IServerService serverService)
 		{
 			if (underlyingBuildsProvider == null)
@@ -68,7 +68,7 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 			}
 
 			m_underlyingBuildsProvider = underlyingBuildsProvider;
-			m_rcListener = rcListener;
+			m_remoteControlService = remoteControlService;
 			m_serverService = serverService;
 
 			m_underlyingBuildsProvider.BuildsRefreshed += (sender, e) =>
@@ -105,21 +105,36 @@ namespace Buildron.Infrastructure.BuildsProviders.Filter
 
 			m_underlyingBuildsProvider.UserAuthenticationCompleted += (sender, e) => UserAuthenticationCompleted.Raise (sender, e);
 
-			m_rcListener.BuildFilterUpdated += (sender2, e2) =>
+			m_remoteControlService.RemoteControlCommandReceived += (sender2, e2) =>
 			{
-				var filteredBuilds = m_buildsCache.Values.Where (Filter).ToArray();
+                var filterCmd = e2.Command as FilterBuildsRemoteControlCommand;
 
-				SHLog.Debug (
-					"Filter updated. There is {0} cached builds and {1} was filtered", 
-					m_buildsCache.Count, 
-					filteredBuilds.Length);
+                if (filterCmd != null)
+                {
+                    var state = m_serverService.GetState();
+                    var filter = state.BuildFilter;
 
-				foreach (var build in filteredBuilds)
-				{
-					OnBuildUpdated (new BuildUpdatedEventArgs (build));
-				}
+                    filter.FailedEnabled = filterCmd.FailedEnabled.HasValue ? filterCmd.FailedEnabled.Value : filter.FailedEnabled;
+                    filter.QueuedEnabled = filterCmd.QueuedEnabled.HasValue ? filterCmd.QueuedEnabled.Value : filter.QueuedEnabled;
+                    filter.RunningEnabled = filterCmd.RunningEnabled.HasValue ? filterCmd.RunningEnabled.Value : filter.RunningEnabled;
+                    filter.SuccessEnabled = filterCmd.SuccessEnabled.HasValue ? filterCmd.SuccessEnabled.Value : filter.SuccessEnabled;
+                    filter.KeyWord = filterCmd.KeyWord;
+                    m_serverService.SaveState(state);
 
-				OnBuildsRefreshed (EventArgs.Empty);
+                    var filteredBuilds = m_buildsCache.Values.Where(Filter).ToArray();
+
+                    SHLog.Debug(
+                        "Filter updated. There is {0} cached builds and {1} was filtered",
+                        m_buildsCache.Count,
+                        filteredBuilds.Length);
+
+                    foreach (var build in filteredBuilds)
+                    {
+                        OnBuildUpdated(new BuildUpdatedEventArgs(build));
+                    }
+
+                    OnBuildsRefreshed(EventArgs.Empty);
+                }
 			};
 		
 			Build.EventInterceptors.Add (new FilterBuildEventInterceptor (this));
