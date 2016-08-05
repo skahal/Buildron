@@ -18,6 +18,9 @@ public class BuildronStatusBarController : StatusBarController
 	#region Fields
 	[Inject]
 	private IServerService m_serverService;
+
+	[Inject]
+	private IRemoteControlService m_rcService;
 	#endregion
 
 	#region Properties
@@ -31,29 +34,27 @@ public class BuildronStatusBarController : StatusBarController
 	{
 		RemoteControlInfoLabel.enabled = false;
 		RemoteControlInfoImage.enabled = false;
-        OnBuildFilterUpdated();
+     
+		// Filter updated.
+		m_rcService.RemoteControlCommandReceived += (sender, e) => {
+			if(e.Command is FilterBuildsRemoteControlCommand)
+			{
+				RefreshFilterInfo();
+			}
+		};
 
-        Messenger.Register (
-			gameObject, 
-			"OnRemoteControlConnected", 
-			"OnRemoteControlDisconnected",
-			"OnBuildFilterUpdated");
+		// RC connected/disconnected
+		m_rcService.RemoteControlChanged += (sender, e) => {
+			var connected = e.RemoteControl != null;
+			RemoteControlInfoLabel.text = connected ? e.RemoteControl.UserName : string.Empty;
+			RemoteControlInfoLabel.enabled = true;
+			RemoteControlInfoImage.enabled = true;
+		};
+
+		RefreshFilterInfo ();
 	}
-	
-	private void OnRemoteControlConnected (IRemoteControl remoteControl)
-	{
-		RemoteControlInfoLabel.text = remoteControl.UserName;
-		RemoteControlInfoLabel.enabled = true;
-		RemoteControlInfoImage.enabled = true;
-	}
-	
-	private void OnRemoteControlDisconnected ()
-	{
-		RemoteControlInfoLabel.enabled = false;
-		RemoteControlInfoImage.enabled = false;
-	}
-	
-	private void OnBuildFilterUpdated()
+
+	void RefreshFilterInfo ()
 	{
 		var state = m_serverService.GetState ();
 		FilteredInfo.enabled = !state.BuildFilter.IsEmpty;
