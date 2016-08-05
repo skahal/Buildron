@@ -10,6 +10,7 @@ using System.Linq;
 using Buildron.Domain.Builds;
 using Buildron.Domain.Servers;
 using Buildron.Domain.Mods;
+using Buildron.Domain.RemoteControls;
 
 /// <summary>
 /// Sorting controller.
@@ -22,6 +23,9 @@ public class SortingController : MonoBehaviour
 
 	[Inject]
 	private IServerService m_serverService;
+
+	[Inject]
+	private IRemoteControlService m_rcService;
 
 	[Inject]
 	private ISHLogStrategy m_log;
@@ -38,11 +42,16 @@ public class SortingController : MonoBehaviour
 			if (e.BuildsFound.Count > 0 || e.BuildsStatusChanged.Count > 0) {
 				PerformOnBuildSortUpdated ();
 			}
-		};        
+		};      
 
-		Messenger.Register (
-			gameObject,
-			"OnBuildSortUpdated");
+		m_rcService.RemoteControlCommandReceived += (sender, e) => {
+			var sortCmd = e.Command as SortBuildsRemoteControlCommand;	
+
+			if(sortCmd != null)
+			{
+				OnBuildSortUpdated(new BuildSortUpdatedEventArgs(sortCmd.Algorithm, sortCmd.SortBy));
+			}
+		};
 	}
 
 	private void PerformOnBuildSortUpdated ()
