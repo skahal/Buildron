@@ -70,21 +70,6 @@ namespace Buildron.Domain.CIServers
 		float RefreshSeconds { get; set; }
 
 		/// <summary>
-		/// Gets or sets if FX Sounds are enabled.
-		/// </summary>
-		bool FxSoundsEnabled { get; set; }
-
-		/// <summary>
-		/// Gets or sets if History Totem is enabled.
-		/// </summary>
-		bool HistoryTotemEnabled { get; set; }
-
-		/// <summary>
-		/// Gets or sets builds totems number.
-		/// </summary>
-		int BuildsTotemsNumber { get; set; }
-
-		/// <summary>
 		/// Gets or sets the status.
 		/// </summary>
 		/// <value>The status.</value>
