@@ -228,6 +228,8 @@ If your mod is not loaded on Buildron, then there is a problem with it, open the
 ### That's all folks!
 Congratulations! Now you know how to build a mod to Buildron.
 
+
+## FAQ
 ### Tags
 There two special tags used on Buildron and mods: "Build" and "User". If you use them on your mod you should define the both as the first tags on your tag manager. The first should be "Build" and the second should be "User". This is necessary because Unity use the tags index on tag manager to search the game objects.
 
@@ -237,4 +239,6 @@ If you want expose some preferences to let Buildron's user select about your bot
 You can register a preferences with the RegisterPreferences methods. It's recommended that you register your mod preferences as first things on Initialize method.
 
 You can read your preferences usen ReadValue methond on same ModContext.Preferences property. In most of case you should only read preferences after the CIServerConnected event be raised.
+
+###
 
