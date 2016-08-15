@@ -6,6 +6,7 @@ using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Builds;
 using Buildron.Infrastructure.PreferencesProxies;
 
+// TODO: rename everything from Emulator to Simulator, because this is a simulator.
 public class EmulatorWindow : EditorWindow
 {
 	#region Fields

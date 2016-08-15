@@ -37,7 +37,8 @@ namespace Buildron.Infrastructure.GameObjectsProxies
 		{
 			SHPoolsManager.AddPool <ModGameObjectPool> ((pool) => {
 				pool.Name = GetModPoolName (poolName);
-				pool.Size = 0;
+				pool.Size = 0; // TODO: we can collect pool usage statisics and in the next Buildron run start pool with average size of the others runs.
+                pool.IsSizeFixed = false;
 				pool.GameObjectFactory = gameObjectFactory;
 			});
 		}
