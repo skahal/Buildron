@@ -88,7 +88,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 								SHLog.Debug ("Looks like '{0}' has no build.", config.Id);
 								CurrentBuildsFoundCount--;
 							}
-						}, "buildTypes/id:{0}/builds/running:any,canceled:false".With (config.Id));
+						}, "buildTypes/id:{0}/builds/running:any,canceled:false,branch:(default:any)".With (config.Id));
 				});
 			});
 		}
