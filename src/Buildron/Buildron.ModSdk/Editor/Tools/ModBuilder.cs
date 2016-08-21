@@ -6,18 +6,19 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using Skahal.Debugging;
-using Skahal.Logging; 
+using Skahal.Logging;
 using System;
 using System.Linq;
+using Buildron.ModSdk.Editor;
+using System.Xml;
 
 public class ModBuilder : EditorWindow
 {
 	#region Fields
-	private bool m_buildToWin;
-	private bool m_buildToOsx;
-	private bool m_buildToLinux;
+	private static BuildTarget[] s_availableBuildTargets = new BuildTarget[] { BuildTarget.StandaloneOSXIntel, BuildTarget.StandaloneLinux, BuildTarget.StandaloneWindows };
+	private string[] m_plaforms;
+	private int m_selectedPlatform;
 	private string m_modsFolder;
-
 	private static StringBuilder m_log = new StringBuilder ();
 	private Vector2 m_logScroll;
 	#endregion
@@ -28,34 +29,19 @@ public class ModBuilder : EditorWindow
 		titleContent.text = "Build mod";
 		autoRepaintOnSceneChange = true;
 		minSize = new Vector2 (700, 455);
-		LoadPrefs ();
+		m_plaforms = s_availableBuildTargets.Select(t => GetPlatform(t)).ToArray();
 	}
 	#endregion
 
 	#region Build
-	private void Build ()
+	private void Build (BuildTarget buildTarget)
 	{
-		m_log = new StringBuilder();
+		m_log.Remove(0, m_log.Length);
 
 		try 
 		{
 			Log("Building mods...");
-
-			if (m_buildToWin) {
-				Log ("Building for Windows...");
-				BuildMod (m_modsFolder, BuildTarget.StandaloneWindows);
-			}
-
-			if (m_buildToOsx) {
-				Log ("Building for OSX...");
-				BuildMod (m_modsFolder, BuildTarget.StandaloneOSXIntel);
-			}
-
-			if (m_buildToLinux) {
-				Log ("Building for Linux...");
-				BuildMod (m_modsFolder, BuildTarget.StandaloneLinux);
-			}
-
+			BuildMod (m_modsFolder, buildTarget);
 			Log("Done.");
 			ShowStatus("Mod successful built.");
 		}
@@ -64,43 +50,81 @@ public class ModBuilder : EditorWindow
 			Log ("Aborted.");
 			ShowStatus("Error building mod: {0}".With(ex.Message));
 		}
+
+		Repaint();
 	}
 
 	public static void BuildFromCommandLine()
 	{
 		var args = Environment.GetCommandLineArgs ();
+		Log("BuildFromCommandLine: {0} args", args.Length);
 		var deployRootFolder = args [args.Length - 2];
 		var buildTarget = (BuildTarget) Enum.Parse (typeof(BuildTarget), args [args.Length - 1]);
 
+		Log("\t- deployRootFolder: {0} args", deployRootFolder);
+		Log("\t- buildTarget: {0} args", buildTarget);
 		BuildMod (deployRootFolder, buildTarget);
 	}
 
 	private static void BuildMod(string deployRootFolder, BuildTarget buildTarget)
 	{
+		var platform = GetPlatform(buildTarget);
+		Log("Building for {0}...", platform);
+
 		var assetsDeployFolder = Path.Combine(deployRootFolder, Guid.NewGuid().ToString());
 
 		if (!Directory.Exists(assetsDeployFolder))
 		{
-			Log ("Creating folder {0}...", assetsDeployFolder);
+			Log("Creating folder {0}...", assetsDeployFolder);
 			Directory.CreateDirectory(assetsDeployFolder);
 		}
 
-		Log ("Building asset bundles...");
+		Log("Building asset bundles...");
 		BuildPipeline.BuildAssetBundles(assetsDeployFolder, BuildAssetBundleOptions.None, buildTarget);
 
-		MoveAssetsToModsFolders(deployRootFolder, assetsDeployFolder);
+		var modDeployFolder = MoveAssetsToModsFolders(deployRootFolder, assetsDeployFolder);
+		CreateModManifest(modDeployFolder, platform);
 	}
 
-	private static void MoveAssetsToModsFolders(string deployRootFolder, string assetsDeployFolder)
+	private static string GetPlatform(BuildTarget buildTarget)
+	{
+		switch (buildTarget)
+		{
+			case BuildTarget.StandaloneWindows:
+			case BuildTarget.StandaloneWindows64:
+				return "Win";
+
+			case BuildTarget.StandaloneOSXIntel:
+			case BuildTarget.StandaloneOSXIntel64:
+			case BuildTarget.StandaloneOSXUniversal:
+				return "Mac";
+
+			case BuildTarget.StandaloneLinux:
+			case BuildTarget.StandaloneLinux64:
+			case BuildTarget.StandaloneLinuxUniversal:
+				return "Linux";
+			
+			default:
+				throw new InvalidOperationException("BuildTarget {0} not supported".With(buildTarget));
+		}
+	}
+
+	private static string MoveAssetsToModsFolders(string deployRootFolder, string assetsDeployFolder)
 	{
 		Log("Moving assets to mod folder");
 		var folderName = Path.GetFileName (assetsDeployFolder);
 		var assetFile = Directory
 			.GetFiles (assetsDeployFolder, "*.manifest")
-			.FirstOrDefault (f => !f.EndsWith("{0}.manifest".With(folderName)));
+			.FirstOrDefault (f => !f.EndsWith("{0}.manifest".With(folderName), StringComparison.OrdinalIgnoreCase));
 
 		if (assetFile == null) {
-			throw new InvalidOperationException ("No assets manifest file found. Did you remember to mark your assets with asset bundle with same name of your mod project?");
+			var noAssetFileMsg = @"
+No assets manifest file found. Possible reasons:
+	* Did you remember to mark your assets with asset bundle with same name of your mod project?
+	* The support to selected platform is installed in your Unity Editor?";
+
+			Log(noAssetFileMsg);
+			throw new InvalidOperationException ("No assets manifest file found!");
 		}
 
 		var modName = Path.GetFileNameWithoutExtension(assetFile);
@@ -120,6 +144,8 @@ public class ModBuilder : EditorWindow
 		MoveAssemblies(modName, deployRootFolder);
 
 		Directory.Delete(assetsDeployFolder, true);
+
+		return modDeployFolder;
 	}
 
 	private static void MoveAssemblies(string modName, string deployRootFolder)
@@ -140,6 +166,15 @@ public class ModBuilder : EditorWindow
 			File.Copy(r, Path.Combine(modDeployFolder, Path.GetFileName(r)), true);
 		}
 	}
+
+	private static void CreateModManifest(string modFolder, string platform)
+	{
+		Log("Creating mod.manifest.xml...");
+		var manifest = new ModManifest();
+		manifest.Platform = platform;
+		manifest.BuildTime = DateTime.UtcNow;
+		manifest.Save(modFolder);
+	}
 	#endregion
 
 	#region GUI
@@ -155,24 +190,27 @@ public class ModBuilder : EditorWindow
 	/// </summary>
 	private void OnGUI ()
 	{
-		m_buildToWin = EditorGUILayout.Toggle ("Windows", m_buildToWin);
-		m_buildToOsx = EditorGUILayout.Toggle ("OSX", m_buildToOsx);
-		m_buildToLinux = EditorGUILayout.Toggle ("Linux", m_buildToLinux);
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Platform: ");
+		m_selectedPlatform = GUILayout.SelectionGrid(m_selectedPlatform, m_plaforms,  3, EditorStyles.radioButton);
+		GUILayout.EndHorizontal();
 
 		m_modsFolder = EditorGUILayout.TextField ("Mods folder", m_modsFolder);
 		CreateHelpBox ("The mods folder used by Buildron");
-	
+
 		if (GUILayout.Button ("Build")) {
 			SavePrefs ();
-			Build ();		
+			Build (s_availableBuildTargets[m_selectedPlatform]);		
 		}
 
 		m_logScroll = EditorGUILayout.BeginScrollView (m_logScroll, GUILayout.Height (200));  
 
 		var logText = m_log.ToString ();
 		var height = GUIStyle.none.CalcHeight (new GUIContent (logText), minSize.x);
-		height = height < 100 ? 100 : height; 
-		EditorGUILayout.TextArea (logText, GUILayout.Height (height));        
+		height = height < 100 ? 100 : height;
+		GUI.enabled = false;
+		EditorGUILayout.TextArea (logText, GUILayout.Height (height));
+		GUI.enabled = true; 
 		EditorGUILayout.EndScrollView ();
 	}
 
@@ -217,9 +255,9 @@ public class ModBuilder : EditorWindow
 		return EditorPrefs.GetString (GetKey(key));
 	}
 
-	private bool GetBool (string key)
+	private int GetInt (string key)
 	{
-		return EditorPrefs.GetBool (GetKey (key));
+		return EditorPrefs.GetInt (GetKey (key));
 	}
 
 	private void SetString (string key, string value)
@@ -227,24 +265,20 @@ public class ModBuilder : EditorWindow
 		EditorPrefs.SetString (GetKey (key), value);
 	}
 
-	private void SetBool (string key, bool value)
+	private void SetInt (string key, int value)
 	{
-		EditorPrefs.SetBool (GetKey (key), value);
+		EditorPrefs.SetInt (GetKey (key), value);
 	}
 
-	private void LoadPrefs ()
+	private void OnEnable ()
 	{
-		m_buildToLinux = GetBool("buildToLinux");
-		m_buildToOsx = GetBool("buildToOsx");
-		m_buildToWin = GetBool("buildToWin");
+		m_selectedPlatform = GetInt("buildTargetSelected");
 		m_modsFolder = GetString ("modsFolder");
 	}
 
 	private void SavePrefs ()
 	{
-		SetBool("buildToLinux", m_buildToLinux);
-		SetBool("buildToOsx", m_buildToOsx);
-		SetBool("buildToWin", m_buildToWin);
+		SetInt ("buildTargetSelected", m_selectedPlatform);
 		SetString("modsFolder", m_modsFolder);
 	}	
 
@@ -252,6 +286,8 @@ public class ModBuilder : EditorWindow
 	{
 		var formattedMsg = msg.With (args);
 		m_log.AppendLine (formattedMsg);
+
+		Console.WriteLine(formattedMsg);
 		//Repaint ();
 	}
 	#endregion
