@@ -176,6 +176,10 @@ namespace Buildron.Domain.Mods
 		/// <value>The preferences.</value>
 		IPreferencesProxy Preferences { get; }
 
+		/// <summary>
+		/// Gets the remote control.
+		/// </summary>
+		/// <value>The remote control.</value>
         IRemoteControlProxy RemoteControl { get; }
         #endregion
     }
