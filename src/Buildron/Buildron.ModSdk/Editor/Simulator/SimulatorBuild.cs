@@ -3,7 +3,7 @@ using Buildron.Domain.Builds;
 using Buildron.Domain.Users;
 using Skahal.Common;
 
-public class EmulatorBuild : IBuild
+public class SimulatorBuild : IBuild
 {
 	#region Fields
 	private static int s_buildsCount;
@@ -11,16 +11,16 @@ public class EmulatorBuild : IBuild
 	#endregion
 
 	#region Constructors
-	public EmulatorBuild ()
+	public SimulatorBuild ()
 	{
 		Id = (++s_buildsCount).ToString ();
-		Configuration = new EmulatorBuildConfiguration{
+		Configuration = new SimulatorBuildConfiguration{
 			Name = "Build #{0} ".With(Id)
 		};
 		Date = DateTime.Now;
 
 		m_status = SHRandomHelper.NextEnum<BuildStatus> ();
-		LastRanStep = new EmulatorBuildStep {
+		LastRanStep = new SimulatorBuildStep {
 			StepType = SHRandomHelper.NextEnum<BuildStepType> ()
 		};
 
@@ -28,7 +28,7 @@ public class EmulatorBuild : IBuild
 			PercentageComplete = UnityEngine.Random.Range(0f, 1f);
 		}
 
-		TriggeredBy = new EmulatorUser ();
+		TriggeredBy = new SimulatorUser ();
 		TriggeredBy.Builds.Add (this);
 	}
 	#endregion

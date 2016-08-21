@@ -5,46 +5,47 @@ using System;
 using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Builds;
 using Buildron.Infrastructure.PreferencesProxies;
+using Skahal.Common;
 
-// TODO: rename everything from Emulator to Simulator, because this is a simulator.
-public class EmulatorWindow : EditorWindow
+public class SimulatorWindow : EditorWindow
 {
 	#region Fields
 	private int m_tab;
 	private bool m_ciServerConnected;
 	private BuildStatus m_buildStatus = BuildStatus.Success;
+	private bool m_randomStatus;
 	private FilterBuildsRemoteControlCommand m_filterCmd = new FilterBuildsRemoteControlCommand(String.Empty);
 	#endregion
 
 	#region Constructors
-	public EmulatorWindow ()
+	public SimulatorWindow ()
 	{
-		titleContent.text = "Emulator";
+		titleContent.text = "Simulator";
 		autoRepaintOnSceneChange = true;
 		minSize = new Vector2 (200, 400);
 	}
 	#endregion
 
 	#region GUI
-	[MenuItem ("Buildron/Show emulator %e")]
+	[MenuItem ("Buildron/Show Simulator %e")]
 	private static void Init ()
 	{	
-		EnsureEmulatorGameObjects ();
+		EnsureSimulatorGameObjects ();
 
-		var instance = GetWindow<EmulatorWindow> ();
+		var instance = GetWindow<SimulatorWindow> ();
 		instance.ShowUtility ();
 	}
 
-	static void EnsureEmulatorGameObjects ()
+	static void EnsureSimulatorGameObjects ()
 	{
-		var go = GameObject.Find ("Emulator");
+		var go = GameObject.Find ("Simulator");
 		if (go == null) {
-			go = new GameObject ("Emulator");
-			go.AddComponent<EmulatorModContext> ();
+			go = new GameObject ("Simulator");
+			go.AddComponent<SimulatorModContext> ();
 
 			var userConfig = new GameObject ("UserConfig");
 			userConfig.transform.parent = go.transform;
-			userConfig.AddComponent<EmulatorUserConfig> ();
+			userConfig.AddComponent<SimulatorUserConfig> ();
 
 			var poolsManager = new GameObject ("PoolsManager");
 			poolsManager.transform.parent = go.transform;
@@ -57,7 +58,7 @@ public class EmulatorWindow : EditorWindow
     /// </summary>
     private void OnGUI()
     {        
-        if (EditorApplication.isPlaying && EmulatorModContext.Instance != null)
+        if (EditorApplication.isPlaying && SimulatorModContext.Instance != null)
         {
 			m_tab = GUILayout.Toolbar(m_tab, new string[] { "Events", "Preferences" });
 
@@ -75,7 +76,7 @@ public class EmulatorWindow : EditorWindow
         else
         {
 			m_ciServerConnected = false;
-            CreateHelpBox("Emulator is activate on play mode.");
+            CreateHelpBox("Simulator is activate on play mode.");
         }
     }    
 
@@ -84,34 +85,39 @@ public class EmulatorWindow : EditorWindow
 		if (!m_ciServerConnected && GUILayout.Button("CIServerConnected"))
         {
 			m_ciServerConnected = true;
-            EmulatorModContext.Instance.RaiseCIServerConnected();
+            SimulatorModContext.Instance.RaiseCIServerConnected();
         }
 
         EditorGUILayout.Separator();
         if (GUILayout.Button("BuildFound"))
         {
-            var build = new EmulatorBuild();
-            build.Status = m_buildStatus;
-            EmulatorModContext.Instance.RaiseBuildFound(build);
+            var build = new SimulatorBuild();
+			build.Status = GetBuildStatus();
+            SimulatorModContext.Instance.RaiseBuildFound(build);
         }
 
         if (GUILayout.Button("BuildStatusChanged"))
         {
-			EmulatorModContext.Instance.RaiseBuildStatusChanged(m_buildStatus);
+			SimulatorModContext.Instance.RaiseBuildStatusChanged(GetBuildStatus());
         }
 
+		GUILayout.BeginHorizontal();
+		GUI.enabled = !m_randomStatus;
         CreateControl("Build status", () => m_buildStatus = (BuildStatus)EditorGUILayout.EnumPopup(m_buildStatus));
+		GUI.enabled = true;
+		m_randomStatus = GUILayout.Toggle(m_randomStatus, "random");
+		GUILayout.EndHorizontal();
 
         EditorGUILayout.Separator();
         if (GUILayout.Button("BuildRemoved"))
         {
-            EmulatorModContext.Instance.RaiseBuildRemoved(0);
+            SimulatorModContext.Instance.RaiseBuildRemoved(0);
         }
 
         EditorGUILayout.Separator();
         if (GUILayout.Button("FilterBuildsRemoteControlCommand"))
         {
-            EmulatorModContext.Instance.RaiseRemoteControlCommandReceived(m_filterCmd);
+            SimulatorModContext.Instance.RaiseRemoteControlCommandReceived(m_filterCmd);
         }
 
         CreateControl("KeyWord", () => m_filterCmd.KeyWord = GUILayout.TextField(m_filterCmd.KeyWord));  
@@ -119,7 +125,7 @@ public class EmulatorWindow : EditorWindow
 
     private void ShowPreferencesTab()
     {
-        var preferences = (ModPreferencesProxy)EmulatorModContext.Instance.Preferences;
+        var preferences = (ModPreferencesProxy)SimulatorModContext.Instance.Preferences;
 
         foreach (var p in preferences.GetRegisteredPreferences())
         {
@@ -167,6 +173,16 @@ public class EmulatorWindow : EditorWindow
 
 		EditorGUILayout.EndHorizontal ();	
 		EditorGUILayout.Separator ();
+	}
+
+	private BuildStatus GetBuildStatus()
+	{
+		if (m_randomStatus)
+		{
+			m_buildStatus = SHRandomHelper.NextEnum(BuildStatus.Failed, BuildStatus.Success, BuildStatus.Queued, BuildStatus.Running);
+		}
+
+		return m_buildStatus;
 	}
 	#endregion
 }

@@ -2,13 +2,13 @@
 using Buildron.Domain.Builds;
 using System.Collections.Generic;
 
-public class EmulatorBuildConfiguration : IBuildConfiguration
+public class SimulatorBuildConfiguration : IBuildConfiguration
 {
-	public EmulatorBuildConfiguration ()
+	public SimulatorBuildConfiguration ()
 	{
 		Id = "1";
 		Name = "Configuration #1";
-		Project = new EmulatorBuildProject ();
+		Project = new SimulatorBuildProject ();
 	}
 
 	#region IBuildConfiguration implementation

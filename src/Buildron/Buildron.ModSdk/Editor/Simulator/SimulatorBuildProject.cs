@@ -1,9 +1,9 @@
 ﻿using System;
 using Buildron.Domain.Builds;
 
-public class EmulatorBuildProject : IBuildProject
+public class SimulatorBuildProject : IBuildProject
 {
-	public EmulatorBuildProject ()
+	public SimulatorBuildProject ()
 	{
 		Name = "Project #1";
 	}

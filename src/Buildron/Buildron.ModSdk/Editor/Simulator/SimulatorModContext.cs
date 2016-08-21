@@ -17,9 +17,9 @@ using UnityEngine;
 using Buildron.Infrastructure.PreferencesProxies;
 
 /// <summary>
-/// Emulator mod context.
+/// Simulator mod context.
 /// </summary>
-public class EmulatorModContext : MonoBehaviour, IModContext {
+public class SimulatorModContext : MonoBehaviour, IModContext {
 
 	#region Events
 	/// <summary>
@@ -103,7 +103,7 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 	/// Gets the instance.
 	/// </summary>
 	/// <value>The instance.</value>
-	public static EmulatorModContext Instance { get; private set; }
+	public static SimulatorModContext Instance { get; private set; }
 
 	/// <summary>
 	/// Gets the builds.
@@ -210,12 +210,12 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		Instance = this;
 		Builds = new List<IBuild> ();
 		Users = new List<IUser> ();
-		CIServer = EmulatorCIServer.Instance;
+		CIServer = SimulatorCIServer.Instance;
 
 		Assets = new ResourcesFolderAssetsProxy ();
 		GameObjects = new ModGameObjectsProxy ();
 		GameObjectsPool = new ModGameObjectsPoolProxy (modInfo, GameObjects);
-		FileSystem = new EmulatorFileSystemProxy ();
+		FileSystem = new SimulatorFileSystemProxy ();
 		Preferences = new ModPreferencesProxy(modInfo);
 		BuildGameObjects = new ModBuildGameObjectsProxy ();
 		UserGameObjects = new ModUserGameObjectsProxy ();
@@ -237,14 +237,14 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		CIServerStatusChanged.Raise(this, new CIServerStatusChangedEventArgs(CIServer));
 	}
 
-	public void RaiseBuildFound (EmulatorBuild build)
+	public void RaiseBuildFound (SimulatorBuild build)
 	{
 		Builds.Add (build);
 		Log.Debug ("BuildFound: {0}: {1}", build.Id, build.Status);
 		BuildFound.Raise (this, new BuildFoundEventArgs (build));
 	}
 
-	public void RaiseBuildUpdated(EmulatorBuild build)
+	public void RaiseBuildUpdated(SimulatorBuild build)
 	{		
 		Log.Debug("BuildUpdated: {0}: {1}", build.Id, build.Status);
 		BuildUpdated.Raise(this, new BuildUpdatedEventArgs(build));
@@ -264,7 +264,7 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 	public void RaiseBuildStatusChanged(BuildStatus status)
 	{
 		if (Builds.Count == 0) {
-			RaiseBuildFound (new EmulatorBuild () {
+			RaiseBuildFound (new SimulatorBuild () {
 				Status = BuildStatus.Unknown
 			});
 		}
@@ -275,7 +275,7 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		BuildStatusChanged.Raise(this, new BuildStatusChangedEventArgs(build, build.Status));
 	}
 
-	public void RaiseBuildTriggeredByChanged(EmulatorBuild build, EmulatorUser user)
+	public void RaiseBuildTriggeredByChanged(SimulatorBuild build, SimulatorUser user)
 	{
 		Log.Debug("BuildTriggeredByChanged: {0}: {1}", build.Id, user.UserName);
 		BuildTriggeredByChanged.Raise(this, new BuildTriggeredByChangedEventArgs(build, user));
@@ -287,19 +287,19 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		BuildsRefreshed.Raise(this, new BuildsRefreshedEventArgs(buildsStatusChanged, buildsFound, buildsRemoved));
 	}
 
-	public void RaiseUserFound(EmulatorUser user)
+	public void RaiseUserFound(SimulatorUser user)
 	{
 		Log.Debug("RaiseUserFound: {0}", user.UserName);
 		UserFound.Raise(this, new UserFoundEventArgs(user));
 	}
 
-	public void RaiseUserUpdated(EmulatorUser user)
+	public void RaiseUserUpdated(SimulatorUser user)
 	{
 		Log.Debug("UserUpdated: {0}", user.UserName);
 		UserUpdated.Raise(this, new UserUpdatedEventArgs(user));
 	}
 
-	public void RaiseUserRemoved(EmulatorUser user)
+	public void RaiseUserRemoved(SimulatorUser user)
 	{
 		Log.Debug("UserRemoved: {0}", user.UserName);
 		UserRemoved.Raise(this, new UserRemovedEventArgs(user));
@@ -311,7 +311,7 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 		UserAuthenticationCompleted.Raise(this, new UserAuthenticationCompletedEventArgs(user, success));
 	}
 
-	public void RaiseUserTriggeredBuild(EmulatorUser user, EmulatorBuild build)
+	public void RaiseUserTriggeredBuild(SimulatorUser user, SimulatorBuild build)
 	{
 		Log.Debug("UserTriggeredBuild: {0}:{1}", user.UserName, build.Id);
 		UserTriggeredBuild.Raise(this, new UserTriggeredBuildEventArgs(user, build));
@@ -320,14 +320,14 @@ public class EmulatorModContext : MonoBehaviour, IModContext {
 	public void RaiseRemoteControlChanged(IRemoteControlCommand cmd)
 	{
 		Log.Debug("RemoteControlChanged");
-		var rc = new EmulatorRemoteControl();
+		var rc = new SimulatorRemoteControl();
 		RemoteControlChanged.Raise(this, new RemoteControlChangedEventArgs(rc));
 	}
 
 	public void RaiseRemoteControlCommandReceived (IRemoteControlCommand cmd)
 	{
 		Log.Debug("RemoteControlCommandReceived: {0}", cmd);
-		var rc = new EmulatorRemoteControl ();
+		var rc = new SimulatorRemoteControl ();
 		RemoteControlCommandReceived.Raise (this, new RemoteControlCommandReceivedEventArgs (rc, cmd));
 	}
 	#endregion

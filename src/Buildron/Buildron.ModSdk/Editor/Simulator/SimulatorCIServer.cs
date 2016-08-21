@@ -2,7 +2,7 @@
 using System.Collections;
 using Buildron.Domain.CIServers;
 
-public class EmulatorCIServer : MonoBehaviour, ICIServer
+public class SimulatorCIServer : MonoBehaviour, ICIServer
 {
 	#region Fields
 	public bool m_historyTotemEnabled;
@@ -10,7 +10,7 @@ public class EmulatorCIServer : MonoBehaviour, ICIServer
 	#endregion
 
 	#region Properties
-	public static EmulatorCIServer Instance { get; private set; }
+	public static SimulatorCIServer Instance { get; private set; }
 	#endregion
 
 	#region Methods

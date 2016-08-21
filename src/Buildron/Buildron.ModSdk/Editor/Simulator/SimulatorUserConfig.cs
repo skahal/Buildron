@@ -4,9 +4,9 @@ using Skahal.Common;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EmulatorUserConfig : MonoBehaviour
+public class SimulatorUserConfig : MonoBehaviour
 {
-	public static EmulatorUserConfig Instance { get; private set; }
+	public static SimulatorUserConfig Instance { get; private set; }
 
 	public Texture2D[] UserPhotos;
 

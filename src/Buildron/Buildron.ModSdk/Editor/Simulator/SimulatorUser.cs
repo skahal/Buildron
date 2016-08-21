@@ -4,26 +4,26 @@ using Buildron.Domain.Users;
 using Skahal.Common;
 using System.Collections.Generic;
 
-public class EmulatorUser : IUser
+public class SimulatorUser : IUser
 {
 	#region Fields
 	private static int s_usersCount;
 	#endregion
 
 	#region Constructors
-	public EmulatorUser ()
+	public SimulatorUser ()
 		: this (string.Empty)
 	{
 	}
 
-	public EmulatorUser(string userName) {
+	public SimulatorUser(string userName) {
 		Builds = new List<IBuild> ();
 
 		var id = (++s_usersCount).ToString ();
 		UserName = String.IsNullOrEmpty (userName) ? "User {0}".With (id) : userName;
 		Kind = UserKind.Human;
 
-		Photo = EmulatorUserConfig.Instance.GetRandomUserPhoto ();
+		Photo = SimulatorUserConfig.Instance.GetRandomUserPhoto ();
 		PhotoUpdated.Raise (this);
 	}
 	#endregion

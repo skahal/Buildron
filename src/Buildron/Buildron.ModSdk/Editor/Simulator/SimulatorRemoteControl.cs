@@ -5,7 +5,7 @@ using Skahal.Common;
 using System.Collections.Generic;
 using Buildron.Domain.RemoteControls;
 
-public class EmulatorRemoteControl : IRemoteControl
+public class SimulatorRemoteControl : IRemoteControl
 {
 	#region Fields
 
@@ -15,7 +15,7 @@ public class EmulatorRemoteControl : IRemoteControl
 
 	#region Constructors
 
-	public EmulatorRemoteControl ()
+	public SimulatorRemoteControl ()
 	{
 		var id = (++s_rcCount).ToString ();
 		UserName = "RC {0}".With (id);

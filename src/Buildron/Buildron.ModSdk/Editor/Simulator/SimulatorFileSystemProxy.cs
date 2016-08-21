@@ -1,9 +1,9 @@
 ﻿using System;
 using Buildron.Domain.Mods;
 
-public class EmulatorFileSystemProxy : IFileSystemProxy
+public class SimulatorFileSystemProxy : IFileSystemProxy
 	{
-		public EmulatorFileSystemProxy ()
+		public SimulatorFileSystemProxy ()
 		{
 		}
 

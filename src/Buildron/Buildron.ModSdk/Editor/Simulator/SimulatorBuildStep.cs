@@ -1,7 +1,7 @@
 ﻿using System;
 using Buildron.Domain.Builds;
 
-public class EmulatorBuildStep : IBuildStep
+public class SimulatorBuildStep : IBuildStep
 {
 	#region IBuildStep implementation
 
