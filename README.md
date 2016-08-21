@@ -114,14 +114,14 @@ Mods are loading from a special folder called "Mods", these folder is related to
 * Mac: Buildron.App\Mods (the "Mods" should be inside Buildron.app. Choose "Show package contents")
 * Linux and Win: "Mods" folder should be in same folder of Buildron executable.
 
-If you want to load a new mod, just put the mod folder inside the Mods folder.
+If you want to load a new mod, just put the mod folder inside the "Mods" folder.
 If you want to remove a mod, just remove it folder from "Mods" folder
 
 ### Mods preferences
-When you open Buildron, you can see what are the loaded mods in the left-bottom button "mods", click on it to see the mods list and change each mod preference.
+When you open Buildron, you can see what mods are loaded in the left-bottom button "mods", click on it to see the mods list and change each mod preference.
 
 ### Building new mods
-If you want to create your own mod to Buildron, see our (Creating a mod tutorial)[docs/creating-a-mod-tutorial.md]
+If you want to create your own mod to Buildron, see our [Creating a mod tutorial](docs/creating-a-mod-tutorial.md).
 
 ## Roadmap
  - Push Buildron RC to GitHub.
