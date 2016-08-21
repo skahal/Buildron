@@ -217,13 +217,19 @@ context.BuildStatusChanged += (sender, e) =>
 In the Unity3d editor play the scene and press ctrl+e (win) or cmd+e(mac) to show simulator window. There is a second tab called "Preferences", change the values of our mod preferences and test its behaviour on simulator.
 
 ### Building the mod
-Now we need to build the mod to test it diretly on Buildron. Click in the menu "Buildron / Build mod", in the windows select for what plaftorm you want to build it (we recommend all of them). In the "Mods folder" type the folder "Mods" where is your Buildron installed, in Win should be a folder "Mods" in same place where is your "Buildron.exe" file, in Mac should be a "Mods" folder inside the Buildron.app file.
+Now we need to build the mod to test it diretly on Buildron. Click in the menu "Buildron / Build mod", in the windows select for what plaftorm you want to build it. In the "Mods folder" type the folder "Mods" where is your Buildron installed, in Win should be a folder "Mods" in same place where is your "Buildron.exe" file, in Mac should be a "Mods" folder inside the Buildron.app file.
 
 ### Testing on Buildron
 Open Buildron, if everything is ok you should see your mod in the mods panel, click in the mods button (left bottom corner). Open the dropdown, your mod should be there, select it, the 3 "Show on" preferences should be shown. Go back to config panel and starts Buildron. Now every a builds status changed match the ToastyMod preferences you should see the Toasty's sprite and sound.
 
 If your mod is not loaded on Buildron, then there is a problem with it, open the Buildron [log file](https://docs.unity3d.com/Manual/LogFiles.html) and look for error messages. If you need any help, [let me know.](http://twitter.com/ogiacomelli)
 
+At this time the ToastyMod should looks like this: [https://www.youtube.com/watch?v=Ju9znmp8tOQ](https://www.youtube.com/watch?v=Ju9znmp8tOQ)
+
+### Packing the mod
+So, your mod is ready to go. Now you need to pack it to allow Buildron users to use it. We recommend you build it to each platform. Open the "Build mod" window and choose "Mac" platform, click and "Build", after build is done, zip the folder of your mod and add ".mac" extension to it, so our ToastyMod will be ToastMod.mac.zip. Repeat the previous steps to generate the package for Linux and Win.
+
+To let others Buildron's know about your mod, fork [Buildron](https://github.com/skahal/buildron/fork) and add a link to your mod repository to our "Mods list", then [submit a pull-request](https://github.com/skahal/buildron/pull/new/master).
 
 ### That's all folks!
 Congratulations! Now you know how to build a mod to Buildron.
@@ -238,7 +244,5 @@ There two special tags used on Buildron and mods: "Build" and "User". If you use
 If you want expose some preferences to let Buildron's user select about your bot, you can use ModContext.Preferences property.
 You can register a preferences with the RegisterPreferences methods. It's recommended that you register your mod preferences as first things on Initialize method.
 
-You can read your preferences usen ReadValue methond on same ModContext.Preferences property. In most of case you should only read preferences after the CIServerConnected event be raised.
-
-###
+You can read your preferences usen ReadValue method on same ModContext.Preferences property. In most of case you should only read preferences after the CIServerConnected event be raised.
 
