@@ -123,6 +123,18 @@ When you open Buildron, you can see what mods are loaded in the left-bottom butt
 ### Building new mods
 If you want to create your own mod to Buildron, see our [Creating a mod tutorial](docs/creating-a-mod-tutorial.md).
 
+### Mods list
+Bellow the list of known mods:
+* Classic Mods
+* * [BuildMod](https://github.com/skahal/Buildron-Classic-Mods)
+* * [CameraMod](https://github.com/skahal/Buildron-Classic-Mods)
+* * [EasterEggMod](https://github.com/skahal/Buildron-Classic-Mods)
+* * [EnvironmentMod](https://github.com/skahal/Buildron-Classic-Mods)
+* * [SoundMod](https://github.com/skahal/Buildron-Classic-Mods)
+* * [UserMod](https://github.com/skahal/Buildron-Classic-Mods)
+
+* [ToastyMod](https://github.com/skahal/Buildron-Mod-Samples)
+
 ## Roadmap
  - Push Buildron RC to GitHub.
  - Implement new builds providers:
