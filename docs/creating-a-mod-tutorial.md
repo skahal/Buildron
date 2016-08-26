@@ -303,7 +303,7 @@ Here you can see the full source code of ToastyMod:
 ### Packing the mod
 So, your mod is ready to go. Now you need to pack it to allow Buildron users to use it. We recommend you build it to each platform. Open the "Build mod" window and choose "Mac" platform, click and "Build", after build is done, zip the folder of your mod and add ".mac" extension to it, so our ToastyMod will be ToastMod.mac.zip. Repeat the previous steps to generate the package for Linux and Win.
 
-To let others Buildron's know about your mod, fork [Buildron](https://github.com/skahal/buildron/fork) and add a link to your mod repository to our "Mods list", then [submit a pull-request](https://github.com/skahal/buildron/pull/new/master).
+To let others Buildron's know about your mod, fork [Buildron](https://github.com/skahal/buildron/fork) and add a link to your mod repository to our [mods-support#mods-list](Mods list), then [submit a pull-request](https://github.com/skahal/buildron/pull/new/master).
 
 ### That's all folks!
 Congratulations! Now you know how to build a mod to Buildron.

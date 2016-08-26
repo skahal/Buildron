@@ -126,12 +126,12 @@ If you want to create your own mod to Buildron, see our [Creating a mod tutorial
 ### Mods list
 Bellow the list of known mods:
 * Classic Mods
-* * [BuildMod](https://github.com/skahal/Buildron-Classic-Mods)
-* * [CameraMod](https://github.com/skahal/Buildron-Classic-Mods)
-* * [EasterEggMod](https://github.com/skahal/Buildron-Classic-Mods)
-* * [EnvironmentMod](https://github.com/skahal/Buildron-Classic-Mods)
-* * [SoundMod](https://github.com/skahal/Buildron-Classic-Mods)
-* * [UserMod](https://github.com/skahal/Buildron-Classic-Mods)
+	* [BuildMod](https://github.com/skahal/Buildron-Classic-Mods)
+	* [CameraMod](https://github.com/skahal/Buildron-Classic-Mods)
+	* [EasterEggMod](https://github.com/skahal/Buildron-Classic-Mods)
+	* [EnvironmentMod](https://github.com/skahal/Buildron-Classic-Mods)
+	* [SoundMod](https://github.com/skahal/Buildron-Classic-Mods)
+	* [UserMod](https://github.com/skahal/Buildron-Classic-Mods)
 
 * [ToastyMod](https://github.com/skahal/Buildron-Mod-Samples)
 
