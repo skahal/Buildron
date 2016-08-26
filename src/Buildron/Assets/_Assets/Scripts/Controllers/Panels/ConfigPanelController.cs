@@ -82,7 +82,6 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	public Text UpdateButtonLabel;
 	public Text VersionNumberButtonLabel;
 
-
 	public Button StartButton;
 	public bool AutoStart;
 
@@ -178,7 +177,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			m_versionService.CheckUpdates (ClientKind.Buildron, SHDevice.Family);
 		}
 		
-		VersionNumberButtonLabel.text = string.Format ("Version: {0}", SHGameInfo.Version);
+		VersionNumberButtonLabel.text = string.Format ("Version:{0}", SHGameInfo.Version);
 	}
 
 	private bool CanStart
