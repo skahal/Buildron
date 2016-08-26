@@ -315,7 +315,7 @@ There two special tags used on Buildron and mods: "Build" and "User". If you use
 
 
 ### Preferences
-If you want expose some preferences to let Buildron's user select about your bot, you can use ModContext.Preferences property.
+If you want expose some preferences to let Buildron's user select about your mod, you can use ModContext.Preferences property.
 You can register a preferences with the RegisterPreferences methods. It's recommended that you register your mod preferences as first things on Initialize method.
 
 You can read your preferences usen ReadValue method on same ModContext.Preferences property. In most of case you should only read preferences after the CIServerConnected event be raised.
