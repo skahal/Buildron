@@ -1,0 +1,3 @@
+[submodule "src/Buildron/Skahal-Unity-Scripts"]
+	path = src/Buildron/Skahal-Unity-Scripts
+	url = https://giacomelli@github.com/skahal/Skahal-Unity-Scripts.git
