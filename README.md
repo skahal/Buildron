@@ -98,7 +98,7 @@ If you want to run Buildron and auto start/connect to CI server, just pass the a
 ## Mods
 Buildron support mods, in fact about everything you see or listen in Buildron is a mod. 
 
-Read more about how to build your own Buidlron's mod in our [wiki](wiki/mods/home).
+Read more about how to build your own Buidlron's mod in our [wiki](https://gihub.com/skahal/buildron/wiki/mods/home).
 
 ## Roadmap
  - Push Buildron RC to GitHub.
