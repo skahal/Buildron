@@ -6,7 +6,7 @@ install:
 - cmd: choco install docfx
 
 before_build:
-- cmd: nuget restore .\src\Solution\Buildron.ClassicMods.sln
+- cmd: nuget restore .\src\Buildron\Buildron.ModSdk\Buildron.ModSdk.sln
 
 build:
   project: .\src\Buildron\Buildron.ModSdk\Buildron.ModSdk.sln
