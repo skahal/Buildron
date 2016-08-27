@@ -1,6 +1,6 @@
 version: 0.0.{build}
 os: Visual Studio 2015
-configuration: CI
+configuration: Debug
             
 install:
 - cmd: choco install docfx
