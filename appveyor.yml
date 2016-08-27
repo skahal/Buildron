@@ -4,6 +4,7 @@ configuration: Debug
             
 install:
 - cmd: choco install docfx
+- git submodule update --init --recursive
 
 before_build:
 - cmd: nuget restore .\src\Buildron\Buildron.ModSdk\Buildron.ModSdk.sln
