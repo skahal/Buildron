@@ -98,52 +98,14 @@ If you want to run Buildron and auto start/connect to CI server, just pass the a
 ## Mods
 Buildron support mods, in fact about everything you see or listen in Buildron is a mod. 
 
-### Classic Mods
-When you download Buildron from our release page you download too 6 classic mods:
-* BuildMod
-* CameraMod
-* EasterEggMod
-* EnvironmentMod
-* SoundMod
-* UserMod
-
-All these mods are implemented on [Buildron-Classic-Mods](https://github.com/skahal/Buildron-Classic-Mods).
-
-### Mods folder
-Mods are loading from a special folder called "Mods", these folder is related to the Buildron executable path:
-* Mac: Buildron.App\Mods (the "Mods" should be inside Buildron.app. Choose "Show package contents")
-* Linux and Win: "Mods" folder should be in same folder of Buildron executable.
-
-If you want to load a new mod, just put the mod folder inside the "Mods" folder.
-If you want to remove a mod, just remove it folder from "Mods" folder
-
-### Mods preferences
-When you open Buildron, you can see what mods are loaded in the left-bottom button "mods", click on it to see the mods list and change each mod preference.
-
-### Building new mods
-If you want to create your own mod to Buildron, see our [Creating a mod tutorial](docs/creating-a-mod-tutorial.md).
-
-### Mods list
-Bellow the list of known mods:
-* Classic Mods
-	* [BuildMod](https://github.com/skahal/Buildron-Classic-Mods)
-	* [CameraMod](https://github.com/skahal/Buildron-Classic-Mods)
-	* [EasterEggMod](https://github.com/skahal/Buildron-Classic-Mods)
-	* [EnvironmentMod](https://github.com/skahal/Buildron-Classic-Mods)
-	* [SoundMod](https://github.com/skahal/Buildron-Classic-Mods)
-	* [UserMod](https://github.com/skahal/Buildron-Classic-Mods)
-
-* [ToastyMod](https://github.com/skahal/Buildron-Mod-Samples)
+Read more about how to build your own Buidlron's mod in our [wiki](wiki/mods/home).
 
 ## Roadmap
  - Push Buildron RC to GitHub.
  - Implement new builds providers:
    - Travis CI
    - AppHarbor
-   - Unity Cloud Build 
  - Change the way that Buildron and Buildron RC communicate, maybe expose a rest web api.  
- - Supports themes.
- 
 --------
 
 ## FAQ
