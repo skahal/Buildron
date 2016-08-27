@@ -1,0 +1,22 @@
+version: 0.0.{build}
+os: Visual Studio 2015
+configuration: CI
+            
+install:
+- cmd: choco install docfx
+
+before_build:
+- cmd: nuget restore .\src\Solution\Buildron.ClassicMods.sln
+
+build:
+  project: .\src\Buildron\Buildron.ModSdk\Buildron.ModSdk.sln
+    
+after_build:
+- cmd: >-
+    cd  .\src\Buildron\
+    
+    docfx
+
+artifacts:
+  - path: .\build
+    name: build.zip
