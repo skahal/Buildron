@@ -4,7 +4,7 @@
       "src": [
         {
           "files": [
-            "C:/projects/buildron/src/Buildron/Buildron.ModSdk/*.csproj"
+            "C:\projects\buildron\src\Buildron\Buildron.ModSdk\Buildron.ModSdk.csproj"
           ],
           "exclude": [
             "**/obj/**",

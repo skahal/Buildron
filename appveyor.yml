@@ -22,4 +22,4 @@ test: off
 
 artifacts:
   - path: .\docs\docfx_project\
-    name: docfx_project.zip
+    name: docfx_project
