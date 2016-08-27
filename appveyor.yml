@@ -14,7 +14,7 @@ build:
     
 after_build:
 - cmd: >-
-    cd  .\src\Buildron\
+    cd  .\docs\docfx_project
     
     docfx
 
