@@ -18,6 +18,8 @@ after_build:
     
     docfx
 
+test: off
+
 artifacts:
-  - path: .\build
-    name: build.zip
+  - path: .\docs\docfx_project\
+    name: docfx_project.zip
