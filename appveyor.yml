@@ -14,12 +14,12 @@ build:
     
 after_build:
 - cmd: >-
-    cd  .\docs\docfx_project
+    cd  .\src
     
     docfx
 
 test: off
 
 artifacts:
-  - path: .\docs\docfx_project\
-    name: docfx_project
+  - path: .\src\_site
+    name: site
