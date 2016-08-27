@@ -107,7 +107,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="msbuilds\Buildron.ModSdk.targets" />
-  <Import Project="packages\docfx.msbuild.2.3.1\build\docfx.msbuild.targets" Condition="Exists('packages\docfx.msbuild.2.3.1\build\docfx.msbuild.targets')" />
   <ItemGroup>
     <ProjectReference Include="..\Skahal-Unity-Scripts\src\Skahal.Unity.Scripts.csproj">
       <Project>{D1F95AB1-B370-4D85-8FBD-E30869E8ACF7}</Project>
