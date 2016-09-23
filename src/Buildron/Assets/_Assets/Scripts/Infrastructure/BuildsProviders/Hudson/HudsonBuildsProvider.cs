@@ -1,7 +1,7 @@
-#region Usings
 using Buildron.Domain;
+using Buildron.Domain.Builds;
 using Buildron.Infrastructure.BuildsProvider.Jenkins;
-#endregion
+using Buildron.Domain.CIServers;
 
 namespace Buildron.Infrastructure.BuildsProvider.Hudson
 {
@@ -18,7 +18,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Hudson
 		/// <param name='server'>
 		/// Server.
 		/// </param>
-		public HudsonBuildsProvider (CIServer server) : base(server)
+		public HudsonBuildsProvider (ICIServer server) : base(server)
 		{
 			Name = "Hudson";
 			AuthenticationRequirement = AuthenticationRequirement.Optional;

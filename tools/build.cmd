@@ -1,0 +1,3 @@
+@echo Building Buildron...
+@"C:\Program Files\Unity\Editor\Unity.exe" -projectPath %cd%\..\src\Buildron -quit -batchmode -buildWindowsPlayer %cd%\..\build\Buildron.exe
+@echo Done.

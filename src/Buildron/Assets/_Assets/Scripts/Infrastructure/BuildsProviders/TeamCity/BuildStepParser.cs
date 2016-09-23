@@ -1,9 +1,6 @@
-#region Usings
 using System.Collections.Generic;
-using Buildron.Domain;
 using System.Xml;
-using Skahal.Logging;
-#endregion
+using Buildron.Domain.Builds;
 
 namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 {
@@ -18,9 +15,9 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 		/// <param name='xmlNode'>
 		/// Xml node.
 		/// </param>
-		public static IList<BuildStep> Parse (XmlNode xmlNode)
+		public static IList<IBuildStep> Parse (XmlNode xmlNode)
 		{
-			var steps = new List<BuildStep> ();
+			var steps = new List<IBuildStep> ();
 			var nodes = xmlNode.SelectNodes ("buildType/steps/step");
 	
 			if (nodes != null) {

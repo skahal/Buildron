@@ -94,15 +94,18 @@ If you want to run Buildron and auto start/connect to CI server, just pass the a
 - On Windows: Buildron.exe autostart
 - On Mac (OSX): open Buildron.app --args autostart
 
+
+## Mods
+Buildron support mods, in fact about everything you see or listen in Buildron is a mod. 
+
+Read more about how to build your own Buidlron's mod in our [wiki](https://gihub.com/skahal/buildron/wiki/mods/home).
+
 ## Roadmap
  - Push Buildron RC to GitHub.
  - Implement new builds providers:
    - Travis CI
    - AppHarbor
-   - Unity Cloud Build 
  - Change the way that Buildron and Buildron RC communicate, maybe expose a rest web api.  
- - Supports themes.
- 
 --------
 
 ## FAQ

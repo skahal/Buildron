@@ -1,10 +1,12 @@
-#region Usings
 using System.Collections.Generic;
-using Buildron.Domain;
 using Skahal.Common;
 using UnityEngine;
-#endregion
+using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
 
+/// <summary>
+/// Test builds provider.
+/// </summary>
 public class TestBuildsProvider : IBuildsProvider
 {
 	#region Fields
@@ -12,6 +14,9 @@ public class TestBuildsProvider : IBuildsProvider
 	#endregion
 	
 	#region Constructors
+	/// <summary>
+	/// Initializes a new instance of the <see cref="TestBuildsProvider"/> class.
+	/// </summary>
 	public TestBuildsProvider ()
 	{
 		m_builds = new List<Build> ();
@@ -35,7 +40,7 @@ public class TestBuildsProvider : IBuildsProvider
 			});
 		};
 		
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 2; i++) {
 			addBuild ("iOS - Classic", "Ships N'Battles");
 			addBuild ("iOS - HD", "Ships N'Battles");
 			addBuild ("Android", "Ships N'Battles");
@@ -48,10 +53,6 @@ public class TestBuildsProvider : IBuildsProvider
 			addBuild ("1.?.?", "Card-o-matic");
 		
 			addBuild ("Mac", "Buildron");
-			//addBuild ("Windows", "Buildron");
-		
-			//addBuild ("iOS", "Buildron RC");
-			//addBuild ("Android", "Buildron RC");	
 		}
 	}
 	#endregion
@@ -61,8 +62,7 @@ public class TestBuildsProvider : IBuildsProvider
 	public event System.EventHandler BuildsRefreshed;	
 	public event System.EventHandler ServerUp;
 	public event System.EventHandler ServerDown;
-	public event System.EventHandler UserAuthenticationSuccessful;
-	public event System.EventHandler UserAuthenticationFailed;
+	public event System.EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 	
 	public string Name { get { return "Test"; }}
 	public AuthenticationRequirement AuthenticationRequirement { get { return AuthenticationRequirement.Never; } }
@@ -81,13 +81,18 @@ public class TestBuildsProvider : IBuildsProvider
 			};
 			
 			b.PercentageComplete = Random.Range (0f, 1f);
-			
-			b.TriggeredBy = new BuildUser ();
-			b.TriggeredBy.Name = "User " + Random.Range (0, 10);
-			b.TriggeredBy.UserName = b.TriggeredBy.Name;
-			b.TriggeredBy.Email = SHRandomHelper.NextBool () ? "giacomelli@gmail.com" : "giusepe@gmail.com";
-			b.TriggeredBy.Builds.Add (b);
-			
+
+			var userId = Random.Range (0, 2);
+			var user = new User () 
+			{
+				Name = "User " + userId,
+				Email = userId == 0 ? "giacomelli@gmail.com" : "giusepe@gmail.com",
+			};
+
+			user.UserName = user.Name;
+			user.Builds.Add (b);
+
+			b.TriggeredBy = user;
 			b.LastChangeDescription = System.DateTime.Now.ToLongTimeString ();
 			b.Date = System.DateTime.Now;
 			BuildUpdated.Raise (this, new BuildUpdatedEventArgs (b));
@@ -96,27 +101,27 @@ public class TestBuildsProvider : IBuildsProvider
 		BuildsRefreshed.Raise (this);
 	}
 	
-	public void RunBuild (User user, Build build)
+	public void RunBuild (IAuthUser user, IBuild build)
 	{
 		build.Status = BuildStatus.Running;
 	}
 	
-	public void StopBuild (User user, Build build)
+	public void StopBuild (IAuthUser user, IBuild build)
 	{
 		build.Status = BuildStatus.Canceled;
 	}
 	
 	private BuildStatus RandomStatus ()
 	{
-		return (BuildStatus)Random.Range (1, (int)BuildStatus.RunningDeploy);
+		return (BuildStatus)Random.Range (1, (int)BuildStatus.Running);
 	}
 	
-	public void AuthenticateUser (User user)
+	public void AuthenticateUser (IAuthUser user)
 	{
 		if (string.IsNullOrEmpty (user.Password)) {
-			UserAuthenticationFailed (this, System.EventArgs.Empty);
+			UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (user, false));
 		} else {
-			UserAuthenticationSuccessful(this, System.EventArgs.Empty);
+			UserAuthenticationCompleted.Raise (this, new UserAuthenticationCompletedEventArgs (user, true));
 		}
 	}
 	

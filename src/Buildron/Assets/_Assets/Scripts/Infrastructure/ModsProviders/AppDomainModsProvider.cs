@@ -1,0 +1,92 @@
+﻿using System;
+using Buildron.Domain.Mods;
+using System.Collections.Generic;
+using System.Linq;
+using Skahal.Logging;
+using Buildron.Infrastructure.AssetsProxies;
+using Buildron.Infrastructure.GameObjectsProxies;
+using Buildron.Infrastructure.UIProxies;
+using Buildron.Infrastructure.FileSystemProxies;
+using System.IO;
+using Buildron.Infrastructure.DataProxies;
+using Buildron.Infrastructure.BuildGameObjectsProxies;
+using Buildron.Infrastructure.UserGameObjectsProxies;
+using Buildron.Infrastructure.CameraProxies;
+using UnityEngine;
+using Buildron.Infrastructure.PreferencesProxies;
+
+namespace Buildron.Infrastructure.ModsProvider
+{
+	public class AppDomainModsProvider : IModsProvider
+	{
+        #region Fields
+        private string m_modsFolder;
+		private ISHLogStrategy m_log;
+        #endregion
+
+        #region Constructors
+        public AppDomainModsProvider (string modsFolder, ISHLogStrategy log)
+		{
+            m_modsFolder = modsFolder;
+			m_log = log;
+		}
+		#endregion
+
+		#region Methods
+		public IEnumerable<ModInfo> GetModInfos ()
+		{
+			var modInfos = new List<ModInfo> ();
+			m_log.Debug ("Looking for IMod implementations in AppDomain.CurrentDomain assemblies...");
+			var buildronAssemblyModTypes = TypeHelper.GetImplementationsOf<IMod> ();
+		
+			foreach (var modType in buildronAssemblyModTypes) 
+			{
+				modInfos.Add (new ModInfo(modType.Namespace));
+			}
+
+			return modInfos;
+		}
+
+		public ModInstanceInfo CreateInstance (ModInfo modInfo)
+		{
+			var typeName = "{0}.Mod".With (modInfo.Name);
+			m_log.Debug ("Looking for type {0}...", typeName);
+
+			var modType = Type.GetType (typeName);
+
+			if (modType == null) {
+				throw new ArgumentException ("Cannot find type '{0}'".With (typeName));
+			}
+
+			m_log.Debug ("Loading mod from class '{0}'...", modType);
+
+			var mod = Activator.CreateInstance (modType) as IMod;
+
+			if (mod == null) {
+				throw new InvalidOperationException ("Cannot create mod, there is no default constructor.");
+			}
+
+			var gameObjectsProxy = new ModGameObjectsProxy (modInfo);
+            
+            return new ModInstanceInfo (
+                mod,
+                modInfo, 
+                this, 
+                new ResourcesFolderAssetsProxy(), 
+				gameObjectsProxy, 
+				new ModGameObjectsPoolProxy(modInfo, gameObjectsProxy),
+                new DefaultUIProxy(),
+                new ModFileSystemProxy(Path.Combine(m_modsFolder, modInfo.Name)),
+				new ModDataProxy(modInfo),
+				new ModBuildGameObjectsProxy(),
+				new ModUserGameObjectsProxy(),
+				new ModCameraProxy(modInfo, Camera.main),
+                new ModPreferencesProxy(modInfo));
+		}
+
+        public void DestroyInstance(ModInstanceInfo modInstanceInfo)
+        {            
+        }
+        #endregion
+    }
+}

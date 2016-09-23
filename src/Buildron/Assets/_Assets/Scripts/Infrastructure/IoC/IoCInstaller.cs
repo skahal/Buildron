@@ -1,0 +1,142 @@
+using UnityEngine;
+using Zenject;
+using Skahal.Logging;
+using Buildron.Infrastructure.UserAvatarProviders;
+using Buildron.Domain;
+using System;
+using Skahal.Infrastructure.Framework.Commons;
+using Buildron.Infrastructure.Repositories;
+using Buildron.Domain.Versions;
+using Buildron.Infrastructure.Clients;
+using Buildron.Domain.Notifications;
+using Skahal.Infrastructure.Framework.Repositories;
+using Skahal.Infrastructure.Repositories;
+using Buildron.Domain.Builds;
+using Buildron.Domain.Users;
+using Buildron.Domain.CIServers;
+using Buildron.Domain.RemoteControls;
+using Buildron.Controllers;
+using Buildron.Domain.Servers;
+using Skahal.Threading;
+using Buildron.Domain.Mods;
+using Buildron.Infrastructure.ModsProvider;
+using Buildron.Infrastructure.UIProxies;
+using System.IO;
+using System.Collections.Generic;
+using Buildron.Infrastructure.BuildGameObjectsProxies;
+
+namespace Buildron.Infrastructure.IoC
+{
+	public class IoCInstaller : MonoInstaller
+	{
+		#region Properties
+		public Texture2D ScheduledTriggerAvatar;
+		public Texture2D RetryTriggerAvatar;
+		public Texture2D UnunknownAvatar;
+		public Font DefaultFont;
+		#endregion
+
+		#region Methods
+		public override void InstallBindings ()
+		{
+			var log = InstallLog ();
+
+			log.Debug ("IOC :: Installing domain...");
+			InstallDomain ();
+
+			log.Debug ("IOC :: Installing repositories...");
+			InstallRepositories ();
+
+			log.Debug ("IOC :: Installing user bindings...");
+			InstallUser ();
+
+			log.Debug ("IOC :: Installing misc bindings...");
+			InstallMisc ();			
+		
+			log.Debug ("IOC :: Bindings installed.");
+		}
+
+
+		ISHLogStrategy InstallLog ()
+		{
+			var logStrategy = SHLog.LogStrategy;
+			Container.Bind<ISHLogStrategy> ().FromInstance (logStrategy).AsSingle ();
+
+			return logStrategy;
+		}
+
+		void InstallDomain ()
+		{
+			Container.Bind<IAsyncActionProvider> ().To<CoroutineAsyncActionProvider>();
+			Container.Bind<IVersionService> ().To<VersionService> ().AsSingle ();
+            Container.BindInitializableService<IRemoteControlService, RemoteControlService>();
+            Container.Bind<ICIServerService>().To<CIServerService>().AsSingle();
+            Container.Bind<IBuildService>().To<BuildService>().AsSingle();
+			Container.Bind<IServerService>().To<ServerService>().AsSingle();
+			Container.Bind<IModLoader>().To<ModLoader>().AsSingle();
+            Container.Bind<IBuildGameObjectsProxy>().To<ModBuildGameObjectsProxy>().AsSingle();
+
+			var log = Container.Resolve<ISHLogStrategy> ();
+
+#if UNITY_EDITOR
+			var folder = Path.GetFullPath("../../build/Mods/");
+#else
+            var folder =  UnityEngine.Application.dataPath.Substring(0, UnityEngine.Application.dataPath.LastIndexOf("/")) + "/mods/";
+            folder = folder.Replace(@"\", "/");
+#endif
+			var uiProxy = new DefaultUIProxy {
+				Font = DefaultFont
+			};
+
+            var modsProviders = new List<IModsProvider>();
+            modsProviders.Add(new FileSystemModsProvider(folder, log, uiProxy));
+
+#if UNITY_EDITOR
+            modsProviders.Add(new AppDomainModsProvider (folder, log));
+#endif
+            Container.Bind<IModsProvider[]> ().FromInstance (modsProviders.ToArray());
+		}
+
+		void InstallRepositories ()
+		{
+			Container.Bind<IRepository<ServerState>>().To<GenericPlayerPrefsRepository<ServerState>>().AsSingle ();
+            Container.Bind<IVersionRepository> ().To<PlayerPrefsVersionRepository> ().AsSingle ();
+			Container.Bind<IRepository<ICIServer>>().To<GenericPlayerPrefsRepository<ICIServer, CIServer>>().AsSingle();
+            Container.Bind<IRepository<IRemoteControl>>().To<GenericPlayerPrefsRepository<IRemoteControl, RemoteControl>>().AsSingle();
+        }
+
+		void InstallUser ()
+		{
+			var humanFallbackUserAvatarProvider = new StaticUserAvatarProvider ();
+			humanFallbackUserAvatarProvider.AddPhoto (UserKind.Human, UnunknownAvatar);
+
+			var nonHumanUserAvatarProviders = new StaticUserAvatarProvider ();
+			nonHumanUserAvatarProviders.AddPhoto (UserKind.ScheduledTrigger, ScheduledTriggerAvatar);
+			nonHumanUserAvatarProviders.AddPhoto (UserKind.RetryTrigger, RetryTriggerAvatar);
+
+			var userService = new UserService (new IUserAvatarProvider[] {
+				new GravatarUserAvatarProvider (),
+				new AcronymUserAvatarProvider (),
+				humanFallbackUserAvatarProvider
+			}, new IUserAvatarProvider[] {
+				nonHumanUserAvatarProviders
+			}, Container.Resolve<ISHLogStrategy> ());
+			Container.Bind<IUserService> ().FromInstance (userService);
+		}
+			
+		void InstallMisc ()
+		{
+			var backEndClient = new BackEndClient ();
+			Container.Bind<INotificationClient> ().FromInstance (backEndClient);
+			Container.Bind<IVersionClient> ().FromInstance (backEndClient);
+			Container.Bind<NotificationService> ().To<NotificationService> ().AsSingle ();
+
+			Container.BindController<RemoteControlController> (true);	
+			Container.BindController<NotificationController>();
+			Container.BindController<ConfigPanelController> ();
+	        Container.BindController<MainSceneController>();
+			Container.BindController<ModLoaderController>();
+        }
+#endregion
+	}
+}

@@ -1,0 +1,1938 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Buildron.ModSdk</name>
+    </assembly>
+    <members>
+        <member name="T:BuildControllerExtensions">
+             <summary>
+             Build controller extensions.
+             </summary>
+            </member>
+        <member name="M:BuildControllerExtensions.GetGameObject(Buildron.Domain.Mods.IBuildController[],Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Gets the game object that is holding the specified build as modeol.
+             </summary>
+             <returns>The game object.</returns>
+             <param name="builds">The builds.</param>
+             <param name="build">The build model.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.CameraControllerKind">
+             <summary>
+             Camera controller kind.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.CameraControllerKind.None">
+             <summary>
+             None.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.CameraControllerKind.Position">
+             <summary>
+             Controller controls the camera position.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.CameraControllerKind.Rotation">
+             <summary>
+             Controller controls the camera rotation.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.CameraControllerKind.Background">
+             <summary>
+             Controller controls the camera background.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.CameraControllerKind.Effect">
+             <summary>
+             Controller controls the camera effects.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Mods.ICameraProxy">
+             <summary>
+             Defines an interface to a camera proxy.
+             </summary>
+             <remarks>
+             The main responsibility of this interface is to control access of the various mods to the Buildron's main camera 
+             and avoid more than one mod tries to change exclusive values, like camera position, in the same time.
+             </remarks>
+            </member>
+        <member name="P:Buildron.Domain.Mods.ICameraProxy.MainCamera">
+             <summary>
+             Gets the main camera.
+             </summary>
+             <value>The main camera.</value>
+            </member>
+        <member name="M:Buildron.Domain.Mods.ICameraProxy.RegisterController``1(Buildron.Domain.Mods.CameraControllerKind,System.Boolean)">
+             <summary>
+             Registers the controller by specifying the kind and if the controller should register as an exclusive controller to camera kind.
+             The previous register controller will be disabled if any exclusive control was requested by CameraControllerKind.
+             </summary>
+             <remarks>
+             CameraControllerKind is a flag enum, so you can combine them to register a camera controller to more than one kind.
+             </remarks>
+             <example>
+             <para>
+             Mod 1 calls
+             RegisterController&lt;Mod1CameraController&gt;(CameraControllerKind.Position | CameraControllerKind.Rotation, true);
+             </para>
+             <para>
+             Mod 2 calls
+             RegisterController&lt;Mod2CameraController&gt;(CameraControllerKind.Position | CameraControllerKind.Background, false);
+             The Mod1CameraController will be disabled, because it needs exclusive control of position.
+             </para>
+             <para>
+             Mod 3 calls
+             RegisterController&lt;Mod3CameraController&gt;(CameraControllerKind.Background, false);
+             The Mod2CameraController will NOT be disabled, because the Mod 2 and Mod 3 controls camera background, but they do not need exclusive control.
+             </para>
+             </example>
+             <returns>The controller.</returns>
+             <param name="kind">Kind.</param>
+             <param name="exclusive">Exclusive.</param>
+             <typeparam name="TController">The 1st type parameter.</typeparam>
+            </member>
+        <member name="M:Buildron.Domain.Mods.ICameraProxy.UnregisterController``1">
+             <summary>
+             Unregisters the controller and enable again the previous one registered.
+             </summary>
+             <returns>The controller.</returns>
+             <typeparam name="TController">The 1st type parameter.</typeparam>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IGameObjectsPoolProxy">
+             <summary>
+             Defines an interface to a game objects pool proxy.
+             </summary>
+             <remarks>
+             Mods can use this interface to create any number of pools of game objects.
+             </remarks>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IGameObjectsPoolProxy.CreatePool(System.String,System.Func{UnityEngine.GameObject})">
+             <summary>
+             Creates the pool.
+             </summary>
+             <returns>The pool.</returns>
+             <param name="poolName">The name of the pool. The same name used here should be used on GetGameObject and ReleaseGameObject methods.</param>
+             <param name="gameObjectFactory">The game object factory or how each instance of game object that will used on the pool will be created.</param>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IGameObjectsPoolProxy.GetGameObject(System.String,System.Single)">
+             <summary>
+             Gets the game object from the pool.
+             </summary>
+             <remarks>
+             If there is a free game object on the pool, this will be used. If there is no free game object, a new one will be created.
+             </remarks>
+             <returns>The game object.</returns>
+             <param name="poolName">The name of the pool.</param>
+             <param name="autoDisableTime">The time, in seconds, to auto disable the game object and put it back to pool (free to be used again). Zero (0) to not auto disable.</param>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IGameObjectsPoolProxy.ReleaseGameObject(System.String,UnityEngine.GameObject)">
+             <summary>
+             Releases the game object back to pool (free to be used again).
+             </summary>
+             <returns>The game object.</returns>
+             <param name="poolName">The name of the pool.</param>
+             <param name="go">The game object to release.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IFileSystemProxy">
+             <summary>
+             Defines an interface to a file system proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IFileSystemProxy.GetFiles(System.String,System.String,System.Boolean)">
+             <summary>
+             Gets the files on the path using the search pattern.
+             </summary>
+             <returns>The files.</returns>
+             <param name="path">The path of the where should get the files. Use relative values here, because you don't know where is your mods folder.</param>
+             <param name="searchPattern">The search pattern. Example: *.png</param>
+             <param name="recursive">If should search in subdirectories recursively.</param>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IFileSystemProxy.GetDirectories(System.String,System.String,System.Boolean)">
+             <summary>
+             Gets the directories on the paht using the search pattern.
+             </summary>
+             <returns>The directories.</returns>
+             <param name="path">The path of the where should get the directories. Use relative values here, because you don't know where is your mods folder.</param>
+             <param name="searchPattern">The search pattern. Example: *.png</param>
+             <param name="recursive">If should search in subdirectories recursively.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IRemoteControlProxy">
+             <summary>
+             Define an interface to a remote control proxy.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IRemoteControlProxy.Current">
+             <summary>
+             Gets the current.
+             </summary>
+             <value>The current.</value>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IRemoteControlProxy.ReceiveCommand(Buildron.Domain.RemoteControls.IRemoteControlCommand)">
+             <summary>
+             Receives the command.
+             </summary>
+             <returns><c>true</c>, if command was received, <c>false</c> otherwise.</returns>
+             <param name="command">The command.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.PreferenceKind">
+             <summary>
+             The kind of preference that a mod can expose to an user.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.PreferenceKind.String">
+             <summary>
+             String value.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.PreferenceKind.Int">
+             <summary>
+             Integer value.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.PreferenceKind.Float">
+             <summary>
+             Float value.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Mods.PreferenceKind.Bool">
+             <summary>
+             Boolean value.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Mods.Preference">
+             <summary>
+             Represents a preference that a mod can expose to an user.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.Preference.#ctor(System.String)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Mods.Preference" /> class.
+             </summary>
+             <param name="name">The preference name.</param>
+            </member>
+        <member name="M:Buildron.Domain.Mods.Preference.#ctor(System.String,System.String)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Mods.Preference" /> class.
+             </summary>
+             <param name="name">The preference name.</param>
+             <param name="title">The preference title. This value will be shown to the user.</param>
+            </member>
+        <member name="M:Buildron.Domain.Mods.Preference.#ctor(System.String,System.String,Buildron.Domain.Mods.PreferenceKind)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Mods.Preference" /> class.
+             </summary>
+             <param name="name">The preference name.</param>
+             <param name="title">The preference title. This value will be shown to the user.</param>
+             <param name="kind">The preference kind.</param>
+            </member>
+        <member name="M:Buildron.Domain.Mods.Preference.#ctor(System.String,System.String,Buildron.Domain.Mods.PreferenceKind,System.Object)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Mods.Preference" /> class.
+             </summary>
+             <param name="name">The preference name.</param>
+             <param name="title">The preference title. This value will be shown to the user.</param>
+             <param name="kind">The preference kind.</param>
+             <param name="defaultValue">The default value.</param>
+            </member>
+        <member name="P:Buildron.Domain.Mods.Preference.Name">
+             <summary>
+             Gets or sets the name.
+             </summary>
+             <value>The name.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.Preference.Title">
+             <summary>
+             Gets or sets the title.
+             </summary>
+             <value>The title.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.Preference.Description">
+             <summary>
+             Gets or sets the description.
+             </summary>
+             <value>The description.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.Preference.Kind">
+             <summary>
+             Gets or sets the kind.
+             </summary>
+             <value>The kind.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.Preference.DefaultValue">
+             <summary>
+             Gets or sets the default value.
+             </summary>
+             <value>The default value.</value>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildEventArgsBase">
+             <summary>
+             Base class to arguments for build  changed events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildEventArgsBase.#ctor(Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Builds.BuildEventArgsBase" /> class.
+             </summary>
+             <param name="build">The build.</param>
+            </member>
+        <member name="P:Buildron.Domain.Builds.BuildEventArgsBase.Build">
+             <summary>
+             Gets the build.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildFoundEventArgs">
+             <summary>
+             Build found event arguments.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildFoundEventArgs.#ctor(Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Builds.BuildFoundEventArgs" /> class.
+             </summary>
+             <param name="build">Build.</param>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildRemovedEventArgs">
+             <summary>
+             Arguments for build removed events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildRemovedEventArgs.#ctor(Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Builds.BuildRemovedEventArgs" /> class.
+             </summary>
+             <param name="build">Build.</param>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildStatusChangedEventArgs">
+             <summary>
+             Arguments for build status changed events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildStatusChangedEventArgs.#ctor(Buildron.Domain.Builds.IBuild,Buildron.Domain.Builds.BuildStatus)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Builds.BuildStatusChangedEventArgs" /> class.
+             </summary>
+             <param name="build">Build.</param>
+             <param name="previousStatus">Previous status.</param>
+            </member>
+        <member name="P:Buildron.Domain.Builds.BuildStatusChangedEventArgs.PreviousStatus">
+             <summary>
+             Gets the previous build status.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildTriggeredByChangedEventArgs">
+             <summary>
+             Arguments for build triggered by changed events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildTriggeredByChangedEventArgs.#ctor(Buildron.Domain.Builds.IBuild,Buildron.Domain.Users.IUser)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Builds.BuildTriggeredByChangedEventArgs" /> class.
+             </summary>
+             <param name="build">Build.</param>
+             <param name="previousTriggeredBy">Previous triggered by.</param>
+            </member>
+        <member name="P:Buildron.Domain.Builds.BuildTriggeredByChangedEventArgs.PreviousTriggeredBy">
+             <summary>
+             Gets the previous triggered by.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildUpdatedEventArgs">
+             <summary>
+             Build updated event arguments.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildUpdatedEventArgs.#ctor(Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Builds.BuildUpdatedEventArgs" /> class.
+             </summary>
+             <param name="build">Build.</param>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildsRefreshedEventArgs">
+             <summary>
+             Arguments for builds refreshed events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildsRefreshedEventArgs.#ctor(System.Collections.Generic.IList{Buildron.Domain.Builds.IBuild},System.Collections.Generic.IList{Buildron.Domain.Builds.IBuild},System.Collections.Generic.IList{Buildron.Domain.Builds.IBuild})">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Builds.BuildsRefreshedEventArgs" /> class.
+             </summary>
+             <param name="buildsStatusChanged">Builds that status changed.</param>
+             <param name="buildsFound">Builds found.</param>
+             <param name="buildsRemoved">Builds removed.</param>
+            </member>
+        <member name="P:Buildron.Domain.Builds.BuildsRefreshedEventArgs.BuildsStatusChanged">
+             <summary>
+             Gets the builds that status changed in builds refresh.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.BuildsRefreshedEventArgs.BuildsFound">
+             <summary>
+             Gets the builds found in builds refresh.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.BuildsRefreshedEventArgs.BuildsRemoved">
+             <summary>
+             Gets the builds removed in builds refresh.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildStatus">
+             <summary>
+             Build status.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.Unknown">
+             <summary>
+             Build is in an unknown status.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.Success">
+             <summary>
+             Build has finish with success.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.Error">
+             <summary>
+             Build is in error status.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.Failed">
+             <summary>
+             Build has failed
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.Canceled">
+             <summary>
+             Build has been canceled.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.Queued">
+             <summary>
+             Build has been queued.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.Running">
+             <summary>
+             Build is running.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.RunningUnitTests">
+             <summary>
+             Build is running unit tests.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.RunningFunctionalTests">
+             <summary>
+             Build is running functional tests.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.RunningDuplicatesFinder">
+             <summary>
+             Build is running duplicates finder.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.RunningCodeAnalysis">
+             <summary>
+             Build is running code analysis.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStatus.RunningDeploy">
+             <summary>
+             Build is running deploy.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Builds.IBuild">
+             <summary>
+             Defines an interface to a build.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Builds.IBuild.StatusChanged">
+             <summary>
+             Occurs when status has changed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Builds.IBuild.TriggeredByChanged">
+             <summary>
+             Occurs when triggered by has changed.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.Configuration">
+             <summary>
+             Gets or sets the configuration.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.Date">
+             <summary>
+             Gets or sets the date.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.Id">
+             <summary>
+             Gets or sets the identifier.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.LastChangeDescription">
+             <summary>
+             Gets a value indicating whether the build has failed (Canceled | Error | Failed)
+             </summary> 
+             <summary>
+             Gets or sets the last change description.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.LastRanStep">
+             <summary>
+             Gets or sets the last ran step.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.PercentageComplete">
+             <summary>
+             Gets or sets the percentage complete.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.PreviousStatus">
+             <summary>
+             Gets the previous status.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.Sequence">
+             <summary>
+             Gets or sets the sequence.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.Status">
+             <summary>
+             Gets or sets the status.
+             </summary>	
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.TriggeredBy">
+             <summary>
+             Gets or sets the user that triggered the build.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Builds.IBuildConfiguration">
+             <summary>
+             Defines an interface to a build configuration.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuildConfiguration.Id">
+             <summary>
+             Gets or sets the identifier.
+             </summary>
+             <value>The identifier.</value>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuildConfiguration.Name">
+             <summary>
+             Gets or sets the name.
+             </summary>
+             <value>The name.</value>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuildConfiguration.Project">
+             <summary>
+             Gets or sets the project.
+             </summary>
+             <value>The project.</value>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuildConfiguration.Steps">
+             <summary>
+             Gets or sets the steps.
+             </summary>
+             <value>The steps.</value>
+            </member>
+        <member name="T:Buildron.Domain.Builds.IBuildProject">
+             <summary>
+             Defines an interface to a build's project.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuildProject.Name">
+             <summary>
+             Gets or sets the name.
+             </summary>
+             <value>The name.</value>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildStepType">
+             <summary>
+             Build step type.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStepType.None">
+             <summary>
+             None.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStepType.Compilation">
+             <summary>
+             Build step is compilation.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStepType.UnitTest">
+             <summary>
+             Build step is unit test.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStepType.CodeAnalysis">
+             <summary>
+             Build step is code analysis.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStepType.CodeDuplicationFinder">
+             <summary>
+             Build step is duplication finder.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStepType.Deploy">
+             <summary>
+             Build step is deploy.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStepType.Statistics">
+             <summary>
+             Build step is statistics.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Builds.BuildStepType.PackagePublishing">
+             <summary>
+             Build step is package publishing.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Builds.IBuildStep">
+             <summary>
+             Defines an interface to a build's step.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuildStep.Name">
+             <summary>
+             Gets or sets the name.
+             </summary>
+             <value>The name.</value>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuildStep.StepType">
+             <summary>
+             Gets or sets the type of the step.
+             </summary>
+             <value>The type of the step.</value>
+            </member>
+        <member name="T:Buildron.Domain.CIServers.CIServerEventArgsBase">
+             <summary>
+             Base class to arguments for CI Server events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.CIServers.CIServerEventArgsBase.#ctor(Buildron.Domain.CIServers.ICIServer)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.CIServers.CIServerEventArgsBase" /> class.
+             </summary>
+             <param name="server">The continuous integration server.</param>
+            </member>
+        <member name="P:Buildron.Domain.CIServers.CIServerEventArgsBase.Server">
+             <summary>
+             Gets the server.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.CIServers.CIServerStatusChangedEventArgs">
+             <summary>
+             Arguments for continous integration server status changed events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.CIServers.CIServerStatusChangedEventArgs.#ctor(Buildron.Domain.CIServers.ICIServer)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.CIServers.CIServerStatusChangedEventArgs" /> class.
+             </summary>
+             <param name="server">Server.</param>
+            </member>
+        <member name="T:Buildron.Domain.CIServers.CIServerType">
+             <summary>
+             Continous integration server types.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.CIServers.CIServerType.Hudson">
+             <summary>
+             Hudson: http://hudson-ci.org
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.CIServers.CIServerType.Jenkins">
+             <summary>
+             Jenkins: https://jenkins.io
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.CIServers.CIServerType.TeamCity">
+             <summary>
+             TeamCity: https://www.jetbrains.com/teamcity/
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.CIServers.CIServerStatus">
+             <summary>
+             Continuous integration server status.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.CIServers.CIServerStatus.Up">
+             <summary>
+             Continous integration server is Up.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.CIServers.CIServerStatus.Down">
+             <summary>
+             Continous integration server is down.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.CIServers.ICIServer">
+             <summary>
+             Defines an interface to the Continuous Integration Server entity.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.CIServers.ICIServer.ServerType">
+             <summary>
+             Gets or sets the type of the server.
+             </summary>
+             <value>
+             The type of the server.
+             </value>
+            </member>
+        <member name="P:Buildron.Domain.CIServers.ICIServer.Title">
+             <summary>
+             Gets or sets the title.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.CIServers.ICIServer.IP">
+             <summary>
+             Gets or sets the IP.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.CIServers.ICIServer.RefreshSeconds">
+             <summary>
+             Gets or sets the refresh seconds.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.CIServers.ICIServer.Status">
+             <summary>
+             Gets or sets the status.
+             </summary>
+             <value>The status.</value>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IMod">
+             <summary>
+             Defines an interface for a Buildron's mod.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IMod.Initialize(Buildron.Domain.Mods.IModContext)">
+             <summary>
+             Initialize the mod with the context.
+             </summary>
+             <param name="context">The mod context.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IModContext">
+             <summary>
+             Defines an interface to the mod context.
+             ModContext is basically a facade to many events that occurs in Buildron.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.BuildFound">
+             <summary>
+             Occurs when a build is found.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.BuildRemoved">
+             <summary>
+             Occurs when a build is removed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.BuildUpdated">
+             <summary>
+             Occurs when a build is updated.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.BuildStatusChanged">
+             <summary>
+             Occurs when a build status changed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.BuildTriggeredByChanged">
+             <summary>
+             Occurs when build's triggered by changed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.BuildsRefreshed">
+             <summary>
+             Occurs when builds are refreshed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.CIServerConnected">
+             <summary>
+             Occurs when CI server is connected.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.CIServerStatusChanged">
+             <summary>
+             Occurs when CI server status changed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.UserFound">
+             <summary>
+             Occurs when an user is found.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.UserUpdated">
+             <summary>
+             Occurs when an user is updated.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.UserTriggeredBuild">
+             <summary>
+             Occurs when an user triggered build.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.UserRemoved">
+             <summary>
+             Occurs when an user is removed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.UserAuthenticationCompleted">
+             <summary>
+             Occurs when an user authentication is completed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.RemoteControlChanged">
+             <summary>
+             Occurs when a remote control changed.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Mods.IModContext.RemoteControlCommandReceived">
+             <summary>
+             Occurs when a remote control command is received.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Builds">
+             <summary>
+             Gets the builds.
+             </summary>
+             <value>The builds.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Users">
+             <summary>
+             Gets the users.
+             </summary>
+             <value>The users.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.CIServer">
+             <summary>
+             Gets the CI server.
+             </summary>
+             <value>The CI server.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Log">
+             <summary>
+             Gets the log.
+             </summary>
+             <value>The log.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Assets">
+             <summary>
+             Gets the assets.
+             </summary>
+             <value>The assets.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.GameObjects">
+             <summary>
+             Gets the game objects.
+             </summary>
+             <value>The game objects.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.GameObjectsPool">
+             <summary>
+             Gets the game objects pool.
+             </summary>
+             <value>The game objects pool.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.UI">
+             <summary>
+             Gets the UI.
+             </summary>
+             <value>The U.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.FileSystem">
+             <summary>
+             Gets the file system.
+             </summary>
+             <value>The file system.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Data">
+             <summary>
+             Gets the data.
+             </summary>
+             <value>The data.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.BuildGameObjects">
+             <summary>
+             Gets the build game objects.
+             </summary>
+             <value>The build game objects.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.UserGameObjects">
+             <summary>
+             Gets the user game objects.
+             </summary>
+             <value>The user game objects.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Camera">
+             <summary>
+             Gets the camera.
+             </summary>
+             <value>The camera.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Preferences">
+             <summary>
+             Gets the preferences.
+             </summary>
+             <value>The preferences.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.RemoteControl">
+             <summary>
+             Gets the remote control.
+             </summary>
+             <value>The remote control.</value>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.IRemoteControl">
+             <summary>
+             Defines an interface for a Buildron RC.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.IRemoteControl.Connected">
+             <summary>
+             Gets or sets a value indicating whether this <see cref="T:Buildron.Domain.RemoteControls.IRemoteControl" /> is connected.
+             </summary>
+             <value><c>true</c> if connected; otherwise, <c>false</c>.</value>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.RemoteControlChangedEventArgs">
+             <summary>
+             Arguments for remote control changed events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.RemoteControls.RemoteControlChangedEventArgs.#ctor(Buildron.Domain.RemoteControls.IRemoteControl)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.RemoteControlChangedEventArgs" /> class.
+             </summary>
+             <param name="remoteControl">The remote control.</param>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.RemoteControlChangedEventArgs.RemoteControl">
+             <summary>
+             Gets the remote control.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Users.UserKind">
+             <summary>
+             User kind.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Users.UserKind.Human">
+             <summary>
+             A human user.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Users.UserKind.ScheduledTrigger">
+             <summary>
+             A scheduled trigger user.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Users.UserKind.RetryTrigger">
+             <summary>
+             A retry trigger user.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Users.IUser">
+             <summary>
+             Defines an interface for a user that trigger a build.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Users.IUser.PhotoUpdated">
+             <summary>
+             Occurs when photo updated.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IUser.Builds">
+             <summary>
+             Gets the build.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IUser.UserName">
+             <summary>
+             Gets or sets the username
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IUser.Name">
+             <summary>
+             Gets or sets the name.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IUser.Email">
+             <summary>
+             Gets or sets the email.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IUser.Kind">
+             <summary>
+             Gets or sets the kind.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IUser.Photo">
+             <summary>
+             Gets or sets the photo.
+             </summary>
+             <value>The photo.</value>
+            </member>
+        <member name="T:Buildron.Domain.Users.UserAuthenticationCompletedEventArgs">
+             <summary>
+             User authentication completed event arguments.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Users.UserAuthenticationCompletedEventArgs.#ctor(Buildron.Domain.Users.IAuthUser,System.Boolean)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Users.UserAuthenticationCompletedEventArgs" /> class.
+             </summary>
+             <param name="user">User.</param>
+             <param name="success">If set to <c>true</c> success.</param>
+            </member>
+        <member name="P:Buildron.Domain.Users.UserAuthenticationCompletedEventArgs.User">
+             <summary>
+             Gets the user.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.UserAuthenticationCompletedEventArgs.Success">
+             <summary>
+             Gets a value indicating whether this <see cref="T:Buildron.Domain.Users.UserAuthenticationCompletedEventArgs" /> is success.
+             </summary>
+             <value><c>true</c> if success; otherwise, <c>false</c>.</value>
+            </member>
+        <member name="T:Buildron.Domain.Users.UserEventArgsBase">
+             <summary>
+             Base class to arguments for user events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Users.UserEventArgsBase.#ctor(Buildron.Domain.Users.IUser)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Users.UserEventArgsBase" /> class.
+             </summary>
+             <param name="user">The user.</param>
+            </member>
+        <member name="P:Buildron.Domain.Users.UserEventArgsBase.User">
+             <summary>
+             Gets the user.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Users.UserFoundEventArgs">
+             <summary>
+             Arguments for user found events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Users.UserFoundEventArgs.#ctor(Buildron.Domain.Users.IUser)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Users.UserFoundEventArgs" /> class.
+             </summary>
+             <param name="user">The user.</param>
+            </member>
+        <member name="T:Buildron.Domain.Users.UserRemovedEventArgs">
+             <summary>
+             Arguments for user removed events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Users.UserRemovedEventArgs.#ctor(Buildron.Domain.Users.IUser)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Users.UserRemovedEventArgs" /> class.
+             </summary>
+             <param name="user">The user.</param>
+            </member>
+        <member name="T:Buildron.Domain.Users.UserTriggeredBuildEventArgs">
+             <summary>
+             Arguments for user triggered build events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Users.UserTriggeredBuildEventArgs.#ctor(Buildron.Domain.Users.IUser,Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Users.UserTriggeredBuildEventArgs" /> class.
+             </summary>
+             <param name="user">The user.</param>
+             <param name="build">The build that user triggered</param>
+            </member>
+        <member name="P:Buildron.Domain.Users.UserTriggeredBuildEventArgs.Build">
+             <summary>
+             Gets the build.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Users.UserUpdatedEventArgs">
+             <summary>
+             Arguments for user updated events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Users.UserUpdatedEventArgs.#ctor(Buildron.Domain.Users.IUser)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Users.UserUpdatedEventArgs" /> class.
+             </summary>
+             <param name="user">The user.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IAssetsProxy">
+             <summary>
+             Defines an interface to an assets proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IAssetsProxy.Load(System.String)">
+             <summary>
+             Load an asset..
+             </summary>
+             <param name="assetName">The asset name.</param>
+            </member>
+        <member name="T:Buildron.Domain.Users.IAuthUser">
+             <summary>
+             Defines an interface to an user that can authenticate at CI sserver.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IAuthUser.Domain">
+             <summary>
+             Gets or sets the domain.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IAuthUser.DomainAndUserName">
+             <summary>
+             Gets the name of the domain and user.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IAuthUser.UserName">
+             <summary>
+             Gets or sets the username.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Users.IAuthUser.Password">
+             <summary>
+             Gets or sets the password.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IGameObjectsProxy">
+             <summary>
+             Defines an interface to a game objects proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IGameObjectsProxy.Create``1(System.String,System.Action{UnityEngine.GameObject})">
+             <summary>
+             Create a new game object with the specified component.
+             </summary>
+             <param name="name">The game object name.</param>
+             <param name="gameObjectCreatedCallback">This callback will be caller right after the game object creation and before the AddComponent method..</param>
+             <typeparam name="TComponent">The 1st type parameter.</typeparam>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IGameObjectsProxy.Create(UnityEngine.Object)">
+             <summary>
+             Create a new game object using the specified prefab.
+             </summary>
+             <param name="prefab">The prefab.</param>
+             <returns>The game object instance.</returns>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IGameObjectsProxy.Create(System.String)">
+             <summary>
+             Create a new game object with the specified name.
+             </summary>
+             <param name="name">The game object name.</param>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IGameObjectsProxy.AddComponent``1(UnityEngine.GameObject)">
+             <summary>
+             Adds the component to the specified game object.
+             </summary>
+             <returns>The component.</returns>
+             <param name="gameObject">The game object.</param>
+             <typeparam name="TComponent">The 1st type parameter.</typeparam>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IGameObjectsProxy.AddComponent(UnityEngine.GameObject,System.String)">
+             <summary>
+             Adds the component to the specified game object.
+             </summary>
+             <remarks>
+             This method is useful when you want to add a component to your mod game object, but the type of component is not available in your code, like camera effects that are available on Buildron runtime.
+             </remarks>
+             <returns>The component.</returns>
+             <param name="gameObject">The game object.</param>
+             <param name="componentTypeName">The component type name.</param>
+            </member>
+        <member name="T:Buildron.Domain.CIServers.CIServerConnectedEventArgs">
+             <summary>
+             Arguments for continous integration server connected events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.CIServers.CIServerConnectedEventArgs.#ctor(Buildron.Domain.CIServers.ICIServer)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.CIServers.CIServerConnectedEventArgs" /> class.
+             </summary>
+             <param name="server">Server.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IUIProxy">
+             <summary>
+             Define an interface to UI proxy.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IUIProxy.Font">
+             <summary>
+             Gets or sets the font.
+             </summary>
+             <value>The font.</value>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IUIProxy.SetStatusText(System.String,System.Single)">
+             <summary>
+             Sets the status text of Buildron UI.
+             </summary>
+             <returns>The status text.</returns>
+             <param name="text">The text.</param>
+             <param name="secondsTimeout">The seconds timeout to text be removed. Default is zero(0).</param>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildExtensions">
+             <summary>
+             Build extension methods.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildExtensions.IsSuccess(Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Gets a value indicating whether the build is finish with success.
+             </summary>
+             <value>
+             <c>true</c> if this instance is success; otherwise, <c>false</c>.
+             </value>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildExtensions.IsRunning(Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Gets a value indicating whether the build is running.
+             </summary>
+             <value>
+             <c>true</c> if this instance is running; otherwise, <c>false</c>.
+             </value>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildExtensions.IsQueued(Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Gets a value indicating whether the build has been queued.
+             </summary>
+             <value>
+               <c>true</c> if this instance is queued; otherwise, <c>false</c>.
+             </value>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildExtensions.IsFailed(Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Gets a value indicating whether the build has failed (Canceled | Error | Failed)
+             </summary>
+             <value>
+               <c>true</c> if this instance is failed; otherwise, <c>false</c>.
+             </value>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildExtensions.GetMostRelevantBuildForUser(System.Collections.Generic.IEnumerable{Buildron.Domain.Builds.IBuild},Buildron.Domain.Users.IUser)">
+             <summary>
+             Gets the most relevant build for user.
+             </summary>
+             <param name="builds">The builds</param>
+             <param name="user">User.</param>
+             <returns>The most relevant build for user.</returns>
+            </member>
+        <member name="T:GameObjectsProxyExtensions">
+             <summary>
+             Game objects proxy extension methods.
+             </summary>
+            </member>
+        <member name="M:GameObjectsProxyExtensions.Create``1(Buildron.Domain.Mods.IGameObjectsProxy,System.String,UnityEngine.Transform)">
+             <summary>
+             Create a new game object.
+             </summary>
+             <param name="proxy">Proxy.</param>
+             <param name="name">The game object name.</param>
+             <param name="parent">The game object parent.</param>
+             <typeparam name="TComponent">The component type.</typeparam>
+            </member>
+        <member name="M:GameObjectsProxyExtensions.Create``1(Buildron.Domain.Mods.IGameObjectsProxy,System.String,UnityEngine.Vector3)">
+             <summary>
+             Create a new game object.
+             </summary>
+             <param name="proxy">Proxy.</param>
+             <param name="name">The game object name.</param>
+             <param name="position">The game object position.</param>
+             <typeparam name="TComponent">The component type.</typeparam>
+            </member>
+        <member name="M:GameObjectsProxyExtensions.Create``1(Buildron.Domain.Mods.IGameObjectsProxy,UnityEngine.Vector3)">
+             <summary>
+             Create a new game object with the specified component.
+             </summary>
+             <param name="proxy">Proxy.</param>
+             <param name="position">The game object position.</param>
+             <typeparam name="TComponent">The component type.</typeparam>
+            </member>
+        <member name="M:GameObjectsProxyExtensions.Create(Buildron.Domain.Mods.IGameObjectsProxy,UnityEngine.Object,UnityEngine.Transform)">
+             <summary>
+             Create a new game object using the specified prefab.
+             </summary>
+             <param name="proxy">Proxy.</param>
+             <param name="prefab">The prefab.</param>
+             <param name="parent">The game object parent.</param>
+            </member>
+        <member name="M:GameObjectsProxyExtensions.Create(Buildron.Domain.Mods.IGameObjectsProxy,System.String,UnityEngine.Transform)">
+             <summary>
+             Create a new game object.
+             </summary>
+             <param name="proxy">Proxy.</param>
+             <param name="name">The game object name.</param>
+             <param name="parent">The game object parent.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IDataProxy">
+             <summary>
+             Defines an interface to a data proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IDataProxy.HasValue(System.String)">
+             <summary>
+             Verifiy if there is a value with the specified key.
+             </summary>
+             <returns>True if there is a value for the key.</returns>
+             <param name="key">The value's key.</param>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IDataProxy.SetValue``1(System.String,``0)">
+             <summary>
+             Set a value for the key.
+             </summary>
+             <returns>The value.</returns>
+             <param name="key">The value's key.</param>
+             <param name="value">The value.</param>
+             <typeparam name="TValue">The 1st type parameter.</typeparam>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IDataProxy.GetValue``1(System.String)">
+             <summary>
+             Gets the value.
+             </summary>
+             <returns>The value.</returns>
+             <param name="key">The value's key.</param>
+             <typeparam name="TValue">The 1st type parameter.</typeparam>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IDataProxy.RemoveValue``1(System.String)">
+             <summary>
+             Removes the value.
+             </summary>
+             <returns>The value.</returns>
+             <param name="key">The value's key.</param>
+             <typeparam name="TValue">The 1st type parameter.</typeparam>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IBuildGameObjectsProxy">
+             <summary>
+             Defines an interface to build game objects proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IBuildGameObjectsProxy.GetAll">
+             <summary>
+             Get all instances that implement IBuildController interface.
+             </summary>
+             <remarks>
+             This method will return all implementations of IBuildController instanced from all mods, so, this useful when you want that your
+             mod do something related to all builds game objects. See a sample of this on Buildron.ClassicMods.CameraMod that use this method to know how to
+             move the camera to show all builds game objects.
+             </remarks>
+             <returns>All IBuildController implentations intancs on Buildron right now.</returns>
+            </member>
+        <member name="T:FileSystemProxyExtensions">
+             <summary>
+             File system proxy extension methods.
+             </summary>
+            </member>
+        <member name="M:FileSystemProxyExtensions.SearchFiles(Buildron.Domain.Mods.IFileSystemProxy,System.String,System.Boolean)">
+             <summary>
+             Search for files on entire mod exclusive file system.
+             </summary>
+             <returns>The files.</returns>
+             <param name="fs">The file system.</param>
+             <param name="searchPattern">The search pattern. Example: *.png</param>
+             <param name="recursive">If the search should be recursive.</param>
+            </member>
+        <member name="M:FileSystemProxyExtensions.SearchDirectories(Buildron.Domain.Mods.IFileSystemProxy,System.String,System.Boolean)">
+             <summary>
+             Search for directories on entire mod exclusive file system.
+             </summary>
+             <returns>The files.</returns>
+             <param name="fs">The file system.</param>
+             <param name="searchPattern">The search pattern. Example: *Test*</param>
+             <param name="recursive">If the search should be recursive.</param>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IUserGameObjectsProxy">
+             <summary>
+             Defines an interface to user game objects proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IUserGameObjectsProxy.GetAll">
+             <summary>
+             Get all instances that implement IUserController interface.
+             </summary>
+             <remarks>
+             This method will return all implementations of IUserController instanced from all mods, so, this useful when you want that your
+             mod do something related to all user game objects. See a sample of this on Buildron.ClassicMods.CameraMod that use this method to know how to
+             move the camera to show all users game objects.
+             </remarks>
+             <returns>All IUserController implentations intancs on Buildron right now.</returns>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IUserController">
+             <summary>
+             Defines an interface to game objects that act as an user game object controller.
+             </summary>
+             <remarks>
+             While is not mandatory you use this interface on your user game objects, it's highly recommended that you implement it, because this allow
+             others mods know what are the currently user game objects and react to them, like Buildron.ClassicMods.CameraMod that move the camera to show all user game objects.
+             </remarks>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IUserController.Model">
+             <summary>
+             Gets the model.
+             </summary>
+             <value>The model.</value>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IGameObjectController">
+             <summary>
+             Defines a basic interface to game object controllers.
+             </summary>
+             <remarks>
+             This is interface is commonly used by mods that want to do something about game objects created by other mods, like builds and users.
+             </remarks>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IGameObjectController.gameObject">
+             <summary>
+             Gets the game object.
+             </summary>
+             <value>The game object.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IGameObjectController.Rigidbody">
+             <summary>
+             Gets the rigidbody.
+             </summary>
+             <value>The rigidbody.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IGameObjectController.CenterCollider">
+             <summary>
+             Gets the center collider.
+             </summary>
+             <value>The center collider.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IGameObjectController.TopCollider">
+             <summary>
+             Gets the top collider.
+             </summary>
+             <value>The top collider.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IGameObjectController.LeftCollider">
+             <summary>
+             Gets the left collider.
+             </summary>
+             <value>The left collider.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IGameObjectController.RightCollider">
+             <summary>
+             Gets the right collider.
+             </summary>
+             <value>The right collider.</value>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IGameObjectController.BottomCollider">
+             <summary>
+             Gets the bottom collider.
+             </summary>
+             <value>The bottom collider.</value>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IBuildController">
+             <summary>
+             Defines an interface to game objects that act as an build game object controller.
+             </summary>
+             <remarks>
+             While is not mandatory you use this interface on your build game objects, it's highly recommended that you implement it, because this allow
+             others mods know what are the currently build game objects and react to them, like Buildron.ClassicMods.CameraMod that move the camera to show all build game objects.
+             </remarks>
+            </member>
+        <member name="P:Buildron.Domain.Mods.IBuildController.Model">
+             <summary>
+             Gets the model.
+             </summary>
+             <value>The model.</value>
+            </member>
+        <member name="T:GameObjectControllerExtensions">
+             <summary>
+             Game object controller extension methods.
+             </summary>
+            </member>
+        <member name="M:GameObjectControllerExtensions.AreVisiblesFromLeft(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Verify whether all game object controllers are visible from main camera left side.
+             </summary>
+             <returns>The whether all are visibles from left.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.CountVisiblesFromLeft(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Count game object controllers that are visible from main camera left side.
+             </summary>
+             <returns>The count of visibles from left.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.AreVisiblesFromRight(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Verify whether all game object controllers are visible from main camera right side.
+             </summary>
+             <returns>The whether all are visibles from right.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.CountVisiblesFromRight(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Count game object controllers that are visible from main camera right side.
+             </summary>
+             <returns>The count of visibles from right.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.AreVisiblesFromHorizontal(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Verify whether all game object controllers are visible from main camera horizontal sides.
+             </summary>
+             <returns>The whether all are visibles from horizontal sides.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.AreVisiblesFromTop(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Verify whether all game object controllers are visible from main camera top side.
+             </summary>
+             <returns>The whether all are visibles from top.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.CountVisiblesFromTop(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Count game object controllers that are visible from main camera top side.
+             </summary>
+             <returns>The count of visibles from top.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.AreVisiblesFromBottom(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Verify whether all game object controllers are visible from main camera bottom side.
+             </summary>
+             <returns>The whether all are visibles from bottom.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.CountVisiblesFromBottom(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Count game object controllers that are visible from main camera bottom side.
+             </summary>
+             <returns>The count of visibles from bottom.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.AreVisiblesFromVertical(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Verify whether all game object controllers are visible from main camera vertical sides.
+             </summary>
+             <returns>The whether all are visibles from vertical.</returns>
+             <param name="controllers">The game object controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.Visible(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Get game object controllers that are visible from main camera.
+             </summary>
+             <param name="controllers">The controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.Stopped(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Get game object controllers that are stopped.
+             </summary>
+             <param name="controllers">The controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.AreAllSleeping(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Verify if all controllers physics are sleeping.
+             </summary>
+             <remarks>
+             Works well with the value of "Sleep Threshold" in the "Project settings\Physics" as "0.05".
+             </remarks>
+             <returns>True if all controllers are sleeping.</returns>
+            </member>
+        <member name="M:GameObjectControllerExtensions.WakeUpSleepingBuilds(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Issue #9: https://github.com/skahal/Buildron/issues/9
+             If a build was removed, maybe there are space between builds totems and some can be sleeping.
+             Wake everyone!
+             </summary>
+            </member>
+        <member name="M:GameObjectControllerExtensions.FreezeAll(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Freezes all game objects.
+             </summary>
+            </member>
+        <member name="M:GameObjectControllerExtensions.UnfreezeAll(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Unfreezes all game objects.
+             </summary>
+             <param name="controllers">The controllers.</param>
+            </member>
+        <member name="M:GameObjectControllerExtensions.GetVisiblesOrderByPosition(Buildron.Domain.Mods.IGameObjectController[])">
+             <summary>
+             Gets the visibles game object controllers ordered by position.
+             </summary>
+             <returns>The visibles order by position.</returns>
+             <param name="controllers">Controllers.</param>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.RemoteControlCommandReceivedEventArgs">
+             <summary>
+             Arguments for remote control command received events.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.RemoteControls.RemoteControlCommandReceivedEventArgs.#ctor(Buildron.Domain.RemoteControls.IRemoteControl,Buildron.Domain.RemoteControls.IRemoteControlCommand)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.RemoteControlCommandReceivedEventArgs" /> class.
+             </summary>
+             <param name="remoteControl">The remote control.</param>
+             <param name="command">The remote control command.</param>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.RemoteControlCommandReceivedEventArgs.RemoteControl">
+             <summary>
+             Gets the remote control.
+             </summary>
+             <value>The remote control.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.RemoteControlCommandReceivedEventArgs.Command">
+             <summary>
+             Gets the command.
+             </summary>
+             <value>The command.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.RemoteControlCommandReceivedEventArgs.Cancel">
+             <summary>
+             Gets or sets a value that indicate whether the command should be canceled.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.IRemoteControlCommand">
+             <summary>
+             Defines a markup interface to remote control commands.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.TakeScreenshotRemoteControlCommand">
+             <summary>
+             Take screenshot remote control command.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand">
+             <summary>
+             Filter builds remote control command.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand.#ctor">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand" /> class.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand.#ctor(System.String)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand" /> class.
+             </summary>
+             <param name="keyWord">Key word.</param>
+            </member>
+        <member name="M:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand.#ctor(System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand" /> class.
+             </summary>
+             <param name="successEnabled">Success enabled.</param>
+             <param name="runningEnabled">Running enabled.</param>
+             <param name="failedEnabled">Failed enabled.</param>
+             <param name="queuedEnabled">Queued enabled.</param>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand.SuccessEnabled">
+             <summary>
+             Gets or sets the success enabled.
+             </summary>
+             <value>The success enabled.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand.RunningEnabled">
+             <summary>
+             Gets or sets the running enabled.
+             </summary>
+             <value>The running enabled.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand.FailedEnabled">
+             <summary>
+             Gets or sets the failed enabled.
+             </summary>
+             <value>The failed enabled.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand.QueuedEnabled">
+             <summary>
+             Gets the queued enabled.
+             </summary>
+             <value>The queued enabled.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.FilterBuildsRemoteControlCommand.KeyWord">
+             <summary>
+             Gets or sets the key word.
+             </summary>
+             <value>The key word.</value>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.MoveCameraRemoteControlCommand">
+             <summary>
+             Move camera remote control command.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.RemoteControls.MoveCameraRemoteControlCommand.#ctor(UnityEngine.Vector3)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.MoveCameraRemoteControlCommand" /> class.
+             </summary>
+             <param name="direction">The move direction.</param>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.MoveCameraRemoteControlCommand.Direction">
+             <summary>
+             Gets the direction.
+             </summary>
+             <value>The direction.</value>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.ResetCameraRemoteControlCommand">
+             <summary>
+             Reset camera remote control command.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.CustomRemoteControlCommand">
+             <summary>
+             Custom remote control command.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.RemoteControls.CustomRemoteControlCommand.#ctor(System.String)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.CustomRemoteControlCommand" /> class.
+             </summary>
+             <param name="name">The custom command name.</param>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.CustomRemoteControlCommand.Name">
+             <summary>
+             Gets the name.
+             </summary>
+             <value>The name.</value>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IPreferencesProxy">
+             <summary>
+             Defines an interface to a preferences proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IPreferencesProxy.Register(Buildron.Domain.Mods.Preference[])">
+             <summary>
+             Register the specified preferences to be available for the users.
+             </summary>
+             <remarks>
+             This method should be called on mod initialization to register mod's preferences.
+             </remarks>
+             <param name="preferences">The preferences.</param>
+            </member>
+        <member name="T:Buildron.Domain.Users.UserExtensions">
+             <summary>
+             User extension methods.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Users.UserExtensions.HasFailedBuild(Buildron.Domain.Users.IUser)">
+             <summary>
+             Determines whether this instance has failed build.
+             </summary>
+             <returns><c>true</c> if this instance has failed build; otherwise, <c>false</c>.</returns>
+            </member>
+        <member name="M:Buildron.Domain.Users.UserExtensions.HasRunningBuild(Buildron.Domain.Users.IUser)">
+             <summary>
+             Determines whether this instance has running build.
+             </summary>
+             <returns><c>true</c> if this instance has running build; otherwise, <c>false</c>.</returns>
+            </member>
+        <member name="T:Buildron.Domain.Builds.BuildMostRelevantStatusComparer">
+             <summary>
+             Build most relevant status comparer.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildMostRelevantStatusComparer.Compare(Buildron.Domain.Builds.IBuild,Buildron.Domain.Builds.IBuild)">
+             <summary>
+             Compare the specified x and y.
+             </summary>
+             <param name="x">The x coordinate.</param>
+             <param name="y">The y coordinate.</param>
+            </member>
+        <member name="M:Buildron.Domain.Builds.BuildMostRelevantStatusComparer.ToString">
+             <summary>
+             Returns a string that represents the current <see cref="T:Buildron.Domain.Builds.BuildMostRelevantStatusComparer" />.
+             </summary>
+             <returns>A string that represents the current <see cref="T:Buildron.Domain.Builds.BuildMostRelevantStatusComparer" />.</returns>
+            </member>
+        <member name="T:ModContextExtensions">
+             <summary>
+             Mod context extension methods.
+             </summary>
+            </member>
+        <member name="M:ModContextExtensions.CreateGameObjectFromPrefab(Buildron.Domain.Mods.IModContext,System.String)">
+             <summary>
+             Create a new game object from prefab name.
+             </summary>
+             <returns>The game object from prefab.</returns>
+             <param name="context">Context.</param>
+             <param name="prefabName">The prefab name.</param>
+            </member>
+        <member name="T:UserGameObjectControllerExtensions">
+             <summary>
+             User game object controller extension methods.
+             </summary>
+            </member>
+        <member name="M:UserGameObjectControllerExtensions.GetByUsername(Buildron.Domain.Mods.IUserController[],System.String)">
+             <summary>
+             Gets an user game object by the user's username model.
+             </summary>
+             <returns>The game object.</returns>
+             <param name="users">The users.</param>
+             <param name="userName">The username.</param>
+            </member>
+        <member name="T:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand">
+             <summary>
+             Sort builds remote control command.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.#ctor(Buildron.Domain.Sorting.ISortingAlgorithm{Buildron.Domain.Builds.IBuild},Buildron.Domain.Sorting.SortBy)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand" /> class.
+             </summary>
+             <param name="algorithm">Algorithm.</param>
+             <param name="sortBy">Sort by.</param>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.Algorithm">
+             <summary>
+             Gets or sets the algorithm.
+             </summary>
+             <value>The algorithm.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.SortBy">
+             <summary>
+             Gets or sets the sort by.
+             </summary>
+             <value>The sort by.</value>
+            </member>
+        <member name="T:Buildron.Domain.Sorting.SortingAlgorithmType">
+             <summary>
+             Sorting algorithm types.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Sorting.SortingAlgorithmType.None">
+             <summary>
+             No sorting at all.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Sorting.SortingAlgorithmType.Insertion">
+             <summary>
+             Insertion sort.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Sorting.SortingAlgorithmType.Selection">
+             <summary>
+             Selection sort.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Sorting.SortingAlgorithmType.Shell">
+             <summary>
+             Shell sort.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Sorting.SortingAlgorithmType.Bubble">
+             <summary>
+             Bubble sort.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Sorting.SortBy">
+             <summary>
+             The kinds of sort by.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Sorting.SortBy.Text">
+             <summary>
+             Sort by text.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Sorting.SortBy.Date">
+             <summary>
+             Sort by date.
+             </summary>
+            </member>
+        <member name="F:Buildron.Domain.Sorting.SortBy.RelevantStatus">
+             <summary>
+             Sort by relevant status.
+             </summary>
+            </member>
+        <member name="T:Buildron.Domain.Sorting.ISortingAlgorithm`1">
+             <summary>
+             Defines an interface for a sorting algorithm.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Sorting.ISortingAlgorithm`1.SortingBegin">
+             <summary>
+             Occurs when sorting begin.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Sorting.ISortingAlgorithm`1.SortingItemsSwapped">
+             <summary>
+             Occurs when sorting items swapped.
+             </summary>
+            </member>
+        <member name="E:Buildron.Domain.Sorting.ISortingAlgorithm`1.SortingEnded">
+             <summary>
+             Occurs when sorting end.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Sorting.ISortingAlgorithm`1.Name">
+             <summary>
+             Gets the name.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Sorting.ISortingAlgorithm`1.Comparer">
+             <summary>
+             Gets the comparer.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Sorting.ISortingAlgorithm`1.Sort(System.Collections.Generic.IList{`0},System.Collections.Generic.IComparer{`0})">
+             <summary>
+             Sorts the specified items.
+             </summary>
+             <param name="items">The items.</param>
+             <param name="comparer">The equality comparer.</param>
+            </member>
+        <member name="T:Buildron.Domain.Sorting.SortingBeginEventArgs">
+             <summary>
+             Sorting begin event arguments.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Sorting.SortingBeginEventArgs.#ctor(System.Boolean)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Sorting.SortingBeginEventArgs" /> class.
+             </summary>
+             <param name="wasAlreadySorted">A value indicating whether the items was already sorted.</param>
+            </member>
+        <member name="P:Buildron.Domain.Sorting.SortingBeginEventArgs.WasAlreadySorted">
+             <summary>
+             Gets a value indicating whether the itemswas already sorted.
+             </summary>
+             <value>
+               <c>true</c> if items was already sorted; otherwise, <c>false</c>.
+             </value>
+            </member>
+        <member name="T:Buildron.Domain.Sorting.SortingEndedEventArgs">
+             <summary>
+             Sorting ended event arguments.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Sorting.SortingEndedEventArgs.#ctor(System.Boolean)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Sorting.SortingEndedEventArgs" /> class.
+             </summary>
+             <param name="wasAlreadySorted">A value indicating whether the items was already sorted.</param>
+            </member>
+        <member name="T:Buildron.Domain.Sorting.SortingItemsSwappedEventArgs`1">
+             <summary>
+             Sorting items swapped event arguments.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Sorting.SortingItemsSwappedEventArgs`1.#ctor(`0,`0)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.Sorting.SortingItemsSwappedEventArgs`1" /> class.
+             </summary>
+             <param name="item1">Item 1.</param>
+             <param name="item2">Item 2.</param>
+            </member>
+        <member name="P:Buildron.Domain.Sorting.SortingItemsSwappedEventArgs`1.Item1">
+             <summary>
+             Gets the item 1.
+             </summary>
+             <value>The item 1.</value>
+            </member>
+        <member name="P:Buildron.Domain.Sorting.SortingItemsSwappedEventArgs`1.Item2">
+             <summary>
+             Gets the item 2.
+             </summary>
+             <value>The item 2.</value>
+            </member>
+    </members>
+</doc>
