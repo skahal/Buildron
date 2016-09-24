@@ -50,6 +50,8 @@ public class SortingController : MonoBehaviour
 			if(sortCmd != null)
 			{
 				sortCmd.Algorithm = sortCmd.Algorithm ?? SortingAlgorithmFactory.CreateSortingAlgorithm<IBuild>(sortCmd.AlgorithmType);
+				m_serverService.UpdateSorting(sortCmd.AlgorithmType, sortCmd.SortBy);
+
 				OnBuildSortUpdated(new BuildSortUpdatedEventArgs(sortCmd.Algorithm, sortCmd.SortBy));
 			}
 		};
