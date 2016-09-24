@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Skahal.Common;
+﻿using Skahal.Common;
 
 namespace Buildron.Domain.Mods
 {
@@ -37,6 +33,10 @@ namespace Buildron.Domain.Mods
 	/// </summary>
 	public class Preference
     {
+		#region Fields
+		private object m_defaultValue;
+		#endregion
+
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Buildron.Domain.Mods.Preference"/> class.
@@ -115,7 +115,40 @@ namespace Buildron.Domain.Mods
 		/// Gets or sets the default value.
 		/// </summary>
 		/// <value>The default value.</value>
-        public object DefaultValue { get; set; }
+        public object DefaultValue
+		{
+			get
+			{
+				if (m_defaultValue == null)
+				{
+					switch (Kind)
+					{
+						case PreferenceKind.Bool:
+							m_defaultValue = false;
+							break;
+
+						case PreferenceKind.Float:
+							m_defaultValue = 0f;
+							break;
+
+						case PreferenceKind.Int:
+							m_defaultValue = 0;
+							break;
+
+						case PreferenceKind.String:
+							// Empty is not the default for string, but is a more suitable for preferences.
+							m_defaultValue = string.Empty;
+							break;
+					}
+				}
+
+				return m_defaultValue;
+			}
+			set
+			{
+				m_defaultValue = value;
+			}
+		}
 		#endregion
     }
 }

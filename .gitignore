@@ -48,3 +48,5 @@ src/Buildron/Buildron.CSharp.Editor.csproj
 src/Buildron/Buildron.CSharp.Plugins.csproj
 Buildron.sln
 src/Buildron/Buildron.ModSdk/obj
+src/Buildron/Buildron.ModSdk/Buildron.ModSdk.UnitTests/bin
+src/Buildron/Buildron.ModSdk/Buildron.ModSdk.UnitTests/obj

@@ -136,20 +136,36 @@ public class SimulatorWindow : EditorWindow
                     break;
 
                 case PreferenceKind.Float:
-                    CreateControl(p.Title, () => preferences.SetValue<float>(p.Name, Convert.ToSingle(GUILayout.TextField(preferences.GetValue<float>(p.Name).ToString()))));
+					CreateControl(p.Title, () =>
+					{
+						try
+						{
+							preferences.SetValue<float>(p.Name, Convert.ToSingle(GUILayout.TextField(preferences.GetValue<float>(p.Name).ToString("0.0000"))));
+						}
+						catch (FormatException)
+						{
+							preferences.SetValue<float>(p.Name, 0f);
+						}
+					});
                     break;
 
                 case PreferenceKind.Int:
-				CreateControl(p.Title, () => {
-					var intValue = GUILayout.TextField(preferences.GetValue<int>(p.Name).ToString());
-
-					preferences.SetValue<int>(p.Name, String.IsNullOrEmpty(intValue) ? 0 : Convert.ToInt32(intValue));
-				});
+				CreateControl(p.Title, () => 
+					{
+						try
+						{
+							preferences.SetValue<int>(p.Name, Convert.ToInt32(GUILayout.TextField(preferences.GetValue<int>(p.Name).ToString())));
+						}
+						catch (FormatException)
+						{
+							preferences.SetValue<int>(p.Name, 0);
+						}
+					});
                     break;
 
                 case PreferenceKind.String:
-                    CreateControl(p.Title, () => preferences.SetValue<string>(p.Name, GUILayout.TextField(preferences.GetValue<string>(p.Name))));
-                    break;
+					CreateControl(p.Title, () => preferences.SetValue<string>(p.Name, GUILayout.TextField(preferences.GetValue<string>(p.Name))));
+			        break;
             }            
         }
     }
