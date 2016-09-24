@@ -15,6 +15,7 @@ using Skahal.Common;
 using Skahal.Logging;
 using UnityEngine;
 using Buildron.Infrastructure.PreferencesProxies;
+using Buildron.Infrastructure.ThreadProxies;
 
 /// <summary>
 /// Simulator mod context.
@@ -189,7 +190,17 @@ public class SimulatorModContext : MonoBehaviour, IModContext {
 	/// <value>The preferences.</value>
 	public IPreferencesProxy Preferences { get; private set; }
 
+	/// <summary>
+	/// Gets the remote control.
+	/// </summary>
+	/// <value>The remote control.</value>
 	public IRemoteControlProxy RemoteControl { get; private set; }
+
+	/// <summary>
+	/// Gets the remote control.
+	/// </summary>
+	/// <value>The remote control.</value>
+	public IThreadProxy Thread { get; private set; }
     #endregion
 
     #region Methods
@@ -219,7 +230,8 @@ public class SimulatorModContext : MonoBehaviour, IModContext {
 		Preferences = new ModPreferencesProxy(modInfo);
 		BuildGameObjects = new ModBuildGameObjectsProxy ();
 		UserGameObjects = new ModUserGameObjectsProxy ();
-
+		RemoteControl = new SimulatorRemoteControlProxy();
+		Thread = new ModThreadProxy(Log, GameObjects);
 	
 		var mod = Activator.CreateInstance (modType) as IMod;
 		mod.Initialize (this);
@@ -263,16 +275,23 @@ public class SimulatorModContext : MonoBehaviour, IModContext {
 
 	public void RaiseBuildStatusChanged(BuildStatus status)
 	{
-		if (Builds.Count == 0) {
-			RaiseBuildFound (new SimulatorBuild () {
+		var previousStatus = BuildStatus.Unknown;
+
+		if (Builds.Count == 0)
+		{
+			RaiseBuildFound(new SimulatorBuild()
+			{
 				Status = BuildStatus.Unknown
 			});
+		}
+		else {
+			previousStatus = Builds[Builds.Count - 1].Status;
 		}
 
 		var build = Builds [Builds.Count - 1];
 		build.Status = status;
 		Log.Debug("BuildStatusChanged: {0}: {1}", build.Id, build.Status);
-		BuildStatusChanged.Raise(this, new BuildStatusChangedEventArgs(build, build.Status));
+		BuildStatusChanged.Raise(this, new BuildStatusChangedEventArgs(build, previousStatus));
 	}
 
 	public void RaiseBuildTriggeredByChanged(SimulatorBuild build, SimulatorUser user)

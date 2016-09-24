@@ -60,6 +60,22 @@ namespace Buildron.Infrastructure.FunctionalTests.PreferenceProxies
             Assert.Catch<InvalidCastException>(() => target.GetValue<string>("P1"));
         }
 
+		[Test]
+		public void GetValue_ValueAndDefaultValueNull_DefaultValueOfType()
+		{
+			var info = new ModInfo("test");
+			var target = new ModPreferencesProxy(info);
+			var preferences = new Preference[]
+			{
+				new Preference("P11", "Preference one", PreferenceKind.Int),
+			};
+			target.Register(preferences);
+		
+			var actual = target.GetValue<int>("P11");
+			target.RemoveValue<int>("P11");
+			Assert.AreEqual(0, actual);
+		}
+
         [Test]
         public void GetValue_RegisteredPreferenceBool_Value()
         {

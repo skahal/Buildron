@@ -888,6 +888,12 @@
              </summary>
              <value>The remote control.</value>
             </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Thread">
+             <summary>
+             Gets the thread.
+             </summary>
+             <value>The thread.</value>
+            </member>
         <member name="T:Buildron.Domain.RemoteControls.IRemoteControl">
              <summary>
              Defines an interface for a Buildron RC.
@@ -1781,11 +1787,24 @@
              <param name="algorithm">Algorithm.</param>
              <param name="sortBy">Sort by.</param>
             </member>
+        <member name="M:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.#ctor(Buildron.Domain.Sorting.SortingAlgorithmType,Buildron.Domain.Sorting.SortBy)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand" /> class.
+             </summary>
+             <param name="algorithmType">Algorithm type.</param>
+             <param name="sortBy">Sort by.</param>
+            </member>
         <member name="P:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.Algorithm">
              <summary>
              Gets or sets the algorithm.
              </summary>
              <value>The algorithm.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.AlgorithmType">
+             <summary>
+             Gets or sets the type of the algorithm.
+             </summary>
+             <value>The type of the algorithm.</value>
             </member>
         <member name="P:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.SortBy">
              <summary>
@@ -1933,6 +1952,17 @@
              Gets the item 2.
              </summary>
              <value>The item 2.</value>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IThreadProxy">
+             <summary>
+             Define an interface to thread proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IThreadProxy.RunOnMainThread(System.Action)">
+             <summary>
+             Runs the action on main thread.
+             </summary>
+             <param name="action">Action.</param>
             </member>
     </members>
 </doc>

@@ -152,9 +152,7 @@ namespace Buildron.Controllers
                 SendToRCCurrentServerState();
             };
 
-            m_serverState.BuildSortingAlgorithmType = sortingType;
-            m_serverState.BuildSortBy = sortByProperty;
-            m_serverService.SaveState(m_serverState);   
+     		m_serverService.UpdateSorting(sortingType, sortByProperty);
 
 			m_remoteControlService.ReceiveCommand (
 				new SortBuildsRemoteControlCommand (sorting, sortByProperty));

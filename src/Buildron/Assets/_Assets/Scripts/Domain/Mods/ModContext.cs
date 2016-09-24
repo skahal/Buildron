@@ -5,6 +5,7 @@ using Buildron.Domain.CIServers;
 using Buildron.Domain.RemoteControls;
 using Buildron.Domain.Users;
 using Buildron.Infrastructure.RemoteControlProxies;
+using Buildron.Infrastructure.ThreadProxies;
 using Skahal.Common;
 using Skahal.Logging;
 
@@ -59,6 +60,7 @@ namespace Buildron.Domain.Mods
 			Camera = new LogCameraProxy (instance.Camera, Log);
 			Preferences = new LogPreferencesProxy(instance.Preferences, Log);
             RemoteControl = new ModRemoteControlProxy(remoteControlService);
+			Thread = new ModThreadProxy(Log, GameObjects);
 
             m_buildService = buildService;
             m_ciServerService = ciServerService;
@@ -119,6 +121,8 @@ namespace Buildron.Domain.Mods
         public IPreferencesProxy Preferences { get; private set; }
 
         public IRemoteControlProxy RemoteControl { get; private set; }
+
+		public IThreadProxy Thread { get; private set; }
         #endregion
 
         #region Methods     
