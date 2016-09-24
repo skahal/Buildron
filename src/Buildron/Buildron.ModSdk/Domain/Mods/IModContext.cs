@@ -181,6 +181,12 @@ namespace Buildron.Domain.Mods
 		/// </summary>
 		/// <value>The remote control.</value>
         IRemoteControlProxy RemoteControl { get; }
+
+		/// <summary>
+		/// Gets the thread.
+		/// </summary>
+		/// <value>The thread.</value>
+		IThreadProxy Thread { get; }
         #endregion
     }
 }

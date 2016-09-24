@@ -888,6 +888,12 @@
              </summary>
              <value>The remote control.</value>
             </member>
+        <member name="P:Buildron.Domain.Mods.IModContext.Thread">
+             <summary>
+             Gets the thread.
+             </summary>
+             <value>The thread.</value>
+            </member>
         <member name="T:Buildron.Domain.RemoteControls.IRemoteControl">
              <summary>
              Defines an interface for a Buildron RC.
@@ -1946,6 +1952,17 @@
              Gets the item 2.
              </summary>
              <value>The item 2.</value>
+            </member>
+        <member name="T:Buildron.Domain.Mods.IThreadProxy">
+             <summary>
+             Define an interface to thread proxy.
+             </summary>
+            </member>
+        <member name="M:Buildron.Domain.Mods.IThreadProxy.RunOnMainThread(System.Action)">
+             <summary>
+             Runs the action on main thread.
+             </summary>
+             <param name="action">Action.</param>
             </member>
     </members>
 </doc>
