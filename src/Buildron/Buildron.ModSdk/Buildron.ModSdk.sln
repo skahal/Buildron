@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buildron.ModSdk", "Buildron.ModSdk.csproj", "{64D6A3EB-ED6C-455B-BD11-B94255E7FC21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skahal.Unity.Scripts.Externals", "..\Skahal-Unity-Scripts\src\Skahal.Unity.Scripts.Externals\Skahal.Unity.Scripts.Externals.csproj", "{AF958CBE-9458-434A-9FAA-0671995A2974}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skahal.Unity.Scripts", "..\Skahal-Unity-Scripts\src\Skahal.Unity.Scripts.csproj", "{D1F95AB1-B370-4D85-8FBD-E30869E8ACF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skahal.Unity.Scripts.UnitTests", "..\Skahal-Unity-Scripts\src\Skahal.Unity.Scripts.UnitTests.csproj", "{893140C7-ACED-4DA4-975A-E04E868AAA84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buildron.ModSdk.Editor", "Editor\Buildron.ModSdk.Editor.csproj", "{9E5DC72E-1BB3-4704-A962-B2B89BB075B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buildron.ModSdk.UnitTests", "Buildron.ModSdk.UnitTests\Buildron.ModSdk.UnitTests.csproj", "{73FE63D6-7B35-43F5-8E71-DA0B26F2E5E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64D6A3EB-ED6C-455B-BD11-B94255E7FC21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64D6A3EB-ED6C-455B-BD11-B94255E7FC21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64D6A3EB-ED6C-455B-BD11-B94255E7FC21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64D6A3EB-ED6C-455B-BD11-B94255E7FC21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{893140C7-ACED-4DA4-975A-E04E868AAA84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{893140C7-ACED-4DA4-975A-E04E868AAA84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{893140C7-ACED-4DA4-975A-E04E868AAA84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{893140C7-ACED-4DA4-975A-E04E868AAA84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E5DC72E-1BB3-4704-A962-B2B89BB075B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E5DC72E-1BB3-4704-A962-B2B89BB075B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E5DC72E-1BB3-4704-A962-B2B89BB075B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E5DC72E-1BB3-4704-A962-B2B89BB075B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF958CBE-9458-434A-9FAA-0671995A2974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF958CBE-9458-434A-9FAA-0671995A2974}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF958CBE-9458-434A-9FAA-0671995A2974}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF958CBE-9458-434A-9FAA-0671995A2974}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1F95AB1-B370-4D85-8FBD-E30869E8ACF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1F95AB1-B370-4D85-8FBD-E30869E8ACF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1F95AB1-B370-4D85-8FBD-E30869E8ACF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1F95AB1-B370-4D85-8FBD-E30869E8ACF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73FE63D6-7B35-43F5-8E71-DA0B26F2E5E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73FE63D6-7B35-43F5-8E71-DA0B26F2E5E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73FE63D6-7B35-43F5-8E71-DA0B26F2E5E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73FE63D6-7B35-43F5-8E71-DA0B26F2E5E2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

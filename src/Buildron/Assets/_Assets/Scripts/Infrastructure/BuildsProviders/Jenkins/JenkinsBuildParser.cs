@@ -1,10 +1,7 @@
-#region Usings
-using Buildron.Domain;
 using System.Xml;
-using System.Text.RegularExpressions;
 using System;
 using System.Globalization;
-#endregion
+using Buildron.Domain.Builds;
 
 namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 {
@@ -29,39 +26,14 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			build.Id = xmlDoc.SelectSingleNode ("//id").InnerText;
 			build.Sequence = Convert.ToInt32 (xmlDoc.SelectSingleNode ("//number").InnerText);
 			build.LastChangeDescription = xmlDoc.SelectSingleNode ("//action/cause/shortDescription").InnerText;
-			build.TriggeredBy = JenkinsBuildUserParser.ParseUserFromBuildResponse (xmlDoc);
+			build.TriggeredBy = JenkinsUserParser.ParseUserFromBuildResponse (xmlDoc);
 			build.Status = ParseStatus (xmlDoc);
 			build.Date = ParseDate (buildTimestamp);
 			build.PercentageComplete = ParsePercentageComplete(build, xmlDoc);
+
 			return build;
 		}
-		
-		private static BuildStatus ParseStatus (XmlDocument xmlDoc)
-		{
-			var inQueue = xmlDoc.SelectSingleNode ("//inQueue");
-			
-			if (inQueue != null && inQueue.InnerText.Equals ("true", StringComparison.OrdinalIgnoreCase)) {
-				return BuildStatus.Queued;
-			}
-			
-			if (xmlDoc.SelectSingleNode ("//building").InnerText.Equals ("true", StringComparison.OrdinalIgnoreCase)) {
-				return BuildStatus.Running;
-			}
-			
-			var statusText = xmlDoc.SelectSingleNode ("//result").InnerText.ToUpperInvariant ();
-			
-			switch (statusText) {
-			case "SUCCESS":
-				return BuildStatus.Success;
-				
-			case "ABORTED":
-				return BuildStatus.Canceled;
-				
-			default:
-				return BuildStatus.Error;
-			}
-		}
-
+	
 		public static DateTime ParseDate(string buildTimestamp)
 		{
 			return DateTime.ParseExact(buildTimestamp.Replace("%20", " "), "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
@@ -80,6 +52,32 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 			}
 			
 			return 0;
+		}
+
+		private static BuildStatus ParseStatus (XmlDocument xmlDoc)
+		{
+			var inQueue = xmlDoc.SelectSingleNode ("//inQueue");
+
+			if (inQueue != null && inQueue.InnerText.Equals ("true", StringComparison.OrdinalIgnoreCase)) {
+				return BuildStatus.Queued;
+			}
+
+			if (xmlDoc.SelectSingleNode ("//building").InnerText.Equals ("true", StringComparison.OrdinalIgnoreCase)) {
+				return BuildStatus.Running;
+			}
+
+			var statusText = xmlDoc.SelectSingleNode ("//result").InnerText.ToUpperInvariant ();
+
+			switch (statusText) {
+			case "SUCCESS":
+				return BuildStatus.Success;
+
+			case "ABORTED":
+				return BuildStatus.Canceled;
+
+			default:
+				return BuildStatus.Error;
+			}
 		}
 	}
 }

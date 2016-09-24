@@ -1,0 +1,1 @@
+./build.sh  mac buildOSXPlayer Buildron.app Buildron.app

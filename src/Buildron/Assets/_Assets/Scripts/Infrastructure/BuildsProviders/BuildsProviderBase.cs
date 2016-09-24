@@ -1,129 +1,166 @@
-#region Usings
 using System;
 using System.Text.RegularExpressions;
 using Buildron.Domain;
+using Buildron.Domain.Builds;
 using Skahal.Common;
 using UnityEngine;
-#endregion
+using Buildron.Domain.Users;
+using Buildron.Domain.CIServers;
+using System.Collections.Generic;
 
 namespace Buildron.Infrastructure.BuildsProvider
 {
+	/// <summary>
+	/// Builds provider base class.
+	/// </summary>
 	public abstract class BuildsProviderBase : IBuildsProvider
 	{
 		#region Fields
 		private string m_protocol;
 		private string m_serverIP;
-		private Regex m_findProtocolRegex = new Regex( "(http://|https://)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-		#endregion
-		
-		#region Constructors
-		protected BuildsProviderBase (CIServer server)
+		private Regex m_findProtocolRegex = new Regex ("(http://|https://)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private List<string> m_currentUpdatedBuildIds = new List<string>();
+        #endregion
+
+        #region Constructors
+        protected BuildsProviderBase (ICIServer server)
 		{
 			Server = server;	
 			PrepareProtocol ();
 			Requester = Requester.Instance;
-			Requester.GetFailed += delegate(object sender, RequestFailedEventArgs e) {
-				if (e.Url.Contains (m_serverIP)) {
+			Requester.GetFailed += delegate(object sender, RequestFailedEventArgs e)
+			{
+				if (e.Url.Contains (m_serverIP))
+				{
 					ServerDown.Raise (this);
 				}
 			};
 		}
 		#endregion
-		
+
 		#region Properties
 		public string Name { get; protected set; }
+
 		public AuthenticationRequirement AuthenticationRequirement { get; protected set; }
-		public string AuthenticationTip { get;  protected set; }
+
+		public string AuthenticationTip { get; protected set; }
+
 		protected Requester Requester { get; private set; }
-		protected CIServer Server { get; private set; }
-		#endregion
-		
-		#region IBuildsProvider implementation
-		public event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
+
+		protected ICIServer Server { get; private set; }
+
+        protected int CurrentBuildsFoundCount { get; set; }
+        #endregion
+
+        #region IBuildsProvider implementation
+        public event EventHandler<BuildUpdatedEventArgs> BuildUpdated;
 		public event EventHandler BuildsRefreshed;
 		public event EventHandler ServerUp;
 		public event EventHandler ServerDown;
-		public event EventHandler UserAuthenticationSuccessful;
+		public event EventHandler<UserAuthenticationCompletedEventArgs> UserAuthenticationCompleted;
 		public event EventHandler UserAuthenticationFailed;
 
-		public abstract void RefreshAllBuilds();
-		public abstract void RunBuild(User user, Build build);
-		public abstract void StopBuild(User user, Build build);
-		public abstract void AuthenticateUser(User user);
+		public void RefreshAllBuilds ()
+        {
+            CurrentBuildsFoundCount = 0;
+            m_currentUpdatedBuildIds.Clear();
+            PerformRefreshAllBuilds();
+        }
+
+        protected abstract void PerformRefreshAllBuilds();
+
+		public abstract void RunBuild (IAuthUser user, IBuild build);
+
+		public abstract void StopBuild (IAuthUser user, IBuild build);
+
+		public abstract void AuthenticateUser (IAuthUser user);
 		#endregion
-		
+
 		#region Methods
 		private void PrepareProtocol ()
 		{
 			var matchProtocol = m_findProtocolRegex.Match (Server.IP);
 			
-			if (matchProtocol.Success) {
+			if (matchProtocol.Success)
+			{
 				m_protocol = matchProtocol.Groups [1].Value;
 				m_serverIP = m_findProtocolRegex.Replace (Server.IP, "");
-			} else { 
+			}
+			else
+			{ 
 				m_protocol = "http://";
 				m_serverIP = Server.IP;
 			}
 		}
-		
-		protected string GetHttpBasicAuthUrl (User user, string urlEndPart, params object[] args)
+
+		protected string GetHttpBasicAuthUrl (IAuthUser user, string urlEndPart, params object[] args)
 		{	
 			var endPart = string.Format (urlEndPart, args);
 			
-			if (String.IsNullOrEmpty (user.UserName) && String.IsNullOrEmpty (user.Password)) {
+			if (String.IsNullOrEmpty (user.UserName) && String.IsNullOrEmpty (user.Password))
+			{
 				return string.Format (
-				"{0}{1}/{2}",
-				m_protocol,
-				EscapeUrl (m_serverIP),
-				EscapeUrl (endPart));	
-			} else {
+					"{0}{1}/{2}",
+					m_protocol,
+					EscapeUrl (m_serverIP),
+					EscapeUrl (endPart));	
+			}
+			else
+			{
 				string domain = String.IsNullOrEmpty (user.Domain) ? "" : user.Domain + @"\";
 			
 				return string.Format (
-				"{0}{1}{2}:{3}@{4}/{5}", 
-				m_protocol,
-				WWW.EscapeURL (domain),
-				WWW.EscapeURL (user.UserName), 
-				WWW.EscapeURL (user.Password), 
-				EscapeUrl (m_serverIP),
-				EscapeUrl (endPart));	
+					"{0}{1}{2}:{3}@{4}/{5}", 
+					m_protocol,
+					WWW.EscapeURL (domain),
+					WWW.EscapeURL (user.UserName), 
+					WWW.EscapeURL (user.Password), 
+					EscapeUrl (m_serverIP),
+					EscapeUrl (endPart));	
 			}
 		}
-		
+
 		protected string EscapeUrl (string url)
 		{
 			return url.Replace (" ", "%20");
 		}
-		
+
 		protected void OnBuildUpdated (BuildUpdatedEventArgs e)
 		{
-			OnServerUp();
+			OnServerUp ();
 			BuildUpdated.Raise (this, e);
-		}
-		
-		protected void OnBuildsRefreshed ()
+
+            var build = e.Build;
+
+            if (!m_currentUpdatedBuildIds.Contains(build.Id))
+            {
+                m_currentUpdatedBuildIds.Add(build.Id);
+            }
+
+			if (m_currentUpdatedBuildIds.Count >= CurrentBuildsFoundCount)
+            {
+                OnBuildsRefreshed();
+            }
+        }
+
+		private void OnBuildsRefreshed ()
 		{
 			BuildsRefreshed.Raise (this);
 		}
-		
-		protected void OnServerUp ()
+
+        protected void OnServerUp ()
 		{
 			ServerUp.Raise (this);
 		}
-		
+
 		protected void OnServerDown ()
 		{
 			ServerDown.Raise (this);
 		}
-		
-		protected void OnUserAuthenticationSuccessful ()
+
+		protected void OnUserAuthenticationCompleted (UserAuthenticationCompletedEventArgs args)
 		{
-			UserAuthenticationSuccessful.Raise (this);
-		}
-		
-		protected void OnUserAuthenticationFailed ()
-		{
-			UserAuthenticationFailed.Raise (this);
+			UserAuthenticationCompleted.Raise (this, args);
 		}
 		#endregion
 	}

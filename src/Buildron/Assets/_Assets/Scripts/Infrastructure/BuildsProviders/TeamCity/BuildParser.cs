@@ -1,10 +1,8 @@
-#region Usings
-using Buildron.Domain;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System;
 using System.Globalization;
-#endregion
+using Buildron.Domain.Builds;
 
 namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 {
@@ -38,7 +36,7 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 				build.Configuration = config;
 				build.Status = ParseStatus (build, e);
 				build.PercentageComplete = ParsePercentageComplete (e);
-				build.TriggeredBy = BuildUserParser.ParseFromTriggered (build, xmlDoc);
+				build.TriggeredBy = UserParser.ParseFromTriggered (build, xmlDoc);
 				build.Date = ParseDate(e);
 			}
 			
@@ -75,7 +73,14 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 
 		private static BuildStatus ParseRunningStates (Build build, XmlNode e)
 		{
-			var statusText = e.SelectSingleNode ("running-info").Attributes ["currentStageText"].Value;
+            var runningInfoNode = e.SelectSingleNode("running-info");
+            
+            if (runningInfoNode == null)
+            {
+                return BuildStatus.Running;
+            }
+
+            var statusText = runningInfoNode.Attributes ["currentStageText"].Value;
 			var status = BuildStatus.Running;
 			var m = s_getStepNumberRegex.Match (statusText);
 			

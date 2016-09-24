@@ -1,0 +1,1 @@
+./build.sh linux buildLinux32Player Linux/Buildron.x86 Linux

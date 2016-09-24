@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{73FE63D6-7B35-43F5-8E71-DA0B26F2E5E2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Buildron.ModSdk.UnitTests</RootNamespace>
+    <AssemblyName>Buildron.ModSdk.UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\Preferences\PreferenceTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\" />
+    <Folder Include="Domain\Preferences\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Buildron.ModSdk.csproj">
+      <Project>{64D6A3EB-ED6C-455B-BD11-B94255E7FC21}</Project>
+      <Name>Buildron.ModSdk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Skahal-Unity-Scripts\src\Skahal.Unity.Scripts.csproj">
+      <Project>{D1F95AB1-B370-4D85-8FBD-E30869E8ACF7}</Project>
+      <Name>Skahal.Unity.Scripts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Skahal-Unity-Scripts\src\Skahal.Unity.Scripts.Externals\Skahal.Unity.Scripts.Externals.csproj">
+      <Project>{AF958CBE-9458-434A-9FAA-0671995A2974}</Project>
+      <Name>Skahal.Unity.Scripts.Externals</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
