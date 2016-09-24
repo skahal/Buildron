@@ -1781,11 +1781,24 @@
              <param name="algorithm">Algorithm.</param>
              <param name="sortBy">Sort by.</param>
             </member>
+        <member name="M:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.#ctor(Buildron.Domain.Sorting.SortingAlgorithmType,Buildron.Domain.Sorting.SortBy)">
+             <summary>
+             Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand" /> class.
+             </summary>
+             <param name="algorithmType">Algorithm type.</param>
+             <param name="sortBy">Sort by.</param>
+            </member>
         <member name="P:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.Algorithm">
              <summary>
              Gets or sets the algorithm.
              </summary>
              <value>The algorithm.</value>
+            </member>
+        <member name="P:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.AlgorithmType">
+             <summary>
+             Gets or sets the type of the algorithm.
+             </summary>
+             <value>The type of the algorithm.</value>
             </member>
         <member name="P:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand.SortBy">
              <summary>

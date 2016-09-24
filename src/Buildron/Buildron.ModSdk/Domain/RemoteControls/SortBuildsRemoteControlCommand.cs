@@ -20,6 +20,16 @@ namespace Buildron.Domain.RemoteControls
 			SortBy = sortBy;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:Buildron.Domain.RemoteControls.SortBuildsRemoteControlCommand"/> class.
+		/// </summary>
+		/// <param name="algorithmType">Algorithm type.</param>
+		/// <param name="sortBy">Sort by.</param>
+		public SortBuildsRemoteControlCommand(SortingAlgorithmType algorithmType, SortBy sortBy)
+		{
+			AlgorithmType = algorithmType;
+			SortBy = sortBy;
+		}
         #endregion
 
         #region Properties
@@ -28,6 +38,12 @@ namespace Buildron.Domain.RemoteControls
 		/// </summary>
 		/// <value>The algorithm.</value>
 		public ISortingAlgorithm<IBuild> Algorithm { get; set; }
+
+		/// <summary>
+		/// Gets or sets the type of the algorithm.
+		/// </summary>
+		/// <value>The type of the algorithm.</value>
+		public SortingAlgorithmType AlgorithmType{ get; set; }
 
 		/// <summary>
 		/// Gets or sets the sort by.
