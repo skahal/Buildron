@@ -1,6 +1,6 @@
 # Buildron
 
-[![GitHub release](https://img.shields.io/github/release/skahal/buildron.svg?maxAge=2592000)]()
+[![GitHub release](https://img.shields.io/github/release/skahal/buildron.svg)](https://github.com/skahal/Buildron/releases)
 [![License](http://img.shields.io/:license-MIT-blue.svg)](https://raw.githubusercontent.com/skahal/buildron/master/LICENSE)
 
 ![](docs/images/Buildron-header.png)
