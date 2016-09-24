@@ -219,7 +219,7 @@ public class SimulatorModContext : MonoBehaviour, IModContext {
 		Preferences = new ModPreferencesProxy(modInfo);
 		BuildGameObjects = new ModBuildGameObjectsProxy ();
 		UserGameObjects = new ModUserGameObjectsProxy ();
-
+		RemoteControl = new SimulatorRemoteControlProxy();
 	
 		var mod = Activator.CreateInstance (modType) as IMod;
 		mod.Initialize (this);
@@ -263,16 +263,23 @@ public class SimulatorModContext : MonoBehaviour, IModContext {
 
 	public void RaiseBuildStatusChanged(BuildStatus status)
 	{
-		if (Builds.Count == 0) {
-			RaiseBuildFound (new SimulatorBuild () {
+		var previousStatus = BuildStatus.Unknown;
+
+		if (Builds.Count == 0)
+		{
+			RaiseBuildFound(new SimulatorBuild()
+			{
 				Status = BuildStatus.Unknown
 			});
+		}
+		else {
+			previousStatus = Builds[Builds.Count - 1].Status;
 		}
 
 		var build = Builds [Builds.Count - 1];
 		build.Status = status;
 		Log.Debug("BuildStatusChanged: {0}: {1}", build.Id, build.Status);
-		BuildStatusChanged.Raise(this, new BuildStatusChangedEventArgs(build, build.Status));
+		BuildStatusChanged.Raise(this, new BuildStatusChangedEventArgs(build, previousStatus));
 	}
 
 	public void RaiseBuildTriggeredByChanged(SimulatorBuild build, SimulatorUser user)
