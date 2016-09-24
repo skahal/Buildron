@@ -2282,9 +2282,9 @@ MonoBehaviour:
   m_Script: {fileID: 1308320081, guid: 6f618ced3538b4c6b89b98197ad170b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_version: 2.0.0-RC1
+  m_version: 2.0.0
   m_isBetaVersion: 1
-  m_multiplayerVersion: 2.0.0-RC1
+  m_multiplayerVersion: 2.0.0
 --- !u!1 &658613938
 GameObject:
   m_ObjectHideFlags: 0
