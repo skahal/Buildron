@@ -105,6 +105,7 @@
     <Compile Include="Domain\Sorting\SortingEndedEventArgs.cs" />
     <Compile Include="Domain\Sorting\SortingItemsSwappedEventArgs.cs" />
     <Compile Include="Domain\Mods\IThreadProxy.cs" />
+    <Compile Include="Domain\Builds\IBuildBranch.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="msbuilds\Buildron.ModSdk.targets" />

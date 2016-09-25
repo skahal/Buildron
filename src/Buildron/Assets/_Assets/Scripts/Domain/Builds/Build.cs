@@ -54,6 +54,7 @@ namespace Buildron.Domain.Builds
             Status = BuildStatus.Unknown;
             Configuration = new BuildConfiguration();
             Sequence = ++s_instancesCount;
+			Branch = new BuildBranch();
         }
         #endregion
 
@@ -155,6 +156,12 @@ namespace Buildron.Domain.Builds
                 }
             }
         }
+
+		/// <summary>
+		/// Gets the branch.
+		/// </summary>
+		/// <value>The branch.</value>
+		public IBuildBranch Branch { get; private set; }
         #endregion
 
         #region Methods        

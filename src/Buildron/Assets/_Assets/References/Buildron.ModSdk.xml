@@ -508,6 +508,12 @@
              Gets or sets the user that triggered the build.
              </summary>
             </member>
+        <member name="P:Buildron.Domain.Builds.IBuild.Branch">
+             <summary>
+             Gets the branch.
+             </summary>
+             <value>The branch.</value>
+            </member>
         <member name="T:Buildron.Domain.Builds.IBuildConfiguration">
              <summary>
              Defines an interface to a build configuration.
@@ -1963,6 +1969,17 @@
              Runs the action on main thread.
              </summary>
              <param name="action">Action.</param>
+            </member>
+        <member name="T:Buildron.Domain.Builds.IBuildBranch">
+             <summary>
+             Defines an interface to a build's branch.
+             </summary>
+            </member>
+        <member name="P:Buildron.Domain.Builds.IBuildBranch.Name">
+             <summary>
+             Gets or sets the name.
+             </summary>
+             <value>The name.</value>
             </member>
     </members>
 </doc>

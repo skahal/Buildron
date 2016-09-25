@@ -142,6 +142,12 @@ namespace Buildron.Domain.Builds
 		/// Gets or sets the user that triggered the build.
 		/// </summary>
 		IUser TriggeredBy { get; set;}
+
+		/// <summary>
+		/// Gets the branch.
+		/// </summary>
+		/// <value>The branch.</value>
+		IBuildBranch Branch { get; }
 		#endregion
     }
 }

@@ -30,6 +30,8 @@ public class SimulatorBuild : IBuild
 
 		TriggeredBy = new SimulatorUser ();
 		TriggeredBy.Builds.Add (this);
+
+		Branch = new SimulatorBuildBranch();
 	}
 	#endregion
 
@@ -70,6 +72,7 @@ public class SimulatorBuild : IBuild
 
 	public IUser TriggeredBy  { get; set; }
 
+	public IBuildBranch Branch { get; private set; }
 	#endregion
 
 	#region ICloneable implementation

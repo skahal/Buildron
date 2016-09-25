@@ -86,6 +86,7 @@
     <Compile Include="..\..\Assets\_Assets\Scripts\Infrastructure\ThreadProxies\ModThreadProxy.cs">
       <Link>Simulator\ModThreadProxy.cs</Link>
     </Compile>
+    <Compile Include="Simulator\SimulatorBuildBranch.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\msbuilds\Buildron.ModSdk.Editor.targets" />
