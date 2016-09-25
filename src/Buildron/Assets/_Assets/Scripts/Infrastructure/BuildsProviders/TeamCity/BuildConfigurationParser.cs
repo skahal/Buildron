@@ -22,7 +22,8 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 			bc.Name = buildTypeNode.Attributes ["name"].Value;
 			bc.Project.Name = buildTypeNode.SelectSingleNode ("project").Attributes ["name"].Value;
 			bc.Steps = BuildStepParser.Parse (xmlNode);
-			
+
+
 			return bc;
 		}
 	}

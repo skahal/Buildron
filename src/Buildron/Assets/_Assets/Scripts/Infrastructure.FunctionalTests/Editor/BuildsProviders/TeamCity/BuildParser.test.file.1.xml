@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build id="20438" buildTypeId="Customer_Project_1CodeQuality" number="195" status="SUCCESS" state="finished" href="/httpAuth/app/rest/builds/id:20438" webUrl="http://138.91.152.155/viewLog.html?buildId=20438&amp;buildTypeId=Customer_Project_1CodeQuality">
+   <statusText>Tests passed: 42; inspections total: 0, errors: 0</statusText>
+   <buildType id="Customer_Project_1CodeQuality" name="#1|Code Quality" projectName="Customer :: Project - RA 2016" projectId="Customer_Project" href="/httpAuth/app/rest/buildTypes/id:Customer_Project_1CodeQuality" webUrl="http://138.91.152.155/viewType.html?buildTypeId=Customer_Project_1CodeQuality" />
+   <queuedDate>20160830T141620-0300</queuedDate>
+   <startDate>20160830T142015-0300</startDate>
+   <finishDate>20160830T142501-0300</finishDate>
+   <triggered type="vcs" details="jetbrains.git" date="20160830T141620-0300" />
+   <lastChanges count="1">
+      <change id="10043" version="c17b7f62fcfaa0ddef4c023d235235876865be6a" username="danielzanella" date="20160830T141449-0300" href="/httpAuth/app/rest/changes/id:10043" webUrl="http://138.91.152.155/viewModification.html?modId=10043&amp;personal=false" />
+   </lastChanges>
+   <changes href="/httpAuth/app/rest/changes?locator=build:(id:20438)" />
+   <revisions count="1">
+      <revision version="c17b7f62fcfaa0ddef4c023d235235876865be6a">
+         <vcs-root-instance id="45" vcs-root-id="Customer_Project_HttpGitCwiComBrGiacomelliCustomerProjectReescritaGit" name="http://git.cwi.com.br/Customer/Customer-Project-reescrita.git" href="/httpAuth/app/rest/vcs-root-instances/id:45" />
+      </revision>
+   </revisions>
+   <agent id="1" name="CustomerIC" typeId="1" href="/httpAuth/app/rest/agents/id:1" />
+   <testOccurrences count="42" href="/httpAuth/app/rest/testOccurrences?locator=build:(id:20438)" passed="42" />
+   <artifacts href="/httpAuth/app/rest/builds/id:20438/artifacts/children/" />
+   <relatedIssues href="/httpAuth/app/rest/builds/id:20438/relatedIssues" />
+   <properties count="5">
+      <property name="Branch" value="sprint-01" />
+      <property name="CheckoutDir" value="c:\TeamCity\buildAgent\work\Customer-Project-" />
+      <property name="Configuration" value="CI" />
+      <property name="solutionName" value="Customer.Project" />
+      <property name="solutionNamespace" value="Customer.Project" />
+   </properties>
+   <statistics href="/httpAuth/app/rest/builds/id:20438/statistics" />
+</build>

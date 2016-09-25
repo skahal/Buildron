@@ -1,14 +1,9 @@
-﻿using NUnit.Framework;
-using Buildron.Infrastructure.BuildsProviders.Filter;
-using Rhino.Mocks;
-using Buildron.Domain.Builds;
-using System.Xml;
-using System;
+﻿using System;
 using System.IO;
+using System.Xml;
+using Buildron.Domain.Builds;
 using Buildron.Infrastructure.BuildsProvider.Jenkins;
-using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
+using NUnit.Framework;
 
 namespace Buildron.Infrastructure.FunctionalTests.BuildsProviders.Jenkins
 {

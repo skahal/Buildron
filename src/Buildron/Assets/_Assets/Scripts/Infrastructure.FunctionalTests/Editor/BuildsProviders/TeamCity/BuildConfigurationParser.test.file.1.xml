@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildType id="Customer_Project_2UnitTests" name="#2|Unit tests" projectName="Customer :: Project - Project" projectId="Customer_Project" href="/httpAuth/app/rest/buildTypes/id:Customer_Project_2UnitTests" webUrl="http://138.91.152.155/viewType.html?buildTypeId=Customer_Project_2UnitTests">
+   <project id="Customer_Project" name="Project - Project" parentProjectId="Customer" href="/httpAuth/app/rest/projects/id:Customer_Project" webUrl="http://138.91.152.155/project.html?projectId=Customer_Project" />
+   <vcs-root-entries count="1">
+      <vcs-root-entry id="Customer_Project_HttpGitCwiComBrGiacomelliCustomerProjectReescritaGit">
+         <vcs-root id="Customer_Project_HttpGitCwiComBrGiacomelliCustomerProjectReescritaGit" name="http://git.cwi.com.br/Customer/Customer-Project-reescrita.git" href="/httpAuth/app/rest/vcs-roots/id:Customer_Project_HttpGitCwiComBrGiacomelliCustomerProjectReescritaGit" />
+         <checkout-rules />
+      </vcs-root-entry>
+   </vcs-root-entries>
+   <settings count="17">
+      <property name="allowExternalStatus" value="true" />
+      <property name="allowPersonalBuildTriggering" value="true" />
+      <property name="artifactRules" value="" />
+      <property name="buildNumberCounter" value="201" />
+      <property name="buildNumberPattern" value="%build.counter%" />
+      <property name="checkoutDirectory" value="%CheckoutDir%" />
+      <property name="checkoutMode" value="ON_SERVER" />
+      <property name="cleanBuild" value="false" />
+      <property name="enableHangingBuildsDetection" value="true" />
+      <property name="executionTimeoutMin" value="0" />
+      <property name="maximumNumberOfBuilds" value="0" />
+      <property name="shouldFailBuildIfTestsFailed" value="true" />
+      <property name="shouldFailBuildOnAnyErrorMessage" value="false" />
+      <property name="shouldFailBuildOnBadExitCode" value="true" />
+      <property name="shouldFailBuildOnOOMEOrCrash" value="true" />
+      <property name="showDependenciesChanges" value="false" />
+      <property name="vcsLabelingBranchFilter" value="+:&lt;default&gt;" />
+   </settings>
+   <parameters count="5" href="/app/rest/buildTypes/id:Customer_Project_2UnitTests/parameters">
+      <property name="Branch" value="Project-sprint-06" own="true" />
+      <property name="CheckoutDir" value="C:\BuildAgent2\work\Customer-Project-Project-s6" own="true" />
+      <property name="Configuration" value="CI" />
+      <property name="solutionName" value="Customer.Project" />
+      <property name="solutionNamespace" value="Customer.Project" />
+   </parameters>
+   <steps count="1">
+      <step id="RUNNER_88" name="Unit tests" type="NUnit">
+         <properties count="24">
+            <property name="dotNetCoverage.dotCover.filters" value="+:%solutionNamespace%.Domain&#xA;+:%solutionNamespace%.Infrastructure.Framework&#xA;-:%solutionNamespace%.Infrastructure.Framework;type=*.Globalization.Texts;method=***&#xA;-:%solutionNamespace%.Infrastructure.Framework;type=*.Globalization.Logs;method=***&#xA;-:%solutionNamespace%.Infrastructure.Framework;type=*.Diagnostics*&#xA;-:%solutionNamespace%.Infrastructure.Framework;type=*.MemoryRuntimeUser&#xA;-:%solutionNamespace%.Infrastructure.Data&#xA;-:%solutionNamespace%.Domain.UnitTests" />
+            <property name="dotNetCoverage.NCover.HTMLReport.File.Sort" value="0" />
+            <property name="dotNetCoverage.NCover.HTMLReport.File.Type" value="1" />
+            <property name="dotNetCoverage.NCover.platformBitness" value="x86" />
+            <property name="dotNetCoverage.NCover.platformVersion" value="v2.0" />
+            <property name="dotNetCoverage.NCover.Reg" value="selected" />
+            <property name="dotNetCoverage.NCover3.args" value="//ias .*" />
+            <property name="dotNetCoverage.NCover3.platformBitness" value="x86" />
+            <property name="dotNetCoverage.NCover3.platformVersion" value="v2.0" />
+            <property name="dotNetCoverage.NCover3.Reg" value="selected" />
+            <property name="dotNetCoverage.NCover3.reporter.executable.args" value="//or FullCoverageReport:Html:{teamcity.report.path}" />
+            <property name="dotNetCoverage.PartCover.includes" value="[*]*" />
+            <property name="dotNetCoverage.PartCover.platformBitness" value="x86" />
+            <property name="dotNetCoverage.PartCover.platformVersion" value="v2.0" />
+            <property name="dotNetCoverage.PartCover.Reg" value="selected" />
+            <property name="dotNetCoverage.tool" value="dotcover" />
+            <property name="dotNetTestRunner.Type" value="NUnit" />
+            <property name="nunit_enabled" value="checked" />
+            <property name="nunit_environment" value="auto" />
+            <property name="nunit_include" value="**/bin/%Configuration%/*UnitTests.dll" />
+            <property name="nunit_path" value="C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" />
+            <property name="nunit_platform" value="MSIL" />
+            <property name="nunit_version" value="NUnit-3.0.0" />
+            <property name="teamcity.step.mode" value="default" />
+         </properties>
+      </step>
+   </steps>
+   <features count="1">
+      <feature id="BUILD_EXT_28" type="BuildFailureOnMetric">
+         <properties count="6">
+            <property name="anchorBuild" value="lastSuccessful" />
+            <property name="metricKey" value="CodeCoverageS" />
+            <property name="metricThreshold" value="100" />
+            <property name="metricUnits" value="metricUnitsDefault" />
+            <property name="moreOrLess" value="less" />
+            <property name="withBuildAnchor" value="false" />
+         </properties>
+      </feature>
+   </features>
+   <triggers count="1">
+      <trigger id="TRIGGER_17" type="buildDependencyTrigger">
+         <properties count="1">
+            <property name="dependsOn" value="Customer_Project_1CodeQuality" />
+         </properties>
+      </trigger>
+   </triggers>
+   <snapshot-dependencies count="1">
+      <snapshot-dependency id="Customer_Project_1CodeQuality" type="snapshot_dependency">
+         <properties count="5">
+            <property name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+            <property name="run-build-if-dependency-failed-to-start" value="MAKE_FAILED_TO_START" />
+            <property name="run-build-on-the-same-agent" value="false" />
+            <property name="take-started-build-with-same-revisions" value="true" />
+            <property name="take-successful-builds-only" value="true" />
+         </properties>
+         <source-buildType id="Customer_Project_1CodeQuality" name="#1|Code Quality" projectName="Customer :: Project - Project" projectId="Customer_Project" href="/httpAuth/app/rest/buildTypes/id:Customer_Project_1CodeQuality" webUrl="http://138.91.152.155/viewType.html?buildTypeId=Customer_Project_1CodeQuality" />
+      </snapshot-dependency>
+   </snapshot-dependencies>
+   <artifact-dependencies count="0" />
+   <agent-requirements count="0" />
+   <builds href="/httpAuth/app/rest/buildTypes/id:Customer_Project_2UnitTests/builds/" />
+</buildType>

@@ -38,6 +38,13 @@ namespace Buildron.Infrastructure.BuildsProvider.TeamCity
 				build.PercentageComplete = ParsePercentageComplete (e);
 				build.TriggeredBy = UserParser.ParseFromTriggered (build, xmlDoc);
 				build.Date = ParseDate(e);
+
+				var branchProperty = e.SelectSingleNode("//properties/property[@name='Branch']");
+
+				if (branchProperty != null)
+				{
+					build.Branch.Name = branchProperty.Attributes["value"].Value;
+				}
 			}
 			
 			return build;
