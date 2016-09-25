@@ -9,7 +9,7 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 	/// A parser for Build.
 	/// </summary>
 	public static class JenkinsBuildParser
-	{		
+	{
 		/// <summary>
 		/// Parse a build from a XmlDocument.
 		/// </summary>
@@ -19,17 +19,24 @@ namespace Buildron.Infrastructure.BuildsProvider.Jenkins
 		/// <param name='xmlDoc'>
 		/// Xml document.
 		/// </param>
-		public static Build Parse (BuildConfiguration config, XmlDocument xmlDoc, string buildTimestamp)
+		public static Build Parse(BuildConfiguration config, XmlDocument xmlDoc, string buildTimestamp)
 		{
-			var build = new Build ();
+			var build = new Build();
 			build.Configuration = config;
-			build.Id = xmlDoc.SelectSingleNode ("//id").InnerText;
-			build.Sequence = Convert.ToInt32 (xmlDoc.SelectSingleNode ("//number").InnerText);
-			build.LastChangeDescription = xmlDoc.SelectSingleNode ("//action/cause/shortDescription").InnerText;
-			build.TriggeredBy = JenkinsUserParser.ParseUserFromBuildResponse (xmlDoc);
-			build.Status = ParseStatus (xmlDoc);
-			build.Date = ParseDate (buildTimestamp);
+			build.Id = xmlDoc.SelectSingleNode("//id").InnerText;
+			build.Sequence = Convert.ToInt32(xmlDoc.SelectSingleNode("//number").InnerText);
+			build.LastChangeDescription = xmlDoc.SelectSingleNode("//action/cause/shortDescription").InnerText;
+			build.TriggeredBy = JenkinsUserParser.ParseUserFromBuildResponse(xmlDoc);
+			build.Status = ParseStatus(xmlDoc);
+			build.Date = ParseDate(buildTimestamp);
 			build.PercentageComplete = ParsePercentageComplete(build, xmlDoc);
+
+			var branchNode = xmlDoc.SelectSingleNode("//action/lastBuiltRevision/branch/name");
+
+			if (branchNode != null)
+			{
+				build.Branch.Name = branchNode.InnerText;
+			}
 
 			return build;
 		}

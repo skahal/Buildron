@@ -28,6 +28,7 @@ namespace Buildron.Infrastructure.FunctionalTests.BuildsProviders.Jenkins
 			Assert.AreSame (bc, actual.Configuration);
 			Assert.AreEqual (new DateTime(2016, 6, 14, 6, 31, 9), actual.Date);
 			Assert.AreEqual (0f, actual.PercentageComplete);
+			Assert.AreEqual("refs/remotes/origin/stable-1.651", actual.Branch.Name);
 		}
 	}
 }
