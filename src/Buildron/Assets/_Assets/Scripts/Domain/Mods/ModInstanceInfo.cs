@@ -19,7 +19,8 @@ namespace Buildron.Domain.Mods
 			IBuildGameObjectsProxy buildGameObjects,
 			IUserGameObjectsProxy userGameObjects,
             ICameraProxy camera,
-            IPreferencesProxy preferences)
+            IPreferencesProxy preferences,
+			IThreadProxy thread)
 		{
 			Mod = mod;
 			Info = info;
@@ -34,6 +35,7 @@ namespace Buildron.Domain.Mods
 			UserGameObjects = userGameObjects;
             Camera = camera;
             Preferences = preferences;
+			Thread = thread;
 		}
 
 		public IMod Mod { get; private set; }
@@ -50,6 +52,7 @@ namespace Buildron.Domain.Mods
 
         public ICameraProxy Camera { get; private set; }
         public IPreferencesProxy Preferences { get; private set; }
+		public IThreadProxy Thread { get; private set; }
 
         public void Destroy()
         {

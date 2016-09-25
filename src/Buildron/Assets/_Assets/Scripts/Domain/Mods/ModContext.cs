@@ -60,7 +60,7 @@ namespace Buildron.Domain.Mods
 			Camera = new LogCameraProxy (instance.Camera, Log);
 			Preferences = new LogPreferencesProxy(instance.Preferences, Log);
             RemoteControl = new ModRemoteControlProxy(remoteControlService);
-			Thread = new ModThreadProxy(Log, GameObjects);
+			Thread = instance.Thread;
 
             m_buildService = buildService;
             m_ciServerService = ciServerService;

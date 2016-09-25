@@ -38,6 +38,7 @@ namespace Buildron.Domain.UnitTests.Mods
 			var userGameObjectsProxy = MockRepository.GenerateMock<IUserGameObjectsProxy>();
 			var cameraProxy = MockRepository.GenerateMock<ICameraProxy> ();
 			var preferencesProxy = MockRepository.GenerateMock<IPreferencesProxy>();
+			var threadProxy = MockRepository.GenerateMock<IThreadProxy>();
 
 			var instance = new ModInstanceInfo (
 					mod, 
@@ -52,7 +53,8 @@ namespace Buildron.Domain.UnitTests.Mods
 					buildGameObjectsProxy, 
 					userGameObjectsProxy, 
 					cameraProxy,
-					preferencesProxy);
+					preferencesProxy,
+					threadProxy);
 			
             var log = MockRepository.GenerateMock<ISHLogStrategy>();
 
