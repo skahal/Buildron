@@ -86,7 +86,7 @@ Download the latest version from our [releases page](https://github.com/skahal/B
 Just execute it:
 
 - On Windows: Buildron.exe 
-- On Mac (OSX): Buildron.app
+- On Mac (OSX): Buildron.app ([move it to Applications folder](https://github.com/skahal/Buildron/wiki/faq#why-i-see-0-mods-running-buildron-on-mac))
 
 ### Auto start
 If you want to run Buildron and auto start/connect to CI server, just pass the autostart argument to it:
