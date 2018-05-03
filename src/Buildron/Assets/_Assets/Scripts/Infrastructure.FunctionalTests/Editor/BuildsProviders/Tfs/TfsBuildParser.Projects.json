@@ -1,0 +1,12 @@
+{
+  "count": 1,
+  "value": [
+    {
+      "id": "c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+      "name": "MyFirstProject",
+      "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projects/c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+      "state": "wellFormed",
+      "revision": 7
+    }
+  ]
+}

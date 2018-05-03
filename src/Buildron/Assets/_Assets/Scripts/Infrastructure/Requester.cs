@@ -88,7 +88,15 @@ public class Requester : MonoBehaviour
 			});
 	}
 
-	public void PostText (string url, Dictionary<string,string> fields,  Action<string> responseReceived, Action<RequestError> errorReceived = null)
+    public void GetText(string url, string userName, string password, Action<string> responseReceived, Action<RequestError> errorReceived = null)
+    {
+        m_requestsQueue.Enqueue(() =>
+        {
+            StartCoroutine(DoGet(url, userName, password, responseReceived, errorReceived));
+        });
+    }
+
+    public void PostText (string url, Dictionary<string,string> fields,  Action<string> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		m_requestsQueue.Enqueue (() =>
 			{
@@ -152,7 +160,14 @@ public class Requester : MonoBehaviour
 		}, errorReceived);
 	}
 
-	private IEnumerator DoGet (string url, Action<Texture2D> responseReceived, Action<RequestError> errorReceived = null)
+    private IEnumerator DoGet(string url, string userName, string password, Action<string> responseReceived, Action<RequestError> errorReceived = null)
+    {
+        return DoBasicGet(url, (response) => {
+            responseReceived(response.text);
+        }, errorReceived, null, userName, password);
+    }
+
+    private IEnumerator DoGet (string url, Action<Texture2D> responseReceived, Action<RequestError> errorReceived = null)
 	{
 		return DoBasicGet (url, (response) => {
 			responseReceived (response.texture);
@@ -160,21 +175,32 @@ public class Requester : MonoBehaviour
 			errorReceived);	
 	}
 
-	private IEnumerator DoBasicGet (string url, Action<WWW> responseReceived)
+    private IEnumerator DoBasicGet (string url, Action<WWW> responseReceived)
 	{
 		return DoBasicGet(url, responseReceived, null, null);
 	}
 
-	private IEnumerator DoBasicGet (string url, Action<WWW> responseReceived, Action<RequestError> errorReceived, Dictionary<string, string> fields = null)
+	private IEnumerator DoBasicGet (string url, Action<WWW> responseReceived, Action<RequestError> errorReceived, Dictionary<string, string> fields = null, string userName = null, string password = null)
 	{
 		SHLog.Debug ("Requesting URL '{0}' on the server...", url);
 		WWW request;
+
+        var headers = new Dictionary<string, string>();
+
+        if (string.IsNullOrEmpty(userName) == false || string.IsNullOrEmpty(password) == false)
+        {
+            headers["Authorization"] = "Basic " + Convert.ToBase64String(
+                Encoding.ASCII.GetBytes(string.Format("{0}:{1}", userName ?? "", password ?? "")));
+        }
 
 		if (AcceptLanguageEnabled) {
 			var form = new WWWForm ();
 			form.AddField ("Buildron", SHGameInfo.Version);
 
-			var headers = form.headers;
+            foreach (var header in form.headers)
+            {
+                headers[header.Key] = header.Value;
+            }
 			var rawData = form.data;
 			headers ["Accept-Language"] = "en-US";
 
@@ -190,7 +216,7 @@ public class Requester : MonoBehaviour
 			request = new WWW (url, form);
 		}
 		else {
-			request = new WWW (url);
+			request = new WWW (url, null, headers);
 		}
 
 		// Timeout

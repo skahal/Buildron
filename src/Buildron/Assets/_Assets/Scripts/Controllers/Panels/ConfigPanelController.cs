@@ -9,6 +9,7 @@ using Buildron.Infrastructure.BuildsProviders.Filter;
 using Buildron.Infrastructure.BuildsProvider.Hudson;
 using Buildron.Infrastructure.BuildsProvider.Jenkins;
 using Buildron.Infrastructure.BuildsProvider.TeamCity;
+using Buildron.Infrastructure.BuildsProvider.Tfs;
 using Skahal.Threading;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,6 +57,7 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 	public Toggle CIServerTypeHudsonToggle;
 	public Toggle CIServerTypeJenkinsToggle;
 	public Toggle CIServerTypeTeamCityToggle;
+	public Toggle CIServerTypeTfsToggle;
 
 	// CI Server.
 	public Text CIServerIPLabel;
@@ -141,9 +143,14 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			CIServerTypeJenkinsToggle.isOn = true;
 			break;
 			
+		case CIServerType.TeamCity:
+			Debug.Log ("CIServerTypeJenkinsToggle.isOn");
+			CIServerTypeJenkinsToggle.isOn = true;
+			break;
+			
 		default:
-			Debug.Log ("CIServerTypeTeamCityToggle.isOn");
-			CIServerTypeTeamCityToggle.isOn = true;
+			Debug.Log ("CIServerTypeTfsToggle.isOn");
+			CIServerTypeTfsToggle.isOn = true;
 			break;
 		}
 	}
@@ -225,13 +232,18 @@ public class ConfigPanelController : MonoBehaviour, IInitializable
 			m_buildsProvider = new JenkinsBuildsProvider (m_ciServer);
 			m_ciServer.ServerType = CIServerType.Jenkins;
 		} 
-		else
+		else if (CIServerTypeTeamCityToggle.isOn)
 		{
 			m_buildsProvider = new TeamCityBuildsProvider (m_ciServer);
 			m_ciServer.ServerType = CIServerType.TeamCity;
 		}
-		
-		CIServerIPLabel.text = string.Format ("{0} IP", m_buildsProvider.Name);
+		else
+		{
+			m_buildsProvider = new TfsBuildsProvider(m_ciServer);
+			m_ciServer.ServerType = CIServerType.Tfs;
+		}
+
+        CIServerIPLabel.text = string.Format ("{0} IP", m_buildsProvider.Name);
 		CIServerAuthenticationTipLabel.text = m_buildsProvider.AuthenticationTip;
 	}
 

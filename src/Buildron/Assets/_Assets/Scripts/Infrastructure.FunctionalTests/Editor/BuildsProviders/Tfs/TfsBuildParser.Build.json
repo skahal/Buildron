@@ -1,0 +1,89 @@
+{
+  "_links": {
+    "self": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/Builds/6" },
+    "web": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_permalink/_build/index?collectionId=92006c1d-3319-4367-bde2-1d9b99fac6b1&projectId=c11391c9-87c3-4c6b-ae49-ddec738cde6a&buildId=6" },
+    "timeline": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/builds/6/Timeline" }
+  },
+  "plans": [ { "planId": "101746aa-7a0f-47ee-a3e4-adb2f6c59aff" } ],
+  "id": 6,
+  "buildNumber": "6",
+  "status": "completed",
+  "result": "succeeded",
+  "queueTime": "2017-03-24T23:05:37.3847509Z",
+  "startTime": "2017-03-24T23:05:38.6651741Z",
+  "finishTime": "2017-03-24T23:06:17.0751836Z",
+  "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/Builds/6",
+  "definition": {
+    "path": "\\",
+    "type": "build",
+    "revision": 3,
+    "id": 1,
+    "name": "MyFirstProject Build",
+    "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/Definitions/1",
+    "project": {
+      "id": "c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+      "name": "MyFirstProject",
+      "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projects/c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+      "state": "wellFormed",
+      "revision": 7
+    }
+  },
+  "project": {
+    "id": "c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+    "name": "MyFirstProject",
+    "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projects/c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+    "state": "wellFormed",
+    "revision": 7
+  },
+  "uri": "vstfs:///Build/Build/6",
+  "sourceBranch": "refs/heads/spike/refactor",
+  "sourceVersion": "4bd752c2c0f12306b720d58b66e35c33d85d6341",
+  "queue": {
+    "pool": {
+      "id": 2,
+      "name": "Hosted",
+      "isHosted": true
+    },
+    "id": 2,
+    "name": "Hosted"
+  },
+  "priority": "normal",
+  "reason": "manual",
+  "requestedFor": {
+    "id": "4504d701-9689-4f0e-9fcb-6ec9bf40ed58",
+    "displayName": "Grimace of Despair",
+    "uniqueName": "grimaceofdespair@hotmail.com",
+    "url": "https://app.vssps.visualstudio.com/A4de0ad2b-4892-4d44-bda2-411aabc435a9/_apis/Identities/4504d701-9689-4f0e-9fcb-6ec9bf40ed58",
+    "imageUrl": "https://grimaceofdespair.visualstudio.com/_api/_common/identityImage?id=4504d701-9689-4f0e-9fcb-6ec9bf40ed58"
+  },
+  "requestedBy": {
+    "id": "4504d701-9689-4f0e-9fcb-6ec9bf40ed58",
+    "displayName": "Grimace of Despair",
+    "uniqueName": "grimaceofdespair@hotmail.com",
+    "url": "https://app.vssps.visualstudio.com/A4de0ad2b-4892-4d44-bda2-411aabc435a9/_apis/Identities/4504d701-9689-4f0e-9fcb-6ec9bf40ed58",
+    "imageUrl": "https://grimaceofdespair.visualstudio.com/_api/_common/identityImage?id=4504d701-9689-4f0e-9fcb-6ec9bf40ed58"
+  },
+  "lastChangedDate": "2017-03-24T23:06:15.783Z",
+  "lastChangedBy": {
+    "id": "00000002-0000-8888-8000-000000000000",
+    "displayName": "Microsoft.VisualStudio.Services.TFS",
+    "uniqueName": "00000002-0000-8888-8000-000000000000@2c895908-04e0-4952-89fd-54b0046d6288",
+    "url": "https://app.vssps.visualstudio.com/A4de0ad2b-4892-4d44-bda2-411aabc435a9/_apis/Identities/00000002-0000-8888-8000-000000000000",
+    "imageUrl": "https://grimaceofdespair.visualstudio.com/_api/_common/identityImage?id=00000002-0000-8888-8000-000000000000"
+  },
+  "parameters": "{\"system.debug\":\"false\"}",
+  "orchestrationPlan": { "planId": "101746aa-7a0f-47ee-a3e4-adb2f6c59aff" },
+  "logs": {
+    "id": 0,
+    "type": "Container",
+    "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/builds/6/logs"
+  },
+  "repository": {
+    "id": "9fb3b724-b326-4893-8b8a-4fa58ea38316",
+    "type": "TfsGit",
+    "clean": null,
+    "checkoutSubmodules": false
+  },
+  "keepForever": false,
+  "retainedByRelease": false
+}

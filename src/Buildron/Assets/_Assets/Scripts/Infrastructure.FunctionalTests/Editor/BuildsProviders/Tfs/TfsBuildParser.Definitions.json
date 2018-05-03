@@ -1,0 +1,83 @@
+{
+  "count": 2,
+  "value": [
+    {
+      "_links": {
+        "self": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/Definitions/1" },
+        "web": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_permalink/_build/index?collectionId=92006c1d-3319-4367-bde2-1d9b99fac6b1&projectId=c11391c9-87c3-4c6b-ae49-ddec738cde6a&definitionId=1" },
+        "editor": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_permalink/_build/definitionEditor?collectionId=92006c1d-3319-4367-bde2-1d9b99fac6b1&projectId=c11391c9-87c3-4c6b-ae49-ddec738cde6a&definitionId=1" }
+      },
+      "quality": "definition",
+      "authoredBy": {
+        "id": "4504d701-9689-4f0e-9fcb-6ec9bf40ed58",
+        "displayName": "Grimace of Despair",
+        "uniqueName": "grimaceofdespair@hotmail.com",
+        "url": "https://app.vssps.visualstudio.com/A4de0ad2b-4892-4d44-bda2-411aabc435a9/_apis/Identities/4504d701-9689-4f0e-9fcb-6ec9bf40ed58",
+        "imageUrl": "https://grimaceofdespair.visualstudio.com/_api/_common/identityImage?id=4504d701-9689-4f0e-9fcb-6ec9bf40ed58"
+      },
+      "queue": {
+        "pool": {
+          "id": 2,
+          "name": "Hosted",
+          "isHosted": true
+        },
+        "id": 2,
+        "name": "Hosted"
+      },
+      "uri": "vstfs:///Build/Definition/1",
+      "path": "\\",
+      "type": "build",
+      "revision": 6,
+      "createdDate": "2017-03-27T02:13:52.77Z",
+      "id": 1,
+      "name": "Sprint Build",
+      "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/Definitions/1",
+      "project": {
+        "id": "c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+        "name": "MyFirstProject",
+        "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projects/c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+        "state": "wellFormed",
+        "revision": 7
+      }
+    },
+    {
+      "_links": {
+        "self": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/Definitions/2" },
+        "web": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_permalink/_build/index?collectionId=92006c1d-3319-4367-bde2-1d9b99fac6b1&projectId=c11391c9-87c3-4c6b-ae49-ddec738cde6a&definitionId=2" },
+        "editor": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_permalink/_build/definitionEditor?collectionId=92006c1d-3319-4367-bde2-1d9b99fac6b1&projectId=c11391c9-87c3-4c6b-ae49-ddec738cde6a&definitionId=2" }
+      },
+      "quality": "definition",
+      "authoredBy": {
+        "id": "4504d701-9689-4f0e-9fcb-6ec9bf40ed58",
+        "displayName": "Grimace of Despair",
+        "uniqueName": "grimaceofdespair@hotmail.com",
+        "url": "https://app.vssps.visualstudio.com/A4de0ad2b-4892-4d44-bda2-411aabc435a9/_apis/Identities/4504d701-9689-4f0e-9fcb-6ec9bf40ed58",
+        "imageUrl": "https://grimaceofdespair.visualstudio.com/_api/_common/identityImage?id=4504d701-9689-4f0e-9fcb-6ec9bf40ed58"
+      },
+      "queue": {
+        "pool": {
+          "id": 2,
+          "name": "Hosted",
+          "isHosted": true
+        },
+        "id": 2,
+        "name": "Hosted"
+      },
+      "uri": "vstfs:///Build/Definition/2",
+      "path": "\\",
+      "type": "build",
+      "revision": 1,
+      "createdDate": "2017-03-27T02:14:32.43Z",
+      "id": 2,
+      "name": "Story Build",
+      "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/c11391c9-87c3-4c6b-ae49-ddec738cde6a/_apis/build/Definitions/2",
+      "project": {
+        "id": "c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+        "name": "MyFirstProject",
+        "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projects/c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+        "state": "wellFormed",
+        "revision": 7
+      }
+    }
+  ]
+}

@@ -21,13 +21,18 @@ namespace Buildron.Domain.CIServers
 		/// <summary>
 		/// TeamCity: https://www.jetbrains.com/teamcity/
 		/// </summary>
-		TeamCity = 3
-	}
+		TeamCity = 3,
 
-	/// <summary>
-	/// Continuous integration server status.
-	/// </summary>
-	public enum CIServerStatus
+        /// <summary>
+        /// Tfs: https://www.visualstudio.com/tfs/
+        /// </summary>
+        Tfs = 4
+    }
+
+    /// <summary>
+    /// Continuous integration server status.
+    /// </summary>
+    public enum CIServerStatus
 	{
 		/// <summary>
 		/// Continous integration server is Up.

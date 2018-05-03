@@ -1,0 +1,17 @@
+{
+  "id": "c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+  "name": "MyFirstProject",
+  "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projects/c11391c9-87c3-4c6b-ae49-ddec738cde6a",
+  "state": "wellFormed",
+  "revision": 7,
+  "_links": {
+    "self": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projects/c11391c9-87c3-4c6b-ae49-ddec738cde6a" },
+    "collection": { "href": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projectCollections/92006c1d-3319-4367-bde2-1d9b99fac6b1" },
+    "web": { "href": "https://grimaceofdespair.visualstudio.com/MyFirstProject" }
+  },
+  "defaultTeam": {
+    "id": "1f571657-ecf2-4a2b-9253-c26ad21e58c7",
+    "name": "MyFirstProject Team",
+    "url": "https://grimaceofdespair.visualstudio.com/DefaultCollection/_apis/projects/c11391c9-87c3-4c6b-ae49-ddec738cde6a/teams/1f571657-ecf2-4a2b-9253-c26ad21e58c7"
+  }
+}
